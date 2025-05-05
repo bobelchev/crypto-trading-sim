@@ -38,12 +38,18 @@ public class TransactionRepository {
 
     /**
      * Insert a new transaction into the db
-     *  TODO: implement SQL query
      * @param transaction
      * @return
      */
-    public long insertTx(Transaction transaction){
+    public void insertTx(Transaction transaction){
+        String sql = """
+        INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """;
+        jdbcTemplate.update(sql,
+                transaction.getUserId(),transaction.getCryptoTicker(),
+                transaction.getQuantity(), transaction.getPrice(),
+                transaction.getTransactionType().name(),transaction.getTimestamp());
 
-        return 1L;
     }
 }

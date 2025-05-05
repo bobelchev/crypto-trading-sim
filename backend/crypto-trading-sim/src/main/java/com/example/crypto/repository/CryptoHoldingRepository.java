@@ -1,6 +1,7 @@
 package com.example.crypto.repository;
 
 import com.example.crypto.model.CryptoHolding;
+import com.example.crypto.repository.mapper.CryptoHoldingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,41 +16,47 @@ public class CryptoHoldingRepository {
 
     /**
      * Returns complete portfolio of user from DB
-     * TODO: implement SQL query
      * @param userId
-     * @return
+     * @return list of (all)crypto holdings
      */
     public List<CryptoHolding> getAllUserHoldings(long userId){
-        return Collections.emptyList();
+        String sql = "SELECT * FROM holdings WHERE user_id=?";
+        return jdbcTemplate.query(sql,new Object[]{userId},new CryptoHoldingMapper());
     }
 
     /**
      * Returns a single holding according to id from DB
-     * TODO: implement SQL query
      * @param holdingId
-     * @return
+     * @return A single holding according to id
      */
     public CryptoHolding getSingleHolding(long holdingId){
-        return null;
+        String sql = "SELECT * FROM holdings WHERE id=?";
+        return jdbcTemplate.queryForObject(sql,new Object[]{holdingId},new CryptoHoldingMapper());
     }
 
     /**
      * Inserts a new holding into the DB
-     * TODO: implement SQL query
      * @param cryptoHolding
-     * @return
      */
     public void insertHolding(CryptoHolding cryptoHolding){
+        String sql = """
+        INSERT INTO holdings (user_id, crypto_ticker, quantity)
+        VALUES (?, ?, ?)
+    """;
+        jdbcTemplate.update(sql,
+                cryptoHolding.getUserId(),cryptoHolding.getCryptoTicker(),
+                cryptoHolding.getQuantity());
 
     }
 
     /**
      * Updates existing holding in the DB
-     * TODO: implement SQL query
      * @param cryptoHolding
-     * @return
      */
-    public long updateHolding(CryptoHolding cryptoHolding){
-        return 1L;
+    public void updateHolding(CryptoHolding cryptoHolding){
+        String sql = "UPDATE holdings SET quantity = ? WHERE user_id = ? AND crypto_ticker = ?";
+        jdbcTemplate.update(sql,
+                cryptoHolding.getQuantity(),cryptoHolding.getUserId(),cryptoHolding.getCryptoTicker());
+
     }
 }

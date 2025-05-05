@@ -24,7 +24,7 @@ public class CryptoHoldingRepositoryTest {
         //clean the table because otherwise it will be new id for each test
         jdbcTemplate.execute("DELETE FROM holdings");
         //id did not reset properly
-        jdbcTemplate.execute("ALTER TABLE transactions ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE holdings ALTER COLUMN id RESTART WITH 1");
 
 
 

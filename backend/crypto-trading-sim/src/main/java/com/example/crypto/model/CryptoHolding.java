@@ -18,5 +18,10 @@ public class CryptoHolding {
         this.cryptoTicker = cryptoTicker;
         this.quantity = quantity;
     }
+    public CryptoHolding(long id, long userId,String cryptoTicker,BigDecimal quantity){
+        this(userId,cryptoTicker,quantity);
+        this.id = id;
+
+    }
 
 }

@@ -34,7 +34,7 @@ public class KrakenWebClient extends WebSocketClient {
                             "method": "subscribe",
                             "params": {
                                 "channel": "ticker",
-                                "symbol": ["BTC/USD"],
+                                "symbol": ["BTC/USD", "ETH/USD"],
                                 "snapshot": true
                             }
                         }

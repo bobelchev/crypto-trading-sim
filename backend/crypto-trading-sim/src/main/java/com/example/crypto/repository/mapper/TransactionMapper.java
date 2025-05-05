@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 //https://stackoverflow.com/questions/15118630/some-doubts-about-rowmapper-use-in-jdbc-in-a-spring-framework-application
 //https://stackoverflow.com/questions/40153567/getting-a-single-object-of-model-class-in-spring-framework
+//https://www.baeldung.com/spring-jdbc-jdbctemplate
 /**
  * Maps the result from the query to a Transaction object
  */
