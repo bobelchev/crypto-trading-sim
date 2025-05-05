@@ -15,8 +15,19 @@ public class Transaction {
     private long userId;
     private String cryptoTicker;
     private BigDecimal quantity;
+    //this not price per coin but total
     private BigDecimal price;
     private LocalDateTime timestamp;
     private TransactionType transactionType;
+    public Transaction(long userId, String cryptoTicker, BigDecimal quantity,
+                       BigDecimal price, LocalDateTime timestamp, TransactionType type) {
+        this.userId = userId;
+        this.cryptoTicker = cryptoTicker;
+        this.quantity = quantity;
+        this.price = price;
+        this.timestamp = timestamp;
+        this.transactionType = type;
+    }
+
 
 }
