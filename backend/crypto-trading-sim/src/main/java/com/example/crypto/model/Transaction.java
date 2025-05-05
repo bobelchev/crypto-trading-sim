@@ -17,5 +17,6 @@ public class Transaction {
     private BigDecimal quantity;
     private BigDecimal price;
     private LocalDateTime timestamp;
+    private TransactionType transactionType;
 
 }
