@@ -18,10 +18,7 @@ public class UserRepository {
     public BigDecimal getBalanceOfUser(long userId){
         //on purpose so that test fails for now
         String sql = "SELECT balance FROM users WHERE id=?";
-        BigDecimal balance = jdbcTemplate.queryForObject(sql,
-                                    BigDecimal.class,
-                                    userId);
-        return balance;
+        return jdbcTemplate.queryForObject(sql,BigDecimal.class, userId);
     }
 
     /**
@@ -33,6 +30,13 @@ public class UserRepository {
     public void updateBalance(long userId, BigDecimal newBalance){
         String sql = "UPDATE users SET balance = ? WHERE id = ?";
         jdbcTemplate.update(sql, newBalance, userId);
+    }
+
+    /**
+     * Resets the balance of a user to the default
+     * @param userId
+     */
+    public void resetBalance(long userId){
 
     }
 }

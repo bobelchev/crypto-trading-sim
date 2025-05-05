@@ -22,6 +22,8 @@ public class TransactionRepositoryTest {
     TransactionRepository transactionRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    public static final long USERID = 1L;
+
     @BeforeEach
     public void setUp(){
         //clean the table because otherwise it will be new id for each test
@@ -46,7 +48,7 @@ public class TransactionRepositoryTest {
         //that should return the btc buy tx
         Transaction transaction = transactionRepository.getSingleTx(1L);
         assertNotNull(transaction);
-        assertEquals(1L,transaction.getUserId());
+        assertEquals(USERID,transaction.getUserId());
         assertEquals("BTC",transaction.getCryptoTicker());
         assertEquals(new BigDecimal("0.075423"), transaction.getQuantity());
         assertEquals(new BigDecimal("46231.128400"), transaction.getPrice());
@@ -61,20 +63,20 @@ public class TransactionRepositoryTest {
         List<Transaction> transactions = transactionRepository.getAllTxForUser(1L);
         assertEquals(2, transactions.size());
         Transaction firstTx = transactions.get(0);
-        assertEquals(1L,firstTx.getUserId());
+        assertEquals(USERID,firstTx.getUserId());
         assertEquals("BTC",firstTx.getCryptoTicker());
         assertEquals(new BigDecimal("0.075423"), firstTx.getQuantity());
         assertEquals(new BigDecimal("46231.128400"), firstTx.getPrice());
         assertEquals(TransactionType.BUY, firstTx.getTransactionType());
         Transaction secondTx = transactions.get(1);
-        assertEquals(1L,secondTx.getUserId());
+        assertEquals(USERID,secondTx.getUserId());
         assertEquals("ETH",secondTx.getCryptoTicker());
         assertEquals(new BigDecimal("1.235670"), secondTx.getQuantity());
         assertEquals(new BigDecimal("2745.326700"), secondTx.getPrice());
         assertEquals(TransactionType.SELL, secondTx.getTransactionType());
         //test with 0 txs in db
         jdbcTemplate.execute("DELETE FROM transactions");
-        transactions = transactionRepository.getAllTxForUser(1L);
+        transactions = transactionRepository.getAllTxForUser(USERID);
         assertEquals(0, transactions.size());
     }
 
@@ -86,14 +88,14 @@ public class TransactionRepositoryTest {
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND crypto_ticker = ?",
                 Integer.class,
-                1L, "XRP"
+                USERID, "XRP"
         );
         //should be 0
         assertEquals(0,count);
 
         //insert tx
         Transaction newTx = new Transaction(
-                1L,
+                USERID,
                 "XRP",
                 new BigDecimal("2.004500"),
                 new BigDecimal("1.887650"),
@@ -105,14 +107,31 @@ public class TransactionRepositoryTest {
         count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND crypto_ticker = ?",
                 Integer.class,
-                1L, "XRP"
+                USERID, "XRP"
         );
         //should be 0
         assertEquals(1,count);
         count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM transactions",
-                Integer.class
+                "SELECT COUNT(*) FROM transactions WHERE user_id=?",
+                Integer.class,
+                USERID
         );
         assertEquals(3,count);
+    }
+    @Test
+    public void testDeleteAllTxs(){
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM transactions WHERE user_id=?",
+                Integer.class,
+                USERID
+        );
+        assertEquals(2, count);
+        transactionRepository.deleteAllTxs(USERID);
+        count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM transactions WHERE user_id=?",
+                Integer.class,
+                USERID
+        );
+        assertEquals(0, count);
     }
 }

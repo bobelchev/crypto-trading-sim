@@ -18,6 +18,8 @@ public class CryptoHoldingRepositoryTest {
     CryptoHoldingRepository cryptoHoldingRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    public static final long USERID = 1L;
+
 
     @BeforeEach
     public void setUp(){
@@ -25,22 +27,19 @@ public class CryptoHoldingRepositoryTest {
         jdbcTemplate.execute("DELETE FROM holdings");
         //id did not reset properly
         jdbcTemplate.execute("ALTER TABLE holdings ALTER COLUMN id RESTART WITH 1");
-
-
-
         jdbcTemplate.execute("""
             INSERT INTO holdings (user_id, crypto_ticker, quantity)
             VALUES 
             (1, 'BTC', 0.075423),
             (1, 'ETH', 1.235670);
-        """);
+            """);
     }
     @Test
     public void testGetSingleHolding(){
         CryptoHolding btcHolding = cryptoHoldingRepository.getSingleHolding(1L);
         assertNotNull(btcHolding);
         assertEquals(1L,btcHolding.getId());
-        assertEquals(1L,btcHolding.getUserId());
+        assertEquals(USERID,btcHolding.getUserId());
         assertEquals("BTC",btcHolding.getCryptoTicker());
         assertEquals(new BigDecimal("0.075423"),btcHolding.getQuantity());
     }
@@ -49,38 +48,62 @@ public class CryptoHoldingRepositoryTest {
         List<CryptoHolding> allHoldings = cryptoHoldingRepository.getAllUserHoldings(1L);
         assertEquals(2, allHoldings.size());
         CryptoHolding firstHolding = allHoldings.get(0);
-        assertEquals(1L,firstHolding.getUserId());
+        assertEquals(USERID,firstHolding.getUserId());
         assertEquals("BTC",firstHolding.getCryptoTicker());
         assertEquals(new BigDecimal("0.075423"), firstHolding.getQuantity());
         CryptoHolding secondHolding = allHoldings.get(1);
-        assertEquals(1L,secondHolding.getUserId());
+        assertEquals(USERID,secondHolding.getUserId());
         assertEquals("ETH",secondHolding.getCryptoTicker());
         assertEquals(new BigDecimal("1.235670"), secondHolding.getQuantity());
         //test with 0 holdings in db
         jdbcTemplate.execute("DELETE FROM holdings");
-        allHoldings = cryptoHoldingRepository.getAllUserHoldings(1L);
+        allHoldings = cryptoHoldingRepository.getAllUserHoldings(USERID);
         assertEquals(0, allHoldings.size());
     }
     @Test
     public void testInsertHolding(){
         CryptoHolding newHolding = new CryptoHolding(
-                1L,
+                USERID,
                 "XRP",
                 new BigDecimal("4500.567812")
         );
         cryptoHoldingRepository.insertHolding(newHolding);
-
+        //using raw SQL instead of method to reduce dependency on other methods
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM holdings WHERE user_id = ? AND crypto_ticker = ?",
                 Integer.class,
-                1L, "XRP"
+                USERID, "XRP"
         );
         assertEquals(1, count);
         count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM holdings",
-                Integer.class
+                "SELECT COUNT(*) FROM holdings WHERE user_id=?",
+                Integer.class,
+                USERID
         );
         //should be three holdings now BTC, ETH and the newly added XRP
         assertEquals(3, count);
+    }
+
+    /**
+     * Tests the deletion of all holdings works correctly
+     */
+    @Test
+    public void testDeleteAllHoldings(){
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM holdings WHERE user_id=?",
+                Integer.class,
+                USERID
+        );
+        assertEquals(2, count);
+        cryptoHoldingRepository.deleteHoldings(USERID);
+         count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM holdings WHERE user_id=?",
+                Integer.class,
+                 USERID
+        );
+        assertEquals(0, count);
+
+
+
     }
 }

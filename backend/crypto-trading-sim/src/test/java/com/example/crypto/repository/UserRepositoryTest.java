@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
 
@@ -16,13 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    public static final long USERID = 1L;
+
 
     /**
      * Initial balance should be 10 000 as per requirement
      */
     @Test
     public void testInitialBalance(){
-        assertEquals(new BigDecimal("10000.000000"), userRepository.getBalanceOfUser(1L));
+        assertEquals(new BigDecimal("10000.000000"), userRepository.getBalanceOfUser(USERID));
     }
 
     /**
@@ -30,8 +35,8 @@ public class UserRepositoryTest {
      */
     @Test
     public void testUpdatingBalance(){
-        userRepository.updateBalance(1L, new BigDecimal("2000.000000"));
-        assertEquals(new BigDecimal("2000.000000"),userRepository.getBalanceOfUser(1L));
+        userRepository.updateBalance(USERID, new BigDecimal("2000.000000"));
+        assertEquals(new BigDecimal("2000.000000"),userRepository.getBalanceOfUser(USERID));
     }
 
     /**
@@ -39,9 +44,15 @@ public class UserRepositoryTest {
      */
     @Test
     public void testNegativeBalance(){
-        BigDecimal oldBalance = userRepository.getBalanceOfUser(1L);
-        userRepository.updateBalance(1L, new BigDecimal("-2000.000000"));
-        BigDecimal newBalance = userRepository.getBalanceOfUser(1L);
+        BigDecimal oldBalance = jdbcTemplate.queryForObject(
+                "SELECT balance FROM users WHERE id = ?",
+                        BigDecimal.class,
+                        USERID);
+        userRepository.updateBalance(USERID, new BigDecimal("-2000.000000"));
+        BigDecimal newBalance = jdbcTemplate.queryForObject(
+                "SELECT balance FROM users WHERE id = ?",
+                BigDecimal.class,
+                USERID);;
         //there shouldn't be a change
         //additionally should throw an exception when implemented
         assertEquals(oldBalance, newBalance);

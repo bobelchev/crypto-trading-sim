@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -57,6 +56,14 @@ public class CryptoHoldingRepository {
         String sql = "UPDATE holdings SET quantity = ? WHERE user_id = ? AND crypto_ticker = ?";
         jdbcTemplate.update(sql,
                 cryptoHolding.getQuantity(),cryptoHolding.getUserId(),cryptoHolding.getCryptoTicker());
+
+    }
+
+    /**
+     * Deletes all holdings of a user
+     * @param userId
+     */
+    public void deleteHoldings(long userId){
 
     }
 }
