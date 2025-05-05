@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public class UserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
 
     /**
      * Returns the balance of a User according to its id
@@ -28,15 +29,20 @@ public class UserRepository {
      * @param newBalance
      */
     public void updateBalance(long userId, BigDecimal newBalance){
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative");
+        }
         String sql = "UPDATE users SET balance = ? WHERE id = ?";
         jdbcTemplate.update(sql, newBalance, userId);
     }
 
     /**
      * Resets the balance of a user to the default
+     * TODO: rethink at a late point
      * @param userId
      */
     public void resetBalance(long userId){
-
+        String sql = "UPDATE user SET balance = ? WHERE id = ?";
+        jdbcTemplate.update(sql,DEFAULT_BALANCE,userId);
     }
 }

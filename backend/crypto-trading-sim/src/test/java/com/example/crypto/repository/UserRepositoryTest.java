@@ -48,7 +48,9 @@ public class UserRepositoryTest {
                 "SELECT balance FROM users WHERE id = ?",
                         BigDecimal.class,
                         USERID);
-        userRepository.updateBalance(USERID, new BigDecimal("-2000.000000"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            userRepository.updateBalance(USERID, new BigDecimal("-2000.000000"));
+        });
         BigDecimal newBalance = jdbcTemplate.queryForObject(
                 "SELECT balance FROM users WHERE id = ?",
                 BigDecimal.class,

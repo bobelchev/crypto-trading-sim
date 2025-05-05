@@ -52,5 +52,7 @@ public class TransactionRepository {
      * @param userId
      */
     public void deleteAllTxs(long userId){
+        String sql = "DELETE FROM transactions WHERE user_id = ?";
+        jdbcTemplate.update(sql,userId);
     }
 }

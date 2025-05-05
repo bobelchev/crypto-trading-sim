@@ -55,7 +55,8 @@ public class CryptoHoldingRepository {
     public void updateHolding(CryptoHolding cryptoHolding){
         String sql = "UPDATE holdings SET quantity = ? WHERE user_id = ? AND crypto_ticker = ?";
         jdbcTemplate.update(sql,
-                cryptoHolding.getQuantity(),cryptoHolding.getUserId(),cryptoHolding.getCryptoTicker());
+                cryptoHolding.getQuantity(),cryptoHolding.getUserId(),
+                cryptoHolding.getCryptoTicker());
 
     }
 
@@ -64,6 +65,7 @@ public class CryptoHoldingRepository {
      * @param userId
      */
     public void deleteHoldings(long userId){
-
+        String sql = "DELETE FROM holdings WHERE user_id = ?";
+        jdbcTemplate.update(sql,userId);
     }
 }
