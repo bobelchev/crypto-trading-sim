@@ -22,7 +22,7 @@ public class UserRepositoryTest {
      */
     @Test
     public void testInitialBalance(){
-        assertEquals(new BigDecimal("10000.00"), userRepository.getBalanceOfUser(1L));
+        assertEquals(new BigDecimal("10000.000000"), userRepository.getBalanceOfUser(1L));
     }
 
     /**
@@ -30,8 +30,8 @@ public class UserRepositoryTest {
      */
     @Test
     public void testUpdatingBalance(){
-        userRepository.updateBalance(1L, new BigDecimal("2000.00"));
-        assertEquals(new BigDecimal("2000.00"),userRepository.getBalanceOfUser(1L));
+        userRepository.updateBalance(1L, new BigDecimal("2000.000000"));
+        assertEquals(new BigDecimal("2000.000000"),userRepository.getBalanceOfUser(1L));
     }
 
     /**
@@ -40,7 +40,7 @@ public class UserRepositoryTest {
     @Test
     public void testNegativeBalance(){
         BigDecimal oldBalance = userRepository.getBalanceOfUser(1L);
-        userRepository.updateBalance(1L, new BigDecimal("-2000.00"));
+        userRepository.updateBalance(1L, new BigDecimal("-2000.000000"));
         BigDecimal newBalance = userRepository.getBalanceOfUser(1L);
         //there shouldn't be a change
         //additionally should throw an exception when implemented

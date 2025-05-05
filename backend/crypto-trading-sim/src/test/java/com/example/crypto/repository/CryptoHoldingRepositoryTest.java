@@ -23,12 +23,16 @@ public class CryptoHoldingRepositoryTest {
     public void setUp(){
         //clean the table because otherwise it will be new id for each test
         jdbcTemplate.execute("DELETE FROM holdings");
+        //id did not reset properly
+        jdbcTemplate.execute("ALTER TABLE transactions ALTER COLUMN id RESTART WITH 1");
+
+
 
         jdbcTemplate.execute("""
             INSERT INTO holdings (user_id, crypto_ticker, quantity)
             VALUES 
-            (1, 'BTC', 0.07542361),
-            (1, 'ETH', 1.23567000);
+            (1, 'BTC', 0.075423),
+            (1, 'ETH', 1.235670);
         """);
     }
     @Test
@@ -38,7 +42,7 @@ public class CryptoHoldingRepositoryTest {
         assertEquals(1L,btcHolding.getId());
         assertEquals(1L,btcHolding.getUserId());
         assertEquals("BTC",btcHolding.getCryptoTicker());
-        assertEquals(new BigDecimal("0.07542361"),btcHolding.getQuantity());
+        assertEquals(new BigDecimal("0.075423"),btcHolding.getQuantity());
     }
     @Test
     public void testGetAllHoldingOfUser(){
@@ -47,11 +51,11 @@ public class CryptoHoldingRepositoryTest {
         CryptoHolding firstHolding = allHoldings.get(0);
         assertEquals(1L,firstHolding.getUserId());
         assertEquals("BTC",firstHolding.getCryptoTicker());
-        assertEquals(new BigDecimal("0.07542361"), firstHolding.getQuantity());
+        assertEquals(new BigDecimal("0.075423"), firstHolding.getQuantity());
         CryptoHolding secondHolding = allHoldings.get(1);
         assertEquals(1L,secondHolding.getUserId());
         assertEquals("ETH",secondHolding.getCryptoTicker());
-        assertEquals(new BigDecimal("1.23567000"), secondHolding.getQuantity());
+        assertEquals(new BigDecimal("1.235670"), secondHolding.getQuantity());
         //test with 0 holdings in db
         jdbcTemplate.execute("DELETE FROM holdings");
         allHoldings = cryptoHoldingRepository.getAllUserHoldings(1L);
@@ -62,7 +66,7 @@ public class CryptoHoldingRepositoryTest {
         CryptoHolding newHolding = new CryptoHolding(
                 1L,
                 "XRP",
-                new BigDecimal("4500.56781234")
+                new BigDecimal("4500.567812")
         );
         cryptoHoldingRepository.insertHolding(newHolding);
 

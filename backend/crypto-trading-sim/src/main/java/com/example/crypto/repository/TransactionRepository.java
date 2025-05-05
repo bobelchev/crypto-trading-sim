@@ -20,7 +20,7 @@ public class TransactionRepository {
      * @return list of transactions belonging to user
      */
     public List<Transaction> getAllTxForUser(long userId){
-        String sql = "SELECT * FROM transaction WHERE user_id=?";
+        String sql = "SELECT * FROM transactions WHERE user_id=?";
         List<Transaction> txs = jdbcTemplate.query(sql,new Object[]{userId}, new TransactionMapper());
         return txs;
     }

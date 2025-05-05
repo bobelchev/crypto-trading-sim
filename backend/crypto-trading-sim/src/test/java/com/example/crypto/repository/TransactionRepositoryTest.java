@@ -26,12 +26,15 @@ public class TransactionRepositoryTest {
     public void setUp(){
         //clean the table because otherwise it will be new id for each test
         jdbcTemplate.execute("DELETE FROM transactions");
+        //id did not reset properly
+        jdbcTemplate.execute("ALTER TABLE transactions ALTER COLUMN id RESTART WITH 1");
+
 
         jdbcTemplate.execute("""
             INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp)
             VALUES 
-            (1, 'BTC', 0.07542361, 46231.1284, 'BUY', CURRENT_TIMESTAMP),
-            (1, 'ETH', 1.23567000, 2745.3267, 'SELL', CURRENT_TIMESTAMP);
+            (1, 'BTC', 0.075423, 46231.128400, 'BUY', CURRENT_TIMESTAMP),
+            (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP);
         """);
     }
 
@@ -45,8 +48,8 @@ public class TransactionRepositoryTest {
         assertNotNull(transaction);
         assertEquals(1L,transaction.getUserId());
         assertEquals("BTC",transaction.getCryptoTicker());
-        assertEquals(new BigDecimal("0.07542361"), transaction.getQuantity());
-        assertEquals(new BigDecimal("46231.1284"), transaction.getPrice());
+        assertEquals(new BigDecimal("0.075423"), transaction.getQuantity());
+        assertEquals(new BigDecimal("46231.128400"), transaction.getPrice());
         assertEquals(TransactionType.BUY, transaction.getTransactionType());
     }
 
@@ -60,14 +63,14 @@ public class TransactionRepositoryTest {
         Transaction firstTx = transactions.get(0);
         assertEquals(1L,firstTx.getUserId());
         assertEquals("BTC",firstTx.getCryptoTicker());
-        assertEquals(new BigDecimal("0.07542361"), firstTx.getQuantity());
-        assertEquals(new BigDecimal("46231.1284"), firstTx.getPrice());
+        assertEquals(new BigDecimal("0.075423"), firstTx.getQuantity());
+        assertEquals(new BigDecimal("46231.128400"), firstTx.getPrice());
         assertEquals(TransactionType.BUY, firstTx.getTransactionType());
         Transaction secondTx = transactions.get(1);
         assertEquals(1L,secondTx.getUserId());
         assertEquals("ETH",secondTx.getCryptoTicker());
-        assertEquals(new BigDecimal("1.23567000"), secondTx.getQuantity());
-        assertEquals(new BigDecimal("2745.3267"), secondTx.getPrice());
+        assertEquals(new BigDecimal("1.235670"), secondTx.getQuantity());
+        assertEquals(new BigDecimal("2745.326700"), secondTx.getPrice());
         assertEquals(TransactionType.SELL, secondTx.getTransactionType());
         //test with 0 txs in db
         jdbcTemplate.execute("DELETE FROM transactions");
@@ -92,7 +95,7 @@ public class TransactionRepositoryTest {
         Transaction newTx = new Transaction(
                 1L,
                 "XRP",
-                new BigDecimal("2.0045"),
+                new BigDecimal("2.004500"),
                 new BigDecimal("1.887650"),
                 LocalDateTime.now(),
                 TransactionType.BUY
