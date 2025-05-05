@@ -1,6 +1,7 @@
 package com.example.crypto.repository;
 
 import com.example.crypto.model.Transaction;
+import com.example.crypto.repository.mapper.TransactionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,22 +16,24 @@ public class TransactionRepository {
 
     /**
      * Returns all transactions of a specific user from the db
-     * TODO: implement SQL query
      * @param userId
-     * @return
+     * @return list of transactions belonging to user
      */
     public List<Transaction> getAllTxForUser(long userId){
-        return Collections.emptyList();
+        String sql = "SELECT * FROM transaction WHERE user_id=?";
+        List<Transaction> txs = jdbcTemplate.query(sql,new Object[]{userId}, new TransactionMapper());
+        return txs;
     }
 
     /**
      * Returns a single transaction accord. to the id from the db
-     * TODO: implement SQL query
      * @param txId
-     * @return
+     * @return transaction with that id
      */
     public Transaction getSingleTx(long txId){
-        return null;
+        String sql = "SELECT * FROM transactions WHERE id=?";
+        Transaction transaction = jdbcTemplate.queryForObject(sql,new Object[] {txId}, new TransactionMapper());
+        return transaction;
     }
 
     /**
@@ -40,6 +43,7 @@ public class TransactionRepository {
      * @return
      */
     public long insertTx(Transaction transaction){
+
         return 1L;
     }
 }

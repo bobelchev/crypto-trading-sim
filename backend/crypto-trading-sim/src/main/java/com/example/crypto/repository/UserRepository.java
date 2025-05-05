@@ -19,8 +19,8 @@ public class UserRepository {
         //on purpose so that test fails for now
         String sql = "SELECT balance FROM users WHERE id=?";
         BigDecimal balance = jdbcTemplate.queryForObject(sql,
-                BigDecimal.class,
-        userId);
+                                    BigDecimal.class,
+                                    userId);
         return balance;
     }
 

@@ -28,6 +28,12 @@ public class Transaction {
         this.timestamp = timestamp;
         this.transactionType = type;
     }
+    public Transaction(long id, long userId, String cryptoTicker, BigDecimal quantity,
+                       BigDecimal price, LocalDateTime timestamp, TransactionType type) {
+        this(userId,cryptoTicker,quantity,price,timestamp,type);
+        this.id = id;
+    }
+
 
 
 }
