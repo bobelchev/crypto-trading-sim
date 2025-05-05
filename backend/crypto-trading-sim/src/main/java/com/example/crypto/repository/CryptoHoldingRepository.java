@@ -39,8 +39,8 @@ public class CryptoHoldingRepository {
      * @param cryptoHolding
      * @return
      */
-    public long insertHolding(CryptoHolding cryptoHolding){
-        return 1L;
+    public void insertHolding(CryptoHolding cryptoHolding){
+
     }
 
     /**
