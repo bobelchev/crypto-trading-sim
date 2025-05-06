@@ -29,9 +29,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetUserBalance() throws Exception {
-
         Mockito.when(userService.getBalance(USERID)).thenReturn(DEFAULT_BALANCE);
-
         mockMvc.perform(get("/users/balance")
                         .param("userId", String.valueOf(USERID)))
                 .andExpect(status().isOk())

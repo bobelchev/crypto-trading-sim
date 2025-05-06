@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class CryptoHoldingService {
@@ -39,5 +40,8 @@ public class CryptoHoldingService {
     }
     public BigDecimal getTickerQuantity(long userId, String cryptoTicker){
         return cryptoHoldingRepository.getSingleHoldingByTickerAndUserId(userId,cryptoTicker).getQuantity();
+    }
+    public List<CryptoHolding> getHoldingsOfUser(long userId){
+        return cryptoHoldingRepository.getAllUserHoldings(userId);
     }
 }

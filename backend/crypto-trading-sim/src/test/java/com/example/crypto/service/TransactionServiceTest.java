@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.function.ToDoubleBiFunction;
 
 import static org.mockito.Mockito.*;
 
@@ -44,6 +45,8 @@ public class TransactionServiceTest {
         verify(mockUserRepository,times(1)).updateBalance(USERID,DEFAULT_BALANCE.subtract(cost));
         verify(mockHoldingService,times(1)).handleHolding(USERID,cryptoTicker,quantity, type);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
+        //TODO: solve the timestamp problem
+
         //verify(mockTxRepository,times(1)).insertTx(new Transaction(USERID,cryptoTicker, quantity, price, LocalDateTime.now(), type));
     }
     @Test
@@ -62,6 +65,7 @@ public class TransactionServiceTest {
         verify(mockUserRepository,times(1)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
         verify(mockHoldingService,times(1)).handleHolding(USERID,cryptoTicker,quantity,type);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
+        //TODO: solve the timestamp problem
         //verify(mockTxRepository,times(1)).insertTx(new Transaction(USERID,cryptoTicker, quantity, price, LocalDateTime.now(), type));
     }
 
