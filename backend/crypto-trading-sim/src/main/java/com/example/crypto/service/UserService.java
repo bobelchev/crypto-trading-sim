@@ -27,7 +27,9 @@ public class UserService {
      * @param userId the ID of the user that is going to be reset
      */
     public void resetAccount(long userId){
-
+        userRepository.resetBalance(userId);
+        transactionRepository.deleteAllTxs(userId);
+        cryptoHoldingRepository.deleteHoldings(userId);
     }
 
     /**
@@ -36,6 +38,6 @@ public class UserService {
      * @return the current balance as a {@link BigDecimal}
      */
     public BigDecimal getBalance(long userId){
-            return new BigDecimal("0.000000");
+            return userRepository.getBalanceOfUser(userId);
     }
 }

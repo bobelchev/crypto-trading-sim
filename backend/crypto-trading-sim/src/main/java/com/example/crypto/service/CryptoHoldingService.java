@@ -1,5 +1,7 @@
 package com.example.crypto.service;
 
+import com.example.crypto.model.CryptoHolding;
+import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.CryptoHoldingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,17 @@ public class CryptoHoldingService {
      * @param cryptoTicker the cryptocurrency ticker (e.g. BTC, ETH)
      * @param quantity the amount by which the holding will be updated
      */
-    public void handleHolding(long userId, String cryptoTicker, BigDecimal quantity){
+    public void handleHolding(long userId, String cryptoTicker, BigDecimal quantity, TransactionType type){
+        CryptoHolding cryptoHolding = cryptoHoldingRepository.getSingleHoldingByTickerAndUserId(userId,cryptoTicker);
+        //if it does not exist we will update existing row
+        if (cryptoHolding!=null){
+            BigDecimal oldQuantity = cryptoHolding.getQuantity();
+            //depending on if the tx was BUY or sell we will add or substract
+            BigDecimal newQuantity = (type==TransactionType.BUY)?oldQuantity.add(quantity):oldQuantity.subtract(quantity);
+            cryptoHoldingRepository.updateHolding(new CryptoHolding(userId,cryptoTicker,newQuantity));
+        } else {
+            cryptoHoldingRepository.insertHolding(new CryptoHolding(userId,cryptoTicker,quantity));
+        }
 
     }
 }

@@ -3,6 +3,7 @@ package com.example.crypto.repository;
 import com.example.crypto.model.CryptoHolding;
 import com.example.crypto.repository.mapper.CryptoHoldingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -40,7 +41,11 @@ public class CryptoHoldingRepository {
      */
     public CryptoHolding getSingleHoldingByTickerAndUserId(long userId, String cryptoTicker){
         String sql = "SELECT * FROM holdings WHERE user_id=? AND crypto_ticker=?";
-        return jdbcTemplate.queryForObject(sql,new Object[]{userId,cryptoTicker},new CryptoHoldingMapper());
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{userId, cryptoTicker}, new CryptoHoldingMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     /**
