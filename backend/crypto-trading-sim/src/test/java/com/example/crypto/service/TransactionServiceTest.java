@@ -33,9 +33,9 @@ public class TransactionServiceTest {
     }
     @Test
     public void testBuy(){
-        BigDecimal quantity = new BigDecimal("0.5");
+        BigDecimal quantity = new BigDecimal("0.500000");
         String cryptoTicker = "BTC";
-        BigDecimal price = new BigDecimal("100.00");
+        BigDecimal price = new BigDecimal("100.000000");
         TransactionType type = TransactionType.BUY;
         BigDecimal cost = quantity.multiply(price);
         //added this one because did not anticipate to be needed before
@@ -48,15 +48,17 @@ public class TransactionServiceTest {
     }
     @Test
     public void testSell(){
-        BigDecimal quantity = new BigDecimal("0.5");
+        BigDecimal quantity = new BigDecimal("0.500001");
         String cryptoTicker = "BTC";
-        BigDecimal price = new BigDecimal("100.00");
+        BigDecimal price = new BigDecimal("100.000000");
         TransactionType type = TransactionType.SELL;
         BigDecimal cost = quantity.multiply(price);
 
         //added this one because did not anticipate to be needed before
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
-        transactionService.makeTx(USERID,cryptoTicker,quantity,price,type);
+        when(mockHoldingService.getTickerQuantity(USERID, cryptoTicker)).thenReturn(new BigDecimal("1.000000"));
+
+        transactionService. makeTx(USERID,cryptoTicker,quantity,price,type);
         verify(mockUserRepository,times(1)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
         verify(mockHoldingService,times(1)).handleHolding(USERID,cryptoTicker,quantity,type);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
