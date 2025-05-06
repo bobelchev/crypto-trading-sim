@@ -20,6 +20,8 @@ public class TransactionService {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    UserService userService;
+    @Autowired
     CryptoHoldingService cryptoHoldingService;
 
     /**
@@ -40,12 +42,12 @@ public class TransactionService {
         //delegate that to CryptoService
         //update the balance
         BigDecimal cost = price.multiply(quantity);
-        BigDecimal availableBalance = userRepository.getBalanceOfUser(userId);
+        BigDecimal availableBalance = userService.getBalance(userId);
         if(cost.compareTo(availableBalance)>0){
             throw new IllegalStateException("Insufficient balance to complete the purchase.");
         }
         BigDecimal newBalance = (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
-        userRepository.updateBalance(userId,newBalance);
+        userService.updateBalance(userId,newBalance);
         cryptoHoldingService.handleHolding(userId,cryptoTicker,quantity,type);
         insertTx(userId,cryptoTicker,quantity,price,type);
     }

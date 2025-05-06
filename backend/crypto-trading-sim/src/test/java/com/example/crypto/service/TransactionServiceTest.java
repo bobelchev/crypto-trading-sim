@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import static org.mockito.Mockito.*;
 
 public class TransactionServiceTest {
-    UserRepository mockUserRepository;
+    UserService mockUserService;
     TransactionRepository mockTxRepository;
     CryptoHoldingService mockHoldingService;
     TransactionService transactionService;
@@ -22,12 +22,13 @@ public class TransactionServiceTest {
     public static final long USERID = 1L;
     @BeforeEach
     void setUp(){
-        mockUserRepository = mock(UserRepository.class);
+
+        mockUserService = mock(UserService.class);
         mockTxRepository = mock(TransactionRepository.class);
         mockHoldingService = mock(CryptoHoldingService.class);
 
         transactionService = new TransactionService();
-        transactionService.userRepository = mockUserRepository;
+        transactionService.userService = mockUserService;
         transactionService.transactionRepository = mockTxRepository;
         transactionService.cryptoHoldingService = mockHoldingService;
     }
@@ -39,9 +40,9 @@ public class TransactionServiceTest {
         TransactionType type = TransactionType.BUY;
         BigDecimal cost = quantity.multiply(price);
         //added this one because did not anticipate to be needed before
-        when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        when(mockUserService.getBalance(USERID)).thenReturn(DEFAULT_BALANCE);
         transactionService.makeTx(USERID,cryptoTicker,quantity,price,type);
-        verify(mockUserRepository,times(1)).updateBalance(USERID,DEFAULT_BALANCE.subtract(cost));
+        verify(mockUserService,times(1)).updateBalance(USERID,DEFAULT_BALANCE.subtract(cost));
         verify(mockHoldingService,times(1)).handleHolding(USERID,cryptoTicker,quantity, type);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
         //verify(mockTxRepository,times(1)).insertTx(new Transaction(USERID,cryptoTicker, quantity, price, LocalDateTime.now(), type));
@@ -55,9 +56,9 @@ public class TransactionServiceTest {
         BigDecimal cost = quantity.multiply(price);
 
         //added this one because did not anticipate to be needed before
-        when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        when(mockUserService.getBalance(USERID)).thenReturn(DEFAULT_BALANCE);
         transactionService.makeTx(USERID,cryptoTicker,quantity,price,type);
-        verify(mockUserRepository,times(1)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
+        verify(mockUserService,times(1)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
         verify(mockHoldingService,times(1)).handleHolding(USERID,cryptoTicker,quantity,type);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
         //verify(mockTxRepository,times(1)).insertTx(new Transaction(USERID,cryptoTicker, quantity, price, LocalDateTime.now(), type));
