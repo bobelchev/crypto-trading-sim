@@ -32,6 +32,16 @@ public class CryptoHoldingRepository {
         String sql = "SELECT * FROM holdings WHERE id=?";
         return jdbcTemplate.queryForObject(sql,new Object[]{holdingId},new CryptoHoldingMapper());
     }
+    /**
+     * Returns a single holding according to user_id and ticker from DB
+     * @param userId
+     * @param cryptoTicker
+     * @return A single holding according to user_id and ticker
+     */
+    public CryptoHolding getSingleHoldingByTickerAndUserId(long userId, String cryptoTicker){
+        String sql = "SELECT * FROM holdings WHERE user_id=? AND crypto_ticker=?";
+        return jdbcTemplate.queryForObject(sql,new Object[]{userId,cryptoTicker},new CryptoHoldingMapper());
+    }
 
     /**
      * Inserts a new holding into the DB
