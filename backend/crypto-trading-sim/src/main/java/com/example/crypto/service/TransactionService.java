@@ -42,7 +42,7 @@ public class TransactionService {
         BigDecimal cost = price.multiply(quantity);
         BigDecimal availableBalance = userRepository.getBalanceOfUser(userId);
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(userId,cryptoTicker);
-
+        // TODO define custom exception
         if(cost.compareTo(availableBalance)>0){
             throw new IllegalStateException("Insufficient balance to complete the purchase.");
         } else if (type == TransactionType.SELL && quantity.compareTo(currentTickerQuantity) > 0) {

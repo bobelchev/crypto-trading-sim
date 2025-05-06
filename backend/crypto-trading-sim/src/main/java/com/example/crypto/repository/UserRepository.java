@@ -24,7 +24,6 @@ public class UserRepository {
 
     /**
      * Updates the balance of the given user in the DB
-     * TODO:implement defensive programming for negative balance
      * @param userId
      * @param newBalance
      */
@@ -38,7 +37,6 @@ public class UserRepository {
 
     /**
      * Resets the balance of a user to the default
-     * TODO: rethink at a late point
      * @param userId
      */
     public void resetBalance(long userId){
