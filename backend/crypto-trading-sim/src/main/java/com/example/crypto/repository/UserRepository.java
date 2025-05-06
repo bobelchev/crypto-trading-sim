@@ -42,7 +42,7 @@ public class UserRepository {
      * @param userId
      */
     public void resetBalance(long userId){
-        String sql = "UPDATE user SET balance = ? WHERE id = ?";
+        String sql = "UPDATE users SET balance = ? WHERE id = ?";
         jdbcTemplate.update(sql,DEFAULT_BALANCE,userId);
     }
 }
