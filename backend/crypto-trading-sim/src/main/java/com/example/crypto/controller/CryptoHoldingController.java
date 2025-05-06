@@ -20,6 +20,6 @@ public class CryptoHoldingController {
 
     @GetMapping
     public List<CryptoHolding> getUserHoldings(@RequestParam long userId) {
-        return Collections.emptyList();
+        return holdingService.getHoldingsOfUser(userId);
     }
 }

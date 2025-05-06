@@ -22,7 +22,7 @@ public class UserController {
      */
     @GetMapping("/balance")
     public BigDecimal getUserBalance(@RequestParam long userId) {
-        return new BigDecimal("10000.000000");
+        return userService.getBalance(userId);
     }
 
     /**
@@ -32,6 +32,6 @@ public class UserController {
      */
     @PostMapping("/reset")
     public void resetUserAccount(@RequestParam long userId) {
-
+        userService.resetAccount(userId);
     }
 }
