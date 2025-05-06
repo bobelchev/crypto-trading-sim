@@ -44,7 +44,9 @@ public class TransactionServiceIntegrationTest {
             (1, 'ETH', 1.235670);
             """);
     }
-
+    /**
+     * Test legal buy: when buyCost <= currentBalance
+     */
     @Test
     public void testLegalBuy(){
         BigDecimal quantity = new BigDecimal("1.100000");
@@ -70,6 +72,9 @@ public class TransactionServiceIntegrationTest {
         assertEquals(calcNewQuantity, newHoldingQuantity);
     }
 
+    /**
+     * Test illegal buy: when buyCost > currentBalance
+     */
     @Test
     public void testIllegalBuy(){
         BigDecimal quantity = new BigDecimal("1.100000");
@@ -102,19 +107,65 @@ public class TransactionServiceIntegrationTest {
         //quantity of the BTC holding should not be changed
         assertEquals(new BigDecimal("0.075423"),sameQuantity);
     }
+
     /**
-     * TODO: test legal sell case
+     * Test legal sell: when sellQuantity <= currentQuantity
      */
     @Test
     public void testLegalSell(){
+        BigDecimal quantity = new BigDecimal("0.030000");
+        BigDecimal price = new BigDecimal("1500.000000");
+        BigDecimal cost = price.multiply(quantity);
+        String ticker = "BTC";
+        String sql = "SELECT balance FROM users WHERE id = ?";
+        BigDecimal initialBalance = jdbcTemplate.queryForObject(
+                sql, BigDecimal.class, USERID);
+        assertEquals(DEFAULT_BALANCE, initialBalance);
 
+        transactionService.makeTx(USERID, ticker, quantity, price, TransactionType.SELL);
+        BigDecimal newBalance = jdbcTemplate.queryForObject(
+                sql, BigDecimal.class, USERID);
+        assertEquals(DEFAULT_BALANCE.add(cost).setScale(6),newBalance);
+
+        //check if the holding is updated properly
+        sql = "SELECT quantity FROM holdings WHERE user_id = ? AND crypto_ticker = ?";
+        BigDecimal newHoldingQuantity = jdbcTemplate.queryForObject(
+                sql, BigDecimal.class, USERID, ticker);
+        BigDecimal calcNewQuantity = new BigDecimal("0.075423").subtract(quantity);
+        assertEquals(calcNewQuantity, newHoldingQuantity);
     }
+
     /**
-     * TODO: test illegal sell case
+     * Test illegal sell: when sellQuantity > holdingQuantity
      */
     @Test
     public void testIllegalSell(){
+        BigDecimal quantity = new BigDecimal("1.000000");
+        BigDecimal price = new BigDecimal("1500.000000");
+        BigDecimal cost = price.multiply(quantity);
+        String ticker = "BTC";
+        String sql = "SELECT balance FROM users WHERE id = ?";
+        BigDecimal initialBalance = jdbcTemplate.queryForObject(
+                sql, BigDecimal.class, USERID);
+        assertEquals(DEFAULT_BALANCE, initialBalance);
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            transactionService.makeTx(USERID, ticker, quantity, price, TransactionType.SELL);
+        });
+        String expectedMessage = "Insufficient holdings to complete the sale.";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
 
+        //check that nothing changed
+        sql = "SELECT balance FROM users WHERE id = ?";
+        BigDecimal balance = jdbcTemplate.queryForObject(
+                sql, BigDecimal.class, USERID);
+        assertEquals(DEFAULT_BALANCE, balance);
+
+        sql = "SELECT quantity FROM holdings WHERE user_id = ? AND crypto_ticker = ?";
+        BigDecimal sameQuantity = jdbcTemplate.queryForObject(
+                sql, BigDecimal.class, USERID, ticker);
+        //quantity of the BTC holding should not be changed
+        assertEquals(new BigDecimal("0.075423"),sameQuantity);
     }
 
 }

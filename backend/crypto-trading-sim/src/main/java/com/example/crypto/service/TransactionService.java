@@ -41,8 +41,12 @@ public class TransactionService {
         //update the balance
         BigDecimal cost = price.multiply(quantity);
         BigDecimal availableBalance = userRepository.getBalanceOfUser(userId);
+        BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(userId,cryptoTicker);
+
         if(cost.compareTo(availableBalance)>0){
             throw new IllegalStateException("Insufficient balance to complete the purchase.");
+        } else if (type == TransactionType.SELL && quantity.compareTo(currentTickerQuantity) > 0) {
+            throw new IllegalStateException("Insufficient holdings to complete the sale.");
         }
         BigDecimal newBalance = (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
         userRepository.updateBalance(userId,newBalance);

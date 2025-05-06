@@ -37,4 +37,7 @@ public class CryptoHoldingService {
     public void deleteAllHoldingsOfUser(long userId){
         cryptoHoldingRepository.deleteHoldings(userId);
     }
+    public BigDecimal getTickerQuantity(long userId, String cryptoTicker){
+        return cryptoHoldingRepository.getSingleHoldingByTickerAndUserId(userId,cryptoTicker).getQuantity();
+    }
 }
