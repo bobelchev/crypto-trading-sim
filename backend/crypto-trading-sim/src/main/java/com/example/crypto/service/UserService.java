@@ -19,7 +19,7 @@ public class UserService {
     @Autowired
     TransactionRepository transactionRepository;
     @Autowired
-    CryptoHoldingRepository cryptoHoldingRepository;
+    CryptoHoldingService cryptoHoldingService;
 
     /**
      * Resets the balance to default and deletes associated
@@ -29,7 +29,7 @@ public class UserService {
     public void resetAccount(long userId){
         userRepository.resetBalance(userId);
         transactionRepository.deleteAllTxs(userId);
-        cryptoHoldingRepository.deleteHoldings(userId);
+        cryptoHoldingService.deleteAllHoldingsOfUser(userId);
     }
 
     /**

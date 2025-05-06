@@ -17,7 +17,7 @@ public class UserServiceTest {
 
     UserRepository mockUserRepository;
     TransactionRepository mockTxRepository;
-    CryptoHoldingRepository mockHoldingRepository;
+    CryptoHoldingService mockHoldingService;
     UserService userService;
 
     public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
@@ -26,12 +26,12 @@ public class UserServiceTest {
     void setUp(){
         mockUserRepository = mock(UserRepository.class);
         mockTxRepository = mock(TransactionRepository.class);
-        mockHoldingRepository = mock(CryptoHoldingRepository.class);
+        mockHoldingService = mock(CryptoHoldingService.class);
 
         userService = new UserService();
         userService.userRepository = mockUserRepository;
         userService.transactionRepository = mockTxRepository;
-        userService.cryptoHoldingRepository = mockHoldingRepository;
+        userService.cryptoHoldingService = mockHoldingService;
     }
 
     @Test
@@ -46,7 +46,7 @@ public class UserServiceTest {
         userService.resetAccount(USERID);
         verify(mockUserRepository, times(1)).resetBalance(USERID);
         verify(mockTxRepository,times(1)).deleteAllTxs(USERID);
-        verify(mockHoldingRepository,times(1)).deleteHoldings(USERID);
+        verify(mockHoldingService,times(1)).deleteAllHoldingsOfUser(USERID);
     }
 
 }

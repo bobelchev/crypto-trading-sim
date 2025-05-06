@@ -34,4 +34,7 @@ public class CryptoHoldingService {
         }
 
     }
+    public void deleteAllHoldingsOfUser(long userId){
+        cryptoHoldingRepository.deleteHoldings(userId);
+    }
 }
