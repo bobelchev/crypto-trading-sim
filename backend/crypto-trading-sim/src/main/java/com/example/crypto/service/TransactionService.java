@@ -41,6 +41,7 @@ public class TransactionService {
         //update the balance
         BigDecimal cost = price.multiply(quantity);
         BigDecimal availableBalance = userRepository.getBalanceOfUser(userId);
+        // TODO there is issue on the line below - fix (delegate to
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(userId,cryptoTicker);
         // TODO define custom exception
         if(cost.compareTo(availableBalance)>0){
