@@ -4,6 +4,10 @@ import com.example.crypto.repository.TransactionRepository;
 import com.example.crypto.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
 
@@ -12,7 +16,7 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest {
 
     UserRepository mockUserRepository;
-    TransactionService mockTxService;
+    TransactionRepository mockTxRepository;
     CryptoHoldingRepository mockHoldingRepository;
     UserService userService;
 
@@ -21,12 +25,12 @@ public class UserServiceTest {
     @BeforeEach
     void setUp(){
         mockUserRepository = mock(UserRepository.class);
-        mockTxService = mock(TransactionService.class);
+        mockTxRepository = mock(TransactionRepository.class);
         mockHoldingRepository = mock(CryptoHoldingRepository.class);
 
         userService = new UserService();
         userService.userRepository = mockUserRepository;
-        userService.transactionService = mockTxService;
+        userService.transactionRepository = mockTxRepository;
         userService.cryptoHoldingRepository = mockHoldingRepository;
     }
 
@@ -41,7 +45,7 @@ public class UserServiceTest {
     public void testReset(){
         userService.resetAccount(USERID);
         verify(mockUserRepository, times(1)).resetBalance(USERID);
-        verify(mockTxService,times(1)).deleteAllTxsOfUser(USERID);
+        verify(mockTxRepository,times(1)).deleteAllTxs(USERID);
         verify(mockHoldingRepository,times(1)).deleteHoldings(USERID);
     }
 

@@ -61,7 +61,4 @@ public class TransactionService {
                 )
         );
    }
-   public void deleteAllTxsOfUser(long userId){
-        transactionRepository.deleteAllTxs(userId);
-   }
 }

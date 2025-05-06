@@ -19,8 +19,6 @@ public class UserService {
     @Autowired
     TransactionRepository transactionRepository;
     @Autowired
-    TransactionService transactionService;
-    @Autowired
     CryptoHoldingRepository cryptoHoldingRepository;
 
     /**
@@ -30,7 +28,7 @@ public class UserService {
      */
     public void resetAccount(long userId){
         userRepository.resetBalance(userId);
-        transactionService.deleteAllTxsOfUser(userId);
+        transactionRepository.deleteAllTxs(userId);
         cryptoHoldingRepository.deleteHoldings(userId);
     }
 
