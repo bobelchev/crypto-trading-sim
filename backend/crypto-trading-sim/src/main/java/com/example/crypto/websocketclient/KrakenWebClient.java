@@ -3,7 +3,8 @@ package com.example.crypto.websocketclient;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -70,6 +71,24 @@ public class KrakenWebClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         System.out.println("received message: " + message);
+        //{"channel":"ticker","type":"snapshot","data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]}
+        JSONObject json = new JSONObject(message);
+        System.out.println(json.toString(2));
+
+        if(json.get("channel").toString().equals("ticker")) {
+            //"data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]
+            JSONArray data = json.getJSONArray("data");
+            System.out.println(data.toString(2));
+            //{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}
+            JSONObject firstEntry = data.getJSONObject(0);
+            String symbol = firstEntry.getString("symbol");
+            double last = firstEntry.getDouble("last");
+            System.out.println("Symbol: " + symbol);
+            System.out.println("Last: " + last);
+        }
+
+
+
 
     }
 
