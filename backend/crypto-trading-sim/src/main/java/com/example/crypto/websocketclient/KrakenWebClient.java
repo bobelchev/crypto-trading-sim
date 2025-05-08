@@ -100,6 +100,9 @@ public class KrakenWebClient extends WebSocketClient {
     public void onMessage(ByteBuffer message) {
         System.out.println("received ByteBuffer");
     }
+    public Map<String, Double> getMarketData(){
+        return marketData;
+    }
 
     @Override
     public void onError(Exception ex) {
