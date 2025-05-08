@@ -1,29 +1,23 @@
 import Table from 'react-bootstrap/Table';
 
-function Holdings() {
-
-  return(
-      <>
-      <h4 className="mb-3">Your holdings</h4>
-      <Table responsive>
+function MarketData() {
+  return <Table responsive>
       <thead>
            <tr>
              <th>Crypto</th>
-             <th>Quantity</th>
+             <th>Price</th>
            </tr>
            </thead>
            <tbody>
            <tr>
              <td>BTC</td>
-             <td>100.00</td>
+             <td>94000.0</td>
            </tr>
            <tr>
              <td>ETH</td>
-             <td>30.12</td>
+             <td>1890.0</td>
            </tr>
            </tbody>
          </Table>;
-         </>
-         );
 }
-export default Holdings;
+export default MarketData;

@@ -1,9 +1,11 @@
 import Card from 'react-bootstrap/Card';
 
 function UserInfo() {
-  return (<Card className="p-3 mb-3">
-            <Card.Text className="mb-1"><strong>User ID:</strong> user123</Card.Text>
-            <Card.Text className="mb-0"><strong>Balance:</strong> $1500.50</Card.Text>
+  return (<Card className="px-0 py-0">
+      <div className="d-flex flex-wrap justify-content-center">
+            <Card.Text className="px-0 py-0"><strong>User ID:</strong> user123</Card.Text>
+            <Card.Text className="px-0 py-0"><strong>Balance:</strong> $1500.50</Card.Text>
+      </div>
            </Card>);
 }
 export default UserInfo;
