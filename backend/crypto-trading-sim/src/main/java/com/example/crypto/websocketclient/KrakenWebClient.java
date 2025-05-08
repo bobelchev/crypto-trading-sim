@@ -5,6 +5,7 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +20,6 @@ import java.util.Map;
  * Licensed under the MIT License.
  * https://github.com/TooTallNate/Java-WebSocket/blob/master/LICENSE
  */
-
 public class KrakenWebClient extends WebSocketClient {
     private static final String[] TOP_X_CRYPTO = {
             "BTC/USD", "ETH/USD", "USDT/USD", "BNB/USD", "SOL/USD",
@@ -75,7 +75,7 @@ public class KrakenWebClient extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        //System.out.println("received message: " + message);
+        System.out.println("received message: " + message);
         //{"channel":"ticker","type":"snapshot","data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]}
         JSONObject json = new JSONObject(message);
         //System.out.println(json.toString(2));
@@ -106,8 +106,4 @@ public class KrakenWebClient extends WebSocketClient {
         System.err.println("an error occurred:" + ex);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        WebSocketClient client = new KrakenWebClient(new URI("wss://ws.kraken.com/v2"));
-        client.connect();
-    }
 }
