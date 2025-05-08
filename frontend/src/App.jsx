@@ -21,19 +21,17 @@ function App() {
   return (
           <Container fluid className="mt-4">
             <Row>
-              <Col className="px-0 py-0">
+              <Col>
                 <UserInfo />
+                <Transactions />
               </Col>
-              <Col className="px-0 py-0">
+              <Col >
                 <Holdings />
               </Col>
             </Row>
           <Row>
-              <Col className="px-0 py-0">
+              <Col >
                   <MarketData />
-              </Col>
-              <Col className="px-0 py-0">
-                  <Transactions />
               </Col>
           </Row>
           </Container>

@@ -15,7 +15,7 @@ function Holdings() {
   return(
       <>
       <h4 className="mb-3">Your holdings</h4>
-      <Table responsive>
+      <Table striped bordered hover responsive="md"  className="rounded shadow-sm">
       <thead>
            <tr>
              <th>Crypto</th>

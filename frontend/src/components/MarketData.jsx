@@ -17,7 +17,7 @@ function MarketData() {
 
   return <>
         <h4 className="mb-3">Market Data</h4>
-  <Table responsive>
+  <Table striped bordered hover responsive="md"  className="rounded shadow-sm">
       <thead>
            <tr>
              <th>Crypto</th>
@@ -36,7 +36,7 @@ function MarketData() {
                            </tr>
                          ))}
            </tbody>
-         </Table>;
+         </Table>
          </>
 }
 export default MarketData;
