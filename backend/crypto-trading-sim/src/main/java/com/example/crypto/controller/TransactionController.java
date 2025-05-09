@@ -6,12 +6,10 @@ import com.example.crypto.service.TransactionService;
 import com.example.crypto.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * REST controller to handle transactions made by the user
@@ -21,6 +19,16 @@ import java.time.LocalDateTime;
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
+    /**
+     * Endpoint for getting all the txs of a user
+     * @param userId
+     * @return
+     */
+    @GetMapping
+    @CrossOrigin(origins = {"http://localhost:5173","http://localhost:5174","http://localhost:3000"})
+    public List<Transaction> getTransactions(@RequestParam long userId){
+        return transactionService.getAllTransactions(userId);
+    }
 
     /**
      * Endpoint for submitting a transaction
@@ -28,6 +36,7 @@ public class TransactionController {
      * @return
      */
     @PostMapping
+    @CrossOrigin(origins = {"http://localhost:5173","http://localhost:5174","http://localhost:3000"})
     public ResponseEntity<String> makeTransaction(@RequestBody TransactionDTO transactionRequest){
         transactionService.makeTx(
                 transactionRequest.getUserId(),

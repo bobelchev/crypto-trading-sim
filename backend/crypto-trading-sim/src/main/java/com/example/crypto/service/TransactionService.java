@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Service class that handles the logic of transactions made by the user.
@@ -21,6 +22,10 @@ public class TransactionService {
     UserRepository userRepository;
     @Autowired
     CryptoHoldingService cryptoHoldingService;
+
+    public List<Transaction> getAllTransactions(long userId){
+        return transactionRepository.getAllTxForUser(userId);
+    }
 
     /**
      * Handles the business logic of a buy transaction.
