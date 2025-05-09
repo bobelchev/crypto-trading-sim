@@ -37,7 +37,7 @@ function SellModal({ show, onCancel, onSell, holding, lockedPrice }) {
           variant="danger"
           onClick={() => onSell(quantity, holding, lockedPrice)}
         >
-          Buy
+          Sell
         </Button>
         <Button variant="secondary" onClick={onCancel}>
           Cancel
