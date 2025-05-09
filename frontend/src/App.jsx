@@ -16,8 +16,15 @@ import Row from "react-bootstrap/Row";
 
 
 function App() {
-  const [count, setCount] = useState(0)
-
+    const marketPrices = [
+        {symbol: "BTC/USD", price: 94000.0 },
+        {symbol: "ETH/USD", price: 1800.0 },
+        {symbol: "DOGE/USD", price: 1.0 },
+        {symbol: "XRP/USD", price: 2.0 },
+        {symbol: "BNB/USD", price: 600.0 },
+        {symbol: "TRON/USD", price: 13.0 },
+        {symbol: "USDT/USD", price: 1.005 }
+      ];
   return (
           <Container fluid className="mt-4">
             <Row>
@@ -26,12 +33,12 @@ function App() {
                 <Transactions />
               </Col>
               <Col >
-                <Holdings />
+                <Holdings prices={marketPrices} />
               </Col>
             </Row>
           <Row>
               <Col >
-                  <MarketData />
+                  <MarketData rows={marketPrices} />
               </Col>
           </Row>
           </Container>

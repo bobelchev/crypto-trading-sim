@@ -2,18 +2,10 @@ import Table from 'react-bootstrap/Table';
 import Button from "react-bootstrap/Button";
 
 
-function MarketData() {
+function MarketData({ rows }) {
     // Sample data
     //example from https://www.geeksforgeeks.org/how-to-add-vertical-scrollbar-to-react-bootstrap-table-body/
-      const rows = [
-        {symbol: "BTC/USD", price: 94000.0 },
-        {symbol: "ETH/USD", price: 1800.0 },
-        {symbol: "DOGE/USD", price: 1.0 },
-        {symbol: "XRP/USD", price: 2.0 },
-        {symbol: "BNB/USD", price: 600.0 },
-        {symbol: "TRON/USD", price: 13.0 },
-        {symbol: "USDT/USD", price: 1.005 }
-      ];
+
 
   return <>
         <h4 className="mb-3">Market Data</h4>

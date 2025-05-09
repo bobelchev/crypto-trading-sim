@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * REST controller to handle transactions made by the user
@@ -18,6 +19,16 @@ import java.time.LocalDateTime;
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
+    /**
+     * Endpoint for getting all the txs of a user
+     * @param userId
+     * @return
+     */
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:5173")
+    public List<Transaction> getTransactions(@RequestParam long userId){
+        return transactionService.getAllTransactions(userId);
+    }
 
     /**
      * Endpoint for submitting a transaction

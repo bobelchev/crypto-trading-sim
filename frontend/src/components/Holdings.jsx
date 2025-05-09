@@ -1,20 +1,13 @@
 import Table from 'react-bootstrap/Table';
 import Button from "react-bootstrap/Button";
 import { useState, useEffect } from 'react';
+import SellModal from './child_components/SellModal';
 
 
-function Holdings() {
-     const rows = [
-            {symbol: "BTC/USD", quantity: 0.5433 },
-            {symbol: "ETH/USD", quantity: 2.1 },
-            {symbol: "DOGE/USD", quantity: 1.0 },
-            {symbol: "XRP/USD", quantity: 2.0 },
-            {symbol: "BNB/USD", quantity: 600.0 },
-            {symbol: "TRON/USD", quantity: 13.0 },
-            {symbol: "USDT/USD", quantity: 1.005 }
-          ];
-
+function Holdings({prices}) {
      const [holdings, setHoldings] = useState([]);
+     const [show, setShow] = useState(false);
+
 
        useEffect(() => {
          fetch('http://localhost:8080/holdings?userId=1')
@@ -27,6 +20,12 @@ function Holdings() {
              console.error(err.message);
            });
        }, []);
+   const openModal  = () => {
+       setShow(true);
+   }
+    const handleClose = () => {
+       setShow(false);
+       }
 
   return(
       <>
@@ -44,14 +43,17 @@ function Holdings() {
                <tr key={holding.cryptoTicker}>
                    <td>{holding.cryptoTicker}</td>
                    <td>{holding.quantity}</td>
-                   <td><Button variant="outline-danger">
+                   <td><Button variant="outline-danger" onClick={openModal}>
                         Sell
                     </Button> </td>
                </tr>
              ))}
            </tbody>
          </Table>;
+
+         <SellModal show={show} onHide={handleClose} holding="Btc"/>
          </>
-         );
+
+    );
 }
 export default Holdings;
