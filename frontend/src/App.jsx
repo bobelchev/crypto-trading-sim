@@ -21,7 +21,7 @@ function App() {
       .then((data) => {
         console.log(data);
         setUser({
-          userId: "user 1",
+          userId: 1,
           balance: data,
         });
       })

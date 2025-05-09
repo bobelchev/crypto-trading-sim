@@ -24,12 +24,44 @@ function MarketData({ rows, user }) {
     setShow(false);
     setPrice(0.0);
   };
-  const handleBuy = (quantityToBuy, crypto, lockedPrice) => {
+  const handleBuy = async(quantityToBuy, crypto, lockedPrice,balance) => {
     const pair = crypto;
     const baseCurrency = pair.split("/")[0];
     console.log(quantityToBuy);
     console.log(baseCurrency);
     console.log(lockedPrice);
+    if (quantityToBuy*lockedPrice > balance) {
+          alert("Cannot buy more than your available balance!");
+        } else {
+          const postBody = {
+            userId: user.userId,
+            cryptoTicker: baseCurrency,
+            quantity: quantityToBuy,
+            price: lockedPrice,
+            type: "BUY",
+          };
+          try {
+            const response = await fetch("http://localhost:8080/transactions", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(postBody),
+            });
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            const jsonResponse = await response.text();
+            alert(`Transaction successful: ${jsonResponse}`);
+            console.log("POST request successful:", jsonResponse);
+            console.log(quantityToBuy);
+            //for now like that
+            window.location.reload();
+          } catch (error) {
+            alert(`Transaction failed: ${error.message}`);
+            console.error("POST request failed:", error);
+          }
+        }
     setShow(false);
     setPrice(0.0);
   };
