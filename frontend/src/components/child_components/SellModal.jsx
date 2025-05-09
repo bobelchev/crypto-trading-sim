@@ -3,10 +3,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
-function SellModal({ show, onCancel, onSell, holding }) {
-    const [quantity, setQuantity] = useState(0.0);
-
-
+function SellModal({ show, onCancel, onSell, holding, lockedPrice }) {
+    const [quantity, setQuantity] = useState('');
 
   return (
     <Modal show={show} onHide={onCancel}>
@@ -28,11 +26,12 @@ function SellModal({ show, onCancel, onSell, holding }) {
             <Form.Text className="text-muted">
               Maximum amount: {holding?.quantity}
             </Form.Text>
+            <p>Total: ${lockedPrice* parseFloat(quantity)}</p>
           </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={() => onSell(quantity, holding.quantity)}>
+        <Button variant="danger" onClick={() => onSell(quantity, holding, lockedPrice)}>
           Sell
         </Button>
         <Button variant="secondary" onClick={onCancel}>
