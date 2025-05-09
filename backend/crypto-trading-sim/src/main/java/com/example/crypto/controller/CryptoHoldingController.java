@@ -16,7 +16,7 @@ public class CryptoHoldingController {
     private CryptoHoldingService holdingService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = "http://localhost:5174")
     public List<CryptoHolding> getUserHoldings(@RequestParam long userId) {
         return holdingService.getHoldingsOfUser(userId);
     }

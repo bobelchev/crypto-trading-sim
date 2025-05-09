@@ -21,7 +21,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/balance")
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = "http://localhost:5174")
     public BigDecimal getUserBalance(@RequestParam long userId) {
         return userService.getBalance(userId);
     }
@@ -32,7 +32,7 @@ public class UserController {
      * @param userId
      */
     @PostMapping("/reset")
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = "http://localhost:5174")
     public void resetUserAccount(@RequestParam long userId) {
         userService.resetAccount(userId);
     }

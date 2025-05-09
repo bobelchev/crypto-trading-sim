@@ -6,9 +6,10 @@ import SellModal from './child_components/SellModal';
 
 function Holdings({prices}) {
      const [holdings, setHoldings] = useState([]);
+     //state to open close the model
      const [show, setShow] = useState(false);
-
-
+     //state to set the holding to be sold
+     const [holding, setHolding] = useState(null);
        useEffect(() => {
          fetch('http://localhost:8080/holdings?userId=1')
            .then((response) => response.json())
@@ -20,13 +21,25 @@ function Holdings({prices}) {
              console.error(err.message);
            });
        }, []);
-   const openModal  = () => {
+   const openModal  = (holding) => {
+       setHolding(holding)
        setShow(true);
    }
-    const handleClose = () => {
+    const handleCancel = () => {
        setShow(false);
-       }
-
+       setHolding(null);
+    }
+    const handleSell = (quantityToSell, availableQuantity) => {
+        setShow(false);
+        setHolding(null);
+        if(quantityToSell>availableQuantity){
+            alert("Cannot sell more than your available coins!");
+        } else{
+        console.log(quantityToSell);
+        //for now like that
+        window.location.reload();
+        }
+    }
   return(
       <>
       <h4 className="mb-3">Your holdings</h4>
@@ -43,15 +56,14 @@ function Holdings({prices}) {
                <tr key={holding.cryptoTicker}>
                    <td>{holding.cryptoTicker}</td>
                    <td>{holding.quantity}</td>
-                   <td><Button variant="outline-danger" onClick={openModal}>
+                   <td><Button variant="outline-danger" onClick={() => openModal(holding)}>
                         Sell
                     </Button> </td>
                </tr>
              ))}
            </tbody>
          </Table>;
-
-         <SellModal show={show} onHide={handleClose} holding="Btc"/>
+         <SellModal show={show} onCancel={handleCancel} onSell={handleSell} holding={holding}/>
          </>
 
     );
