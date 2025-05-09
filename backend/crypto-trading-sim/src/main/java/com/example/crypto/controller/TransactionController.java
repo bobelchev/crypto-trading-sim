@@ -25,7 +25,7 @@ public class TransactionController {
      * @return
      */
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = {"http://localhost:5173","http://localhost:5174","http://localhost:3000"})
     public List<Transaction> getTransactions(@RequestParam long userId){
         return transactionService.getAllTransactions(userId);
     }
@@ -36,7 +36,7 @@ public class TransactionController {
      * @return
      */
     @PostMapping
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = {"http://localhost:5173","http://localhost:5174","http://localhost:3000"})
     public ResponseEntity<String> makeTransaction(@RequestBody TransactionDTO transactionRequest){
         transactionService.makeTx(
                 transactionRequest.getUserId(),

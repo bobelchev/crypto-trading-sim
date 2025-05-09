@@ -13,8 +13,7 @@ function BuyModal({ show, onCancel, onBuy, row, lockedPrice, user }) {
       </Modal.Header>
 
       <Modal.Body>
-        Select the quantity of {row?.symbol} you want to buy. You have in total
-        balance.
+        Select the quantity of {row?.symbol} you want to buy. You have ${user.balance}.
         <Form>
           <Form.Group className="mb-3" controlId="setQuantity">
             <Form.Label>Quantity:</Form.Label>
