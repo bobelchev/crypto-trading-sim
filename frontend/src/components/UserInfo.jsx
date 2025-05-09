@@ -34,7 +34,7 @@ function UserInfo() {
           <strong>User ID:</strong> {user.userId}
         </Card.Text>
         <Card.Text >
-          <strong>Balance:</strong> $${Number(user.balance).toLocaleString()}
+          <strong>Balance:</strong> ${Number(user.balance).toLocaleString()}
         </Card.Text>
         <Button variant="outline-primary" onClick={handleReset}>
             Reset

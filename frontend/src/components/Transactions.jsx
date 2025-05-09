@@ -9,6 +9,7 @@ function Transactions() {
                .then((response) => response.json())
                .then((data) => {
                  console.log(data);
+                 data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                  setTransactions(data);
                })
                .catch((err) => {
@@ -18,6 +19,7 @@ function Transactions() {
   return (
       <>
       <h4 className="mb-3">Transaction history</h4>
+       <div style={{ overflowY: 'scroll', height: '550px'}}>
     {transactions.map((transaction) => (
     <Card border={transaction.transactionType === 'BUY' ? 'success' : 'danger'} className="mb-3 shadow-sm w-100">
       <Card.Body>
@@ -25,11 +27,12 @@ function Transactions() {
             <div className="d-flex flex-wrap justify-content-between">
                 <div><strong>Quantity:</strong> {transaction.quantity}</div>
                 <div><strong>Total Price:</strong> {transaction.price}</div>
-                 <div><strong>Date:</strong> {transaction.timestamp}</div>
+                 <div><strong>Date:</strong> {new Date(transaction.timestamp).toLocaleString()}</div>
           </div>
       </Card.Body>
     </Card>
     ))}
+    </div>
     </>
   );
 }

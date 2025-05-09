@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
-function SellModal({ show, onCancel, onSell, holding, lockedPrice }) {
+function BuyModal({show, onCancel, onSell, row, lockedPrice}) {
     const [quantity, setQuantity] = useState('');
 
   return (
@@ -13,7 +13,7 @@ function SellModal({ show, onCancel, onSell, holding, lockedPrice }) {
       </Modal.Header>
 
       <Modal.Body>
-        Select the quantity of {holding?.cryptoTicker} you want to sell. You have in total {holding?.quantity}.
+        Select the quantity of {row?.cryptoTicker} you want to buy. You have in total balance.
         <Form>
           <Form.Group className="mb-3" controlId="setQuantity">
             <Form.Label>Quantity:</Form.Label>
@@ -24,15 +24,15 @@ function SellModal({ show, onCancel, onSell, holding, lockedPrice }) {
                           onChange={(e) => setQuantity(e.target.value)}
             />
             <Form.Text className="text-muted">
-              Maximum amount: {holding?.quantity}
+              Maximum amount according to balance:
             </Form.Text>
             <p>Total: ${lockedPrice* parseFloat(quantity)}</p>
           </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={() => onSell(quantity, holding, lockedPrice)}>
-          Buy
+        <Button variant="success" onClick={() => onBuy()}>
+          Sell
         </Button>
         <Button variant="secondary" onClick={onCancel}>
           Cancel
@@ -42,4 +42,4 @@ function SellModal({ show, onCancel, onSell, holding, lockedPrice }) {
   );
 }
 
-export default SellModal;
+export default BuyModal;

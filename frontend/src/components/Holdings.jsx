@@ -61,7 +61,7 @@ function Holdings({prices}) {
           }
 
           const jsonResponse = await response.text();
-          alert("Transaction successful:",jsonResponse);
+          alert(`Transaction successful: ${jsonResponse}`);
           console.log('POST request successful:', jsonResponse);
           console.log(quantityToSell);
           //for now like that
@@ -76,6 +76,7 @@ function Holdings({prices}) {
   return(
       <>
       <h4 className="mb-3">Your holdings</h4>
+       <div style={{ overflowY: 'scroll', height: '200px'}}>
       <Table striped bordered hover responsive="md"  className="rounded shadow-sm">
       <thead>
            <tr>
@@ -96,7 +97,9 @@ function Holdings({prices}) {
              ))}
            </tbody>
          </Table>
-         <SellModal show={show} onCancel={handleCancel} onSell={handleSell} holding={holding} lockedPrice={lockedPrice}/>
+         </div>
+        <SellModal show={show} onCancel={handleCancel} onSell={handleSell} holding={holding} lockedPrice={lockedPrice}/>
+
          </>
 
     );

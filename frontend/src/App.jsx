@@ -17,14 +17,27 @@ import Row from "react-bootstrap/Row";
 
 function App() {
     const marketPrices = [
-        {symbol: "BTC/USD", price: 94000.0 },
-        {symbol: "ETH/USD", price: 1800.0 },
-        {symbol: "DOGE/USD", price: 1.0 },
-        {symbol: "XRP/USD", price: 2.0 },
-        {symbol: "BNB/USD", price: 600.0 },
-        {symbol: "TRON/USD", price: 13.0 },
-        {symbol: "USDT/USD", price: 1.005 }
-      ];
+      { symbol: "BTC/USD", price: 103234.48 },
+      { symbol: "ETH/USD", price: 2333.61 },
+      { symbol: "USDT/USD", price: 1.00 },
+      { symbol: "XRP/USD", price: 2.35 },
+      { symbol: "BNB/USD", price: 638.14 },
+      { symbol: "SOL/USD", price: 172.23 },
+      { symbol: "USDC/USD", price: 1.00 },
+      { symbol: "DOGE/USD", price: 0.2047 },
+      { symbol: "ADA/USD", price: 0.7807 },
+      { symbol: "TRX/USD", price: 0.2611 },
+      { symbol: "SUI/USD", price: 3.90 },
+      { symbol: "LINK/USD", price: 16.02 },
+      { symbol: "AVAX/USD", price: 23.05 },
+      { symbol: "XLM/USD", price: 0.2932 },
+      { symbol: "WBTC/USD", price: 103120.80 },
+      { symbol: "DOT/USD", price: 6.50 },
+      { symbol: "SHIB/USD", price: 0.000015 },
+      { symbol: "LTC/USD", price: 99.51 },
+      { symbol: "UNI/USD", price: 6.31 },
+      { symbol: "BCH/USD", price: 408.72 }
+    ];
   return (
           <Container fluid className="mt-4">
             <Row>
@@ -34,13 +47,11 @@ function App() {
               </Col>
               <Col >
                 <Holdings prices={marketPrices} />
+
+                 <MarketData rows={marketPrices} />
+
               </Col>
             </Row>
-          <Row>
-              <Col >
-                  <MarketData rows={marketPrices} />
-              </Col>
-          </Row>
           </Container>
         );
 
