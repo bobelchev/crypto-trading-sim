@@ -1,5 +1,7 @@
 import Table from 'react-bootstrap/Table';
 import Button from "react-bootstrap/Button";
+import { useState, useEffect } from 'react';
+
 
 function Holdings() {
      const rows = [
@@ -11,6 +13,20 @@ function Holdings() {
             {symbol: "TRON/USD", quantity: 13.0 },
             {symbol: "USDT/USD", quantity: 1.005 }
           ];
+
+     const [holdings, setHoldings] = useState([]);
+
+       useEffect(() => {
+         fetch('http://localhost:8080/holdings?userId=1')
+           .then((response) => response.json())
+           .then((data) => {
+             console.log(data);
+             setHoldings(data);
+           })
+           .catch((err) => {
+             console.error(err.message);
+           });
+       }, []);
 
   return(
       <>
@@ -24,10 +40,10 @@ function Holdings() {
            </tr>
            </thead>
            <tbody>
-           {rows.map((row) => (
-               <tr key={row.symbol}>
-                   <td>{row.symbol}</td>
-                   <td>{row.quantity}</td>
+           {holdings.map((holding) => (
+               <tr key={holding.cryptoTicker}>
+                   <td>{holding.cryptoTicker}</td>
+                   <td>{holding.quantity}</td>
                    <td><Button variant="outline-danger">
                         Sell
                     </Button> </td>

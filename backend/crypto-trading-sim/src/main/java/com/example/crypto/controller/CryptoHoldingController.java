@@ -3,10 +3,7 @@ package com.example.crypto.controller;
 import com.example.crypto.model.CryptoHolding;
 import com.example.crypto.service.CryptoHoldingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +16,7 @@ public class CryptoHoldingController {
     private CryptoHoldingService holdingService;
 
     @GetMapping
+    @CrossOrigin(origins = "http://localhost:5173")
     public List<CryptoHolding> getUserHoldings(@RequestParam long userId) {
         return holdingService.getHoldingsOfUser(userId);
     }
