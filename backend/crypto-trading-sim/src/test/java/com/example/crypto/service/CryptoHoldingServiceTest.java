@@ -3,6 +3,7 @@ package com.example.crypto.service;
 import com.example.crypto.model.CryptoHolding;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.CryptoHoldingRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,17 +12,20 @@ import java.math.BigDecimal;
 import static org.mockito.Mockito.*;
 
 public class CryptoHoldingServiceTest {
-    private CryptoHoldingRepository mockRepository;
-    private CryptoHoldingService holdingService;
+    private static CryptoHoldingRepository mockRepository;
+    private static CryptoHoldingService holdingService;
     public static final long USERID = 1L;
 
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         mockRepository = mock(CryptoHoldingRepository.class);
-
         holdingService = new CryptoHoldingService();
         holdingService.cryptoHoldingRepository = mockRepository;
+    }
+    @BeforeEach
+    void resetMocks() {
+        reset(mockRepository);
     }
 
     @Test
