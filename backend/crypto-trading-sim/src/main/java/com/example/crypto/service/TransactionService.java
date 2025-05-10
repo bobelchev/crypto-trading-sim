@@ -52,7 +52,11 @@ public class TransactionService {
         // TODO there is issue on the line below - fix (delegate to
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(userId,cryptoTicker);
         // TODO define custom exception
-        if(cost.compareTo(availableBalance)>0){
+        /*
+        specify buy or sell because in case of selling for cost
+        bigger than the balance it will still throw which is incorrect
+         */
+        if(type == TransactionType.BUY  && cost.compareTo(availableBalance)>0){
             throw new IllegalStateException("Insufficient balance to complete the purchase.");
         } else if (type == TransactionType.SELL && quantity.compareTo(currentTickerQuantity) > 0) {
             throw new IllegalStateException("Insufficient holdings to complete the sale.");

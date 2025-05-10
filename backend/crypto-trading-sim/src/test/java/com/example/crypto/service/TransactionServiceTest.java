@@ -23,6 +23,8 @@ public class TransactionServiceTest {
     private static final BigDecimal DEFAULT_QUANTITY = new BigDecimal("0.500000");
     private static final BigDecimal NEGATIVE_QUANTITY = new BigDecimal("-0.500000");
     private static final BigDecimal DEFAULT_PRICE = new BigDecimal("100.000000");
+    //200*100=20 000>10 000
+    private static final BigDecimal EXCESSIVE_QUANTITY = new BigDecimal("200.000000");
     private static final TransactionType BUY = TransactionType.BUY;
     private static final TransactionType SELL = TransactionType.SELL;
 
@@ -31,7 +33,6 @@ public class TransactionServiceTest {
         mockUserRepository = mock(UserRepository.class);
         mockTxRepository = mock(TransactionRepository.class);
         mockHoldingService = mock(CryptoHoldingService.class);
-
         transactionService = new TransactionService();
         transactionService.userRepository = mockUserRepository;
         transactionService.transactionRepository = mockTxRepository;
@@ -47,17 +48,13 @@ public class TransactionServiceTest {
         verify(mockHoldingService,times(1)).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY, BUY);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
         //TODO: solve the timestamp problem
-
         //verify(mockTxRepository,times(1)).insertTx(new Transaction(USERID,cryptoTicker, quantity, price, LocalDateTime.now(), type));
     }
     @Test
     public void testSell(){
         BigDecimal cost = DEFAULT_QUANTITY.multiply(DEFAULT_PRICE);
-
-        //added this one because did not anticipate to be needed before
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
-
         transactionService. makeTx(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,DEFAULT_PRICE,SELL);
         verify(mockUserRepository,times(1)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
         verify(mockHoldingService,times(1)).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,SELL);
@@ -68,8 +65,6 @@ public class TransactionServiceTest {
     @Test
     public void testIllegalSellNegativeQuantity(){
         BigDecimal cost = NEGATIVE_QUANTITY.multiply(DEFAULT_PRICE);
-
-        //added this one because did not anticipate to be needed before
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
@@ -83,7 +78,6 @@ public class TransactionServiceTest {
     @Test
     public void testIllegalBuyNegativeQuantity(){
         BigDecimal cost = NEGATIVE_QUANTITY.multiply(DEFAULT_PRICE);
-        //added this one because did not anticipate to be needed before
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             transactionService.makeTx(USERID, DEFAULT_TICKER, NEGATIVE_QUANTITY, DEFAULT_PRICE, BUY);
@@ -91,6 +85,32 @@ public class TransactionServiceTest {
         assert(exception.getMessage().contains("Quantity must be a positive number."));
         verify(mockUserRepository,times(0)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
         verify(mockHoldingService,times(0)).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY);
+        verify(mockTxRepository, never()).insertTx(any());
+    }
+    @Test
+    public void testIllegalBuyExcessiveQuantity(){
+        BigDecimal cost = EXCESSIVE_QUANTITY.multiply(DEFAULT_PRICE);
+        when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            transactionService.makeTx(USERID, DEFAULT_TICKER, EXCESSIVE_QUANTITY, DEFAULT_PRICE, BUY);
+        });
+        assert(exception.getMessage().contains("Insufficient balance to complete the purchase."));
+        verify(mockUserRepository,times(0)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
+        verify(mockHoldingService,times(0)).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY);
+        verify(mockTxRepository, never()).insertTx(any());
+    }
+    @Test
+    public void testIllegalSellExcessiveQuantity(){
+        BigDecimal currentHoldings = new BigDecimal("0.1");
+        BigDecimal cost = EXCESSIVE_QUANTITY.multiply(DEFAULT_PRICE);
+        when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(currentHoldings);
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            transactionService.makeTx(USERID, DEFAULT_TICKER, EXCESSIVE_QUANTITY, DEFAULT_PRICE, SELL);
+        });
+        assert(exception.getMessage().contains("Insufficient holdings to complete the sale."));
+        verify(mockUserRepository,times(0)).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
+        verify(mockHoldingService,times(0)).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,SELL);
         verify(mockTxRepository, never()).insertTx(any());
     }
 
