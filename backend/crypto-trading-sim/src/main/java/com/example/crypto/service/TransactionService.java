@@ -44,6 +44,9 @@ public class TransactionService {
         //handle the holding logic if it exist insert new one otherwise update
         //delegate that to CryptoService
         //update the balance
+        if (quantity.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalStateException("Quantity must be a positive number.");
+        }
         BigDecimal cost = price.multiply(quantity);
         BigDecimal availableBalance = userRepository.getBalanceOfUser(userId);
         // TODO there is issue on the line below - fix (delegate to

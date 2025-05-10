@@ -48,17 +48,15 @@ function MarketData({ rows, user }) {
               },
               body: JSON.stringify(postBody),
             });
+            const result = await response.text();
             if (!response.ok) {
-              throw new Error("Network response was not ok");
+                throw new Error(result|| "Transaction failed");
             }
-            const jsonResponse = await response.text();
-            alert(`Transaction successful: ${jsonResponse}`);
-            console.log("POST request successful:", jsonResponse);
-            console.log(quantityToBuy);
+            alert(result);
             //for now like that
             window.location.reload();
           } catch (error) {
-            alert(`Transaction failed: ${error.message}`);
+            alert(error.message);
             console.error("POST request failed:", error);
           }
         }
