@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * WebSocket client for connecting to Kraken's WebSocket V2 API.
@@ -23,9 +24,12 @@ import java.util.Map;
 public class KrakenWebClient extends WebSocketClient {
     private static final String[] TOP_X_CRYPTO = {
             "BTC/USD", "ETH/USD", "USDT/USD", "BNB/USD", "SOL/USD",
-            "XRP/USD", "DOGE/USD"
+            "XRP/USD", "DOGE/USD", "ADA/USD", "AVAX/USD", "DOT/USD",
+            "TRX/USD", "SHIB/USD", "MATIC/USD", "LINK/USD", "LTC/USD",
+            "ATOM/USD", "UNI/USD", "NEAR/USD", "XLM/USD", "XMR/USD"
     };
-    private final Map<String, Double> marketData = new HashMap<>();
+
+    private final Map<String, Double> marketData = new ConcurrentHashMap<>();
 
 
     public KrakenWebClient(URI serverUri, Draft draft) {
@@ -51,7 +55,6 @@ public class KrakenWebClient extends WebSocketClient {
         System.out.println("Market Data init");
         System.out.println("new connection opened");
         String pairs = "\"" + String.join("\", \"", marketData.keySet()) + "\"";
-
         //"symbol": ["BTC/USD", "ETH/USD"],
         String subMessage = String.format("""
                 {
@@ -75,7 +78,7 @@ public class KrakenWebClient extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        System.out.println("received message: " + message);
+        //System.out.println("received message: " + message);
         //{"channel":"ticker","type":"snapshot","data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]}
         JSONObject json = new JSONObject(message);
         //System.out.println(json.toString(2));
@@ -88,10 +91,10 @@ public class KrakenWebClient extends WebSocketClient {
             JSONObject firstEntry = data.getJSONObject(0);
             String symbol = firstEntry.getString("symbol");
             double last = firstEntry.getDouble("last");
-            System.out.println("Symbol: " + symbol);
-            System.out.println("Last: " + last);
+            //System.out.println("Symbol: " + symbol);
+            //System.out.println("Last: " + last);
             updateMarketData(symbol,last);
-            System.out.println(marketData);
+            //System.out.println(marketData);
         }
 
     }
