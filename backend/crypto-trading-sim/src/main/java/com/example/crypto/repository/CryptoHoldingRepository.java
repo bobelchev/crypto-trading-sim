@@ -84,4 +84,10 @@ public class CryptoHoldingRepository {
         String sql = "DELETE FROM holdings WHERE user_id = ?";
         jdbcTemplate.update(sql,userId);
     }
+
+    public void deleteSingleHolding(long userId, String cryptoTicker) {
+        String sql = "DELETE FROM holdings WHERE user_id = ? AND crypto_ticker = ?";
+        jdbcTemplate.update(sql, userId, cryptoTicker);
+    }
+
 }

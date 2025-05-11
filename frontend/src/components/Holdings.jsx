@@ -48,6 +48,7 @@ function Holdings({ prices }) {
         price: lockedPrice,
         type: "SELL",
       };
+      console.log("Sending POST request with body:", postBody);
       try {
         const response = await fetch("http://localhost:8080/transactions", {
           method: "POST",
@@ -95,6 +96,7 @@ function Holdings({ prices }) {
               <tr key={holding.cryptoTicker}>
                 <td>{holding.cryptoTicker}</td>
                 <td>{holding.quantity}</td>
+                <td>{holding.averagePrice}</td>
                 <td>
                   <Button
                     variant="outline-danger"

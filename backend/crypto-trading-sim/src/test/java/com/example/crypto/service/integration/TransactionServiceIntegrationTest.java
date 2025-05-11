@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -139,8 +140,9 @@ public class TransactionServiceIntegrationTest {
         sql = "SELECT profit_loss FROM transactions WHERE user_id = ? AND crypto_ticker = ? ORDER BY id DESC LIMIT 1";
         BigDecimal profitOrLoss = jdbcTemplate.queryForObject(sql, BigDecimal.class, USERID, ticker);
 
-        BigDecimal avgPrice = new BigDecimal("27000.50"); // from setup
-        BigDecimal expectedProfit = price.subtract(avgPrice).multiply(quantity).setScale(6, BigDecimal.ROUND_HALF_UP);
+        BigDecimal avgPrice = new BigDecimal("27000.50");
+        BigDecimal sellPricePerUnit = price.divide(quantity, 6, RoundingMode.HALF_UP);
+        BigDecimal expectedProfit = sellPricePerUnit.subtract(avgPrice).multiply(quantity).setScale(6, RoundingMode.HALF_UP);
         assertEquals(expectedProfit, profitOrLoss);
     }
 

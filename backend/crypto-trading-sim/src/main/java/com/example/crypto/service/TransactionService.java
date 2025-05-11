@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,16 +41,11 @@ public class TransactionService {
      * @param price the price of 1 coin from the ticker
      */
     public void makeTx(long userId, String cryptoTicker, BigDecimal quantity, BigDecimal price, TransactionType type){
-        //insert transaction
-        //handle the holding logic if it exist insert new one otherwise update
-        //delegate that to CryptoService
-        //update the balance
         if (quantity.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("Quantity must be a positive number.");
         }
         BigDecimal cost = price.multiply(quantity);
         BigDecimal availableBalance = userRepository.getBalanceOfUser(userId);
-        // TODO there is issue on the line below - fix (delegate to
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(userId,cryptoTicker);
         // TODO define custom exception
         /*
@@ -63,11 +59,12 @@ public class TransactionService {
         }
         BigDecimal newBalance = (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
         userRepository.updateBalance(userId,newBalance);
+        //before holding got deleted before we can read the average price
+        BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(userId, cryptoTicker);
         cryptoHoldingService.handleHolding(userId,cryptoTicker,quantity,type,price);
         if (type == TransactionType.SELL){
-            BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(userId, cryptoTicker);
             BigDecimal profitOrLoss = price.subtract(averagePrice).multiply(quantity);
-            insertTx(userId,cryptoTicker,quantity,price,type,profitOrLoss);
+            insertTx(userId, cryptoTicker, quantity, price, type, profitOrLoss);
         } else {
             insertTx(userId,cryptoTicker,quantity,price,type,BigDecimal.ZERO);
         }

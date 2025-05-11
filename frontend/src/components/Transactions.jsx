@@ -36,7 +36,10 @@ function Transactions() {
                   <strong>Quantity:</strong> {transaction.quantity}
                 </div>
                 <div>
-                  <strong>Total Price:</strong> {transaction.price}
+                  <strong>Price:</strong> {transaction.price}
+                </div>
+                <div>
+                    <strong>PnL:</strong> {transaction.pnl}
                 </div>
                 <div>
                   <strong>Date:</strong>{" "}

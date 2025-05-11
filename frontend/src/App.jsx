@@ -31,7 +31,7 @@ function App() {
             });
       }
   useEffect(() => {
-      const myInterval = setInterval(fetchMarketData, 300);
+      const myInterval = setInterval(fetchMarketData, 250);
       return () => {
           clearInterval(myInterval);
         };
