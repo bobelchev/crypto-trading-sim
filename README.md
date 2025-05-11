@@ -44,9 +44,9 @@ The frontend will run on http://localhost:3000
 
 ![Interface before the transaction](img/initialScreen.png)
 ----
-![Make a buy](img/buy.png)
+![Make a sell](img/buyInterface.png)
 ----
-![Interface after the transaction](img/interfaceafterBuy.png)
+![Interface after the transaction](img/interfaceAfterBuy.png)
 ----
 ### Development Process
 
