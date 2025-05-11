@@ -63,7 +63,7 @@ public class TransactionService {
         }
         BigDecimal newBalance = (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
         userRepository.updateBalance(userId,newBalance);
-        cryptoHoldingService.handleHolding(userId,cryptoTicker,quantity,type);
+        cryptoHoldingService.handleHolding(userId,cryptoTicker,quantity,type,price);
         insertTx(userId,cryptoTicker,quantity,price,type);
     }
 

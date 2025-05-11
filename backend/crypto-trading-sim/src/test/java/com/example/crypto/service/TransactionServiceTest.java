@@ -50,7 +50,7 @@ public class TransactionServiceTest {
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         transactionService.makeTx(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,DEFAULT_PRICE,BUY);
         verify(mockUserRepository).updateBalance(USERID,DEFAULT_BALANCE.subtract(cost));
-        verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY, BUY);
+        verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY, BUY, DEFAULT_PRICE);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
         //TODO: solve the timestamp problem
         //verify(mockTxRepository,times(1)).insertTx(new Transaction(USERID,cryptoTicker, quantity, price, LocalDateTime.now(), type));
@@ -62,7 +62,7 @@ public class TransactionServiceTest {
         when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         transactionService. makeTx(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,DEFAULT_PRICE,SELL);
         verify(mockUserRepository).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
-        verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,SELL);
+        verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,SELL,DEFAULT_PRICE);
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
         //TODO: solve the timestamp problem
         //verify(mockTxRepository,times(1)).insertTx(new Transaction(USERID,cryptoTicker, quantity, price, LocalDateTime.now(), type));
@@ -77,7 +77,7 @@ public class TransactionServiceTest {
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
         verify(mockUserRepository,never()).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
-        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY);
+        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY,DEFAULT_PRICE);
         verify(mockTxRepository, never()).insertTx(any());
     }
     @Test
@@ -89,7 +89,7 @@ public class TransactionServiceTest {
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
         verify(mockUserRepository,never()).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
-        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY);
+        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY,DEFAULT_PRICE);
         verify(mockTxRepository, never()).insertTx(any());
     }
     @Test
@@ -101,7 +101,7 @@ public class TransactionServiceTest {
         });
         assert(exception.getMessage().contains("Insufficient balance to complete the purchase."));
         verify(mockUserRepository,never()).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
-        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY);
+        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY,DEFAULT_PRICE);
         verify(mockTxRepository, never()).insertTx(any());
     }
     @Test
@@ -115,7 +115,7 @@ public class TransactionServiceTest {
         });
         assert(exception.getMessage().contains("Insufficient holdings to complete the sale."));
         verify(mockUserRepository,never()).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
-        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY);
+        verify(mockHoldingService,never()).handleHolding(USERID,DEFAULT_TICKER,NEGATIVE_QUANTITY,BUY,DEFAULT_PRICE);
         verify(mockTxRepository, never()).insertTx(any());
     }
 

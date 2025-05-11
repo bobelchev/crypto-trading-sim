@@ -54,12 +54,12 @@ public class CryptoHoldingRepository {
      */
     public void insertHolding(CryptoHolding cryptoHolding){
         String sql = """
-        INSERT INTO holdings (user_id, crypto_ticker, quantity)
-        VALUES (?, ?, ?)
+        INSERT INTO holdings (user_id, crypto_ticker, quantity, average_price)
+        VALUES (?, ?, ?, ?)
     """;
         jdbcTemplate.update(sql,
                 cryptoHolding.getUserId(),cryptoHolding.getCryptoTicker(),
-                cryptoHolding.getQuantity());
+                cryptoHolding.getQuantity(),cryptoHolding.getAveragePrice());
 
     }
 
@@ -68,11 +68,12 @@ public class CryptoHoldingRepository {
      * @param cryptoHolding
      */
     public void updateHolding(CryptoHolding cryptoHolding){
-        String sql = "UPDATE holdings SET quantity = ? WHERE user_id = ? AND crypto_ticker = ?";
+        String sql = "UPDATE holdings SET quantity = ?, average_price = ? WHERE user_id = ? AND crypto_ticker = ?";
         jdbcTemplate.update(sql,
-                cryptoHolding.getQuantity(),cryptoHolding.getUserId(),
+                cryptoHolding.getQuantity(),
+                cryptoHolding.getAveragePrice(),
+                cryptoHolding.getUserId(),
                 cryptoHolding.getCryptoTicker());
-
     }
 
     /**

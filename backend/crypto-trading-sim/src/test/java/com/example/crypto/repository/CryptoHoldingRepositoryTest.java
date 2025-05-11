@@ -28,10 +28,10 @@ public class CryptoHoldingRepositoryTest {
         //id did not reset properly
         jdbcTemplate.execute("ALTER TABLE holdings ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("""
-            INSERT INTO holdings (user_id, crypto_ticker, quantity)
+            INSERT INTO holdings (user_id, crypto_ticker, quantity, average_price)
             VALUES 
-            (1, 'BTC', 0.075423),
-            (1, 'ETH', 1.235670);
+            (1, 'BTC', 0.075423,27000.50),
+            (1, 'ETH', 1.235670, 1850.00);
             """);
     }
     @Test
@@ -42,6 +42,8 @@ public class CryptoHoldingRepositoryTest {
         assertEquals(USERID,btcHolding.getUserId());
         assertEquals("BTC",btcHolding.getCryptoTicker());
         assertEquals(new BigDecimal("0.075423"),btcHolding.getQuantity());
+        assertEquals(new BigDecimal("27000.500000"), btcHolding.getAveragePrice());
+
     }
     @Test
     public void testGetAllHoldingOfUser(){
@@ -51,10 +53,12 @@ public class CryptoHoldingRepositoryTest {
         assertEquals(USERID,firstHolding.getUserId());
         assertEquals("BTC",firstHolding.getCryptoTicker());
         assertEquals(new BigDecimal("0.075423"), firstHolding.getQuantity());
+        assertEquals(new BigDecimal("27000.500000"), firstHolding.getAveragePrice());
         CryptoHolding secondHolding = allHoldings.get(1);
         assertEquals(USERID,secondHolding.getUserId());
         assertEquals("ETH",secondHolding.getCryptoTicker());
         assertEquals(new BigDecimal("1.235670"), secondHolding.getQuantity());
+        assertEquals(new BigDecimal("1850.000000"), secondHolding.getAveragePrice());
         //test with 0 holdings in db
         jdbcTemplate.execute("DELETE FROM holdings");
         allHoldings = cryptoHoldingRepository.getAllUserHoldings(USERID);
@@ -65,7 +69,8 @@ public class CryptoHoldingRepositoryTest {
         CryptoHolding newHolding = new CryptoHolding(
                 USERID,
                 "XRP",
-                new BigDecimal("4500.567812")
+                new BigDecimal("4500.567812"),
+                new BigDecimal("2.40")
         );
         cryptoHoldingRepository.insertHolding(newHolding);
         //using raw SQL instead of method to reduce dependency on other methods

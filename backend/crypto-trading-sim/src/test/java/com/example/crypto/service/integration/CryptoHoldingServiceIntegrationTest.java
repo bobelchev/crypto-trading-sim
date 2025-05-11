@@ -3,9 +3,11 @@ package com.example.crypto.service.integration;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.service.CryptoHoldingService;
 import com.example.crypto.service.UserService;
+import com.example.crypto.websocketclient.WebSocketConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@ImportAutoConfiguration(exclude = WebSocketConfig.class)
 @Transactional
 public class CryptoHoldingServiceIntegrationTest {
     @Autowired
@@ -38,10 +41,10 @@ public class CryptoHoldingServiceIntegrationTest {
             (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP);
         """);
         jdbcTemplate.execute("""
-            INSERT INTO holdings (user_id, crypto_ticker, quantity)
+            INSERT INTO holdings (user_id, crypto_ticker, quantity, average_price)
             VALUES 
-            (1, 'BTC', 0.075423),
-            (1, 'ETH', 1.235670);
+            (1, 'BTC', 0.075423,27000.50),
+            (1, 'ETH', 1.235670, 1850.00);
             """);
     }
     @Test
@@ -49,6 +52,8 @@ public class CryptoHoldingServiceIntegrationTest {
         //new ticker would be something different that BTC and ETH
         String newTicker = "XRP";
         BigDecimal quantity = new BigDecimal("10.000000");
+        BigDecimal price = new BigDecimal("2.4");
+
         String sql = "SELECT COUNT(*) FROM holdings WHERE user_id = ? AND crypto_ticker = ?";
 
         Integer preInsertCount = jdbcTemplate.queryForObject(
@@ -57,7 +62,7 @@ public class CryptoHoldingServiceIntegrationTest {
         );
         assertEquals(0, preInsertCount);
 
-        cryptoHoldingService.handleHolding(USERID,newTicker,quantity, TransactionType.BUY);
+        cryptoHoldingService.handleHolding(USERID,newTicker,quantity, TransactionType.BUY,price);
 
         Integer postInsertCount = jdbcTemplate.queryForObject(
                 sql,
@@ -70,20 +75,38 @@ public class CryptoHoldingServiceIntegrationTest {
         //BTC
         String ticker = "BTC";
         BigDecimal quantity = new BigDecimal("10.000000");
-        String sql = "SELECT quantity FROM holdings WHERE user_id = ? AND crypto_ticker = ?";
+        BigDecimal price = new BigDecimal("30000");
+
+        String quantitySql = "SELECT quantity FROM holdings WHERE user_id = ? AND crypto_ticker = ?";
+        String avgPriceSql = "SELECT average_price FROM holdings WHERE user_id = ? AND crypto_ticker = ?";
+
 
         BigDecimal oldQuantity = jdbcTemplate.queryForObject(
-                sql,
+                quantitySql,
                 BigDecimal.class, USERID, ticker
         );
-        assertEquals(new BigDecimal("0.075423"), oldQuantity);
+        BigDecimal oldAvgPrice = jdbcTemplate.queryForObject(
+                avgPriceSql,
+                BigDecimal.class, USERID, ticker
+        );
 
-        cryptoHoldingService.handleHolding(USERID,ticker,quantity, TransactionType.BUY);
+        assertEquals(new BigDecimal("0.075423"), oldQuantity);
+        assertEquals(new BigDecimal("27000.500000"), oldAvgPrice);
+
+
+        cryptoHoldingService.handleHolding(USERID,ticker,quantity, TransactionType.BUY,price);
 
         BigDecimal newQuantity = jdbcTemplate.queryForObject(
-                sql,
+                quantitySql,
                 BigDecimal.class, USERID, ticker
         );
+
         assertEquals(new BigDecimal("0.075423").add(quantity), newQuantity);
+
+        BigDecimal expectedAvgPrice = oldAvgPrice.multiply(oldQuantity)
+                .add(price.multiply(quantity))
+                .divide(newQuantity, 6);
+        BigDecimal storedAvgPrice = jdbcTemplate.queryForObject(avgPriceSql, BigDecimal.class, USERID, ticker);
+
     }
 }

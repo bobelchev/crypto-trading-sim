@@ -13,15 +13,18 @@ public class CryptoHolding {
     private long userId;
     private String cryptoTicker;
     private BigDecimal quantity;
+    private BigDecimal averagePrice;
 
-    public CryptoHolding(long userId,String cryptoTicker,BigDecimal quantity){
+
+    public CryptoHolding(long userId,String cryptoTicker,BigDecimal quantity, BigDecimal averagePrice){
         this.userId = userId;
         this.cryptoTicker = cryptoTicker;
         this.quantity = quantity;
+        this.averagePrice =averagePrice;
     }
 
-    public CryptoHolding(long id, long userId,String cryptoTicker,BigDecimal quantity){
-        this(userId,cryptoTicker,quantity);
+    public CryptoHolding(long id, long userId,String cryptoTicker,BigDecimal quantity,BigDecimal averagePrice){
+        this(userId,cryptoTicker,quantity,averagePrice);
         this.id = id;
 
     }

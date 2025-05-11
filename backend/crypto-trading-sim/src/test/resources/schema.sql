@@ -26,6 +26,7 @@ CREATE TABLE holdings (
     user_id BIGINT NOT NULL,
     crypto_ticker VARCHAR(10) NOT NULL,
     quantity DECIMAL(18, 6) NOT NULL,
+    average_price DECIMAL(18, 6) NOT NULL,
     CONSTRAINT unique_user_crypto UNIQUE (user_id, crypto_ticker),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

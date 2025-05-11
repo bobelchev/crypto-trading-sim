@@ -3,9 +3,11 @@ package com.example.crypto.service.integration;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.service.CryptoHoldingService;
 import com.example.crypto.service.TransactionService;
+import com.example.crypto.websocketclient.WebSocketConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ImportAutoConfiguration(exclude = WebSocketConfig.class)
 @Transactional
 public class TransactionServiceIntegrationTest {
     @Autowired
@@ -38,10 +41,10 @@ public class TransactionServiceIntegrationTest {
             (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP);
         """);
         jdbcTemplate.execute("""
-            INSERT INTO holdings (user_id, crypto_ticker, quantity)
+            INSERT INTO holdings (user_id, crypto_ticker, quantity, average_price)
             VALUES 
-            (1, 'BTC', 0.075423),
-            (1, 'ETH', 1.235670);
+            (1, 'BTC', 0.075423, 27000.50),
+            (1, 'ETH', 1.235670, 1850.00);
             """);
     }
     /**
