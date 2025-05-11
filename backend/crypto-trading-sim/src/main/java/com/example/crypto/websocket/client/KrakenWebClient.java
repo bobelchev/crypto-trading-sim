@@ -1,5 +1,6 @@
 package com.example.crypto.websocket.client;
 
+import com.example.crypto.websocket.server.FrontendWebSocketHandler;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
@@ -25,16 +26,15 @@ public class KrakenWebClient extends WebSocketClient {
             "TRX/USD", "SHIB/USD", "MATIC/USD", "LINK/USD", "LTC/USD",
             "ATOM/USD", "UNI/USD", "NEAR/USD", "XLM/USD", "XMR/USD"
     };
+    private final FrontendWebSocketHandler frontendHandler;
+
 
     private final Map<String, Double> marketData = new ConcurrentHashMap<>();
 
-
-    public KrakenWebClient(URI serverUri, Draft draft) {
-        super(serverUri, draft);
-    }
-
-    public KrakenWebClient(URI serverURI) {
+    public KrakenWebClient(URI serverURI,FrontendWebSocketHandler frontendHandler) {
         super(serverURI);
+        this.frontendHandler = frontendHandler;
+
     }
 
     private void initializeMarketData() {
@@ -92,6 +92,9 @@ public class KrakenWebClient extends WebSocketClient {
             //System.out.println("Last: " + last);
             updateMarketData(symbol,last);
             //System.out.println(marketData);
+            if(!frontendHandler.getSessions().isEmpty()) {
+                frontendHandler.pushMarketData("Update");
+            }
         }
 
     }

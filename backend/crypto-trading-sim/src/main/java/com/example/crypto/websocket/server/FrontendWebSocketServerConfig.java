@@ -10,13 +10,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableWebSocket
 public class FrontendWebSocketServerConfig implements WebSocketConfigurer {
-
+    private final FrontendWebSocketHandler handler;
+    public FrontendWebSocketServerConfig(FrontendWebSocketHandler handler) {
+        this.handler = handler;
+    }
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(myHandler(), "/ws/marketdata").setAllowedOrigins("*");
+        registry.addHandler(handler, "/ws/marketdata").setAllowedOrigins("*");
     }
-    @Bean
-    public WebSocketHandler myHandler() {
-        return new FrontendWebSocketHandler();
-    }
+
 }
