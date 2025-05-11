@@ -19,20 +19,22 @@ public class Transaction {
     private BigDecimal price;
     private LocalDateTime timestamp;
     private TransactionType transactionType;
+    private BigDecimal pNl;
 
     public Transaction(long userId, String cryptoTicker, BigDecimal quantity,
-                       BigDecimal price, LocalDateTime timestamp, TransactionType type) {
+                       BigDecimal price, LocalDateTime timestamp, TransactionType type, BigDecimal pNl) {
         this.userId = userId;
         this.cryptoTicker = cryptoTicker;
         this.quantity = quantity;
         this.price = price;
         this.timestamp = timestamp;
         this.transactionType = type;
+        this.pNl = pNl;
     }
 
     public Transaction(long id, long userId, String cryptoTicker, BigDecimal quantity,
-                       BigDecimal price, LocalDateTime timestamp, TransactionType type) {
-        this(userId,cryptoTicker,quantity,price,timestamp,type);
+                       BigDecimal price, LocalDateTime timestamp, TransactionType type, BigDecimal pNl) {
+        this(userId,cryptoTicker,quantity,price,timestamp,type, pNl);
         this.id = id;
     }
 

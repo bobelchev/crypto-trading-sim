@@ -39,13 +39,13 @@ public class TransactionRepository {
      */
     public void insertTx(Transaction transaction){
         String sql = """
-        INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp, profit_loss)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """;
         jdbcTemplate.update(sql,
                 transaction.getUserId(),transaction.getCryptoTicker(),
                 transaction.getQuantity(), transaction.getPrice(),
-                transaction.getTransactionType().name(),transaction.getTimestamp());
+                transaction.getTransactionType().name(),transaction.getTimestamp(),transaction.getPNl());
     }
     /**
      * Deletes all transactions of a user from the DB

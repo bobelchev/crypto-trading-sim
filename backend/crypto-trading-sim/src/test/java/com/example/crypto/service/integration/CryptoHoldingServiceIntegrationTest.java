@@ -35,10 +35,10 @@ public class CryptoHoldingServiceIntegrationTest {
         jdbcTemplate.execute("ALTER TABLE transactions ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("ALTER TABLE holdings ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("""
-            INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp)
+            INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp, profit_loss)
             VALUES 
-            (1, 'BTC', 0.075423, 46231.128400, 'BUY', CURRENT_TIMESTAMP),
-            (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP);
+            (1, 'BTC', 0.075423, 46231.128400, 'BUY', CURRENT_TIMESTAMP, 0.0),
+            (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP, 0.0);
         """);
         jdbcTemplate.execute("""
             INSERT INTO holdings (user_id, crypto_ticker, quantity, average_price)

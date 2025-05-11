@@ -33,10 +33,10 @@ public class TransactionRepositoryTest {
 
 
         jdbcTemplate.execute("""
-            INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp)
+            INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp, profit_loss)
             VALUES 
-            (1, 'BTC', 0.075423, 46231.128400, 'BUY', CURRENT_TIMESTAMP),
-            (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP);
+            (1, 'BTC', 0.075423, 46231.128400, 'BUY', CURRENT_TIMESTAMP, 0.00),
+            (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP, 150.00);
         """);
     }
 
@@ -53,6 +53,7 @@ public class TransactionRepositoryTest {
         assertEquals(new BigDecimal("0.075423"), transaction.getQuantity());
         assertEquals(new BigDecimal("46231.128400"), transaction.getPrice());
         assertEquals(TransactionType.BUY, transaction.getTransactionType());
+        assertEquals(new BigDecimal("0.000000"), transaction.getPNl());
     }
 
     /**
@@ -68,12 +69,15 @@ public class TransactionRepositoryTest {
         assertEquals(new BigDecimal("0.075423"), firstTx.getQuantity());
         assertEquals(new BigDecimal("46231.128400"), firstTx.getPrice());
         assertEquals(TransactionType.BUY, firstTx.getTransactionType());
+        assertEquals(new BigDecimal("0.000000"), firstTx.getPNl());
         Transaction secondTx = transactions.get(1);
         assertEquals(USERID,secondTx.getUserId());
         assertEquals("ETH",secondTx.getCryptoTicker());
         assertEquals(new BigDecimal("1.235670"), secondTx.getQuantity());
         assertEquals(new BigDecimal("2745.326700"), secondTx.getPrice());
         assertEquals(TransactionType.SELL, secondTx.getTransactionType());
+        assertEquals(new BigDecimal("150.000000"), secondTx.getPNl());
+
         //test with 0 txs in db
         jdbcTemplate.execute("DELETE FROM transactions");
         transactions = transactionRepository.getAllTxForUser(USERID);
@@ -100,7 +104,8 @@ public class TransactionRepositoryTest {
                 new BigDecimal("2.004500"),
                 new BigDecimal("1.887650"),
                 LocalDateTime.now(),
-                TransactionType.BUY
+                TransactionType.BUY,
+                BigDecimal.ZERO
         );
         transactionRepository.insertTx(newTx);
         //querying again should return 1

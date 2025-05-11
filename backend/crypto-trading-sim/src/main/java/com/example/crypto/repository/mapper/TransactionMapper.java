@@ -21,7 +21,8 @@ public class TransactionMapper implements RowMapper<Transaction> {
                     rs.getBigDecimal("quantity"),
                     rs.getBigDecimal("price"),
                     rs.getTimestamp("timestamp").toLocalDateTime(),
-                    TransactionType.valueOf(rs.getString("transaction_type"))
+                    TransactionType.valueOf(rs.getString("transaction_type")),
+                    rs.getBigDecimal("profit_loss")
             );
         }
 }

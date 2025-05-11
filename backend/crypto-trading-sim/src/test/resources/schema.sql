@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS transactions(
         price DECIMAL(18, 6) NOT NULL,
         transaction_type VARCHAR(10) NOT NULL,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        profit_loss DECIMAL(18, 6) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
 );
 --create holdings table

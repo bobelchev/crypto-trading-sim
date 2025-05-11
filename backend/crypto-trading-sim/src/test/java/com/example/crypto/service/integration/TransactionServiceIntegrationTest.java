@@ -35,10 +35,10 @@ public class TransactionServiceIntegrationTest {
         jdbcTemplate.execute("ALTER TABLE transactions ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("ALTER TABLE holdings ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("""
-            INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp)
+            INSERT INTO transactions (user_id, crypto_ticker, quantity, price, transaction_type, timestamp, profit_loss)
             VALUES 
-            (1, 'BTC', 0.075423, 46231.128400, 'BUY', CURRENT_TIMESTAMP),
-            (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP);
+            (1, 'BTC', 0.075423, 46231.128400, 'BUY', CURRENT_TIMESTAMP,0.0),
+            (1, 'ETH', 1.235670, 2745.326700, 'SELL', CURRENT_TIMESTAMP,0.0);
         """);
         jdbcTemplate.execute("""
             INSERT INTO holdings (user_id, crypto_ticker, quantity, average_price)
@@ -136,6 +136,12 @@ public class TransactionServiceIntegrationTest {
                 sql, BigDecimal.class, USERID, ticker);
         BigDecimal calcNewQuantity = new BigDecimal("0.075423").subtract(quantity);
         assertEquals(calcNewQuantity, newHoldingQuantity);
+        sql = "SELECT profit_loss FROM transactions WHERE user_id = ? AND crypto_ticker = ? ORDER BY id DESC LIMIT 1";
+        BigDecimal profitOrLoss = jdbcTemplate.queryForObject(sql, BigDecimal.class, USERID, ticker);
+
+        BigDecimal avgPrice = new BigDecimal("27000.50"); // from setup
+        BigDecimal expectedProfit = price.subtract(avgPrice).multiply(quantity).setScale(6, BigDecimal.ROUND_HALF_UP);
+        assertEquals(expectedProfit, profitOrLoss);
     }
 
     /**

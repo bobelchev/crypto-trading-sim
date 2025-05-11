@@ -73,6 +73,12 @@ public class CryptoHoldingService {
         return (holding != null) ? holding.getQuantity() : BigDecimal.ZERO;
     }
 
+    public BigDecimal getAveragePrice(long userId, String cryptoTicker) {
+        CryptoHolding holding = cryptoHoldingRepository.getSingleHoldingByTickerAndUserId(userId, cryptoTicker);
+        return (holding != null) ? holding.getAveragePrice() : BigDecimal.ZERO;
+    }
+
+
     public List<CryptoHolding> getHoldingsOfUser(long userId){
         return cryptoHoldingRepository.getAllUserHoldings(userId);
     }

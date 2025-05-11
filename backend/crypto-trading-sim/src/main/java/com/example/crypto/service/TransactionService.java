@@ -64,15 +64,24 @@ public class TransactionService {
         BigDecimal newBalance = (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
         userRepository.updateBalance(userId,newBalance);
         cryptoHoldingService.handleHolding(userId,cryptoTicker,quantity,type,price);
-        insertTx(userId,cryptoTicker,quantity,price,type);
+        if (type == TransactionType.SELL){
+            BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(userId, cryptoTicker);
+            BigDecimal profitOrLoss = price.subtract(averagePrice).multiply(quantity);
+            insertTx(userId,cryptoTicker,quantity,price,type,profitOrLoss);
+        } else {
+            insertTx(userId,cryptoTicker,quantity,price,type,BigDecimal.ZERO);
+        }
+
     }
 
-   private void insertTx(long userId, String cryptoTicker, BigDecimal quantity, BigDecimal price, TransactionType type){
+   private void insertTx(long userId, String cryptoTicker, BigDecimal quantity, BigDecimal price, TransactionType type, BigDecimal pNl){
         transactionRepository.insertTx(
                 new Transaction(
                         userId,cryptoTicker,
                         quantity,price,
-                        LocalDateTime.now(), type
+                        LocalDateTime.now(),
+                        type,
+                        pNl
                 )
         );
    }
