@@ -40,7 +40,7 @@ The frontend will run on http://localhost:3000
 #### Sell Interface
 ![Sell Interface](img/sellInterface.png)
 ----
-#### Updated Interface After Transaction
+#### Updated Balance After Transaction
 
 ![Interface before the transaction](img/initialScreen.png)
 ----
@@ -73,13 +73,22 @@ The frontend will run on http://localhost:3000
 | Kraken WebSocket Integration     | `feature/kraken-ws-client` | [#5](https://github.com/bobelchev/crypto-trading-sim/pull/5) |
 | Frontend UI                      | `frontend`         | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
 
-
 ### Third-Party Code
 
-This project includes source code from the [Java-WebSocket](https://github.com/TooTallNate/Java-WebSocket) library to enable WebSocket communication with Kraken's WebSocket V2 API.
+- **Java-WebSocket Library**  
+  Used the WS client example to enable WebSocket communication with Kraken's WebSocket V2 API.
+   - **Original Repository**: [Java-WebSocket](https://github.com/TooTallNate/Java-WebSocket)
+   - **Author**: [TooTallNate](https://github.com/TooTallNate)
+   - **License**: [MIT License](https://github.com/TooTallNate/Java-WebSocket/blob/master/LICENSE)
 
-- **Original Repository**: [Java-WebSocket](https://github.com/TooTallNate/Java-WebSocket)
-- **Author**: [TooTallNate](https://github.com/TooTallNate)
-- **License**: [MIT License](https://github.com/TooTallNate/Java-WebSocket/blob/master/LICENSE)
+- **WebSocket Server Management (Spring without STOMP)**  
+  Referenced for implementing raw Spring WebSocket message broadcasting without STOMP.
+    - **Source**: [Stack Overflow Thread](https://stackoverflow.com/questions/33910639/how-to-broadcast-a-message-using-raw-spring-4-websockets-without-stomp)
+    - **Answer by**: [novax](https://stackoverflow.com/users/943686/novax)
 
+- **WebSocket + React Tutorial**  
+  Used code from the blog to implement the React WS client.
+   - **Title**: [How to Use WebSockets with React](https://ably.com/blog/websockets-react-tutorial)
+   - **Author**: [Alex Booker](https://github.com/bookercodes)
+   - **Published by**: [Ably](https://ably.com)
 
