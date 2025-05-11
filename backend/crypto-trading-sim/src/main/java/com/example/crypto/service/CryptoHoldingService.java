@@ -38,9 +38,11 @@ public class CryptoHoldingService {
     public void deleteAllHoldingsOfUser(long userId){
         cryptoHoldingRepository.deleteHoldings(userId);
     }
-    public BigDecimal getTickerQuantity(long userId, String cryptoTicker){
-        return cryptoHoldingRepository.getSingleHoldingByTickerAndUserId(userId,cryptoTicker).getQuantity();
+    public BigDecimal getTickerQuantity(long userId, String cryptoTicker) {
+        CryptoHolding holding = cryptoHoldingRepository.getSingleHoldingByTickerAndUserId(userId, cryptoTicker);
+        return (holding != null) ? holding.getQuantity() : BigDecimal.ZERO;
     }
+
     public List<CryptoHolding> getHoldingsOfUser(long userId){
         return cryptoHoldingRepository.getAllUserHoldings(userId);
     }

@@ -29,6 +29,25 @@ The backend will run on http://localhost:8080
 
 The frontend will run on http://localhost:3000
 
+### Screenshots
+
+#### Initial Application Screen (Top 20 Crypto Prices)
+![Top 20 Crypto Prices](img/initialScreen.png)
+----
+#### Buy Interface
+![Buy Interface](img/buyInterface.png)
+----
+#### Sell Interface
+![Sell Interface](img/sellInterface.png)
+----
+#### Updated Interface After Transaction
+
+![Interface before the transaction](img/initialScreen.png)
+----
+![Make a buy](img/buy.png)
+----
+![Interface after the transaction](img/interfaceafterBuy.png)
+----
 ### Development Process
 
 1. **Test-Driven Development (TDD) for the Backend**
