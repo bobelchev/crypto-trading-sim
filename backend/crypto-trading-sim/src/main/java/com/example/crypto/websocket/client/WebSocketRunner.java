@@ -1,4 +1,4 @@
-package com.example.crypto.websocketclient;
+package com.example.crypto.websocket.client;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

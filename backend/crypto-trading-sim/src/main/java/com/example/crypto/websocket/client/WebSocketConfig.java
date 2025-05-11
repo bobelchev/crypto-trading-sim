@@ -1,4 +1,4 @@
-package com.example.crypto.websocketclient;
+package com.example.crypto.websocket.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;

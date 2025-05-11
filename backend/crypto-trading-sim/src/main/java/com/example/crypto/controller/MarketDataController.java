@@ -1,6 +1,6 @@
 package com.example.crypto.controller;
 
-import com.example.crypto.websocketclient.KrakenWebClient;
+import com.example.crypto.websocket.client.KrakenWebClient;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
