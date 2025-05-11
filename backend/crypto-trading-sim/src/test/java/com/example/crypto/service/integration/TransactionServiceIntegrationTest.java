@@ -140,8 +140,8 @@ public class TransactionServiceIntegrationTest {
         BigDecimal profitOrLoss = jdbcTemplate.queryForObject(sql, BigDecimal.class, USERID, ticker);
 
         BigDecimal avgPrice = new BigDecimal("27000.50");
-        BigDecimal sellPricePerUnit = price.divide(quantity, 6, RoundingMode.HALF_UP);
-        BigDecimal expectedProfit = sellPricePerUnit.subtract(avgPrice).multiply(quantity).setScale(6, RoundingMode.HALF_UP);
+        BigDecimal expectedProfit = price.subtract(avgPrice).multiply(quantity).setScale(6, RoundingMode.HALF_UP);
+
         assertEquals(expectedProfit, profitOrLoss);
     }
 
