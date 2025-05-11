@@ -1,4 +1,33 @@
+### Requirements
 
+- Java 17.0.6 or newer (Java 17+ required)
+- Node.js 18.18.2 or newer
+- npm 9.8.1 or newer
+
+### Running the project
+1. Navigate to the backend folder and start the Spring Boot server using PS on Windows:
+
+   ```bash
+   cd backend/crypto-trading-sim
+   .\mvnw spring-boot:run
+   ```
+   Or if using CMD:
+   ```bash
+    mvnw spring-boot:run
+   ```
+
+2. Open a new terminal, navigate to the frontend folder, and start the React app:
+
+   ```bash
+   cd frontend
+   npm install    # Only needed the first time
+   npm start
+   ```
+
+
+The backend will run on http://localhost:8080
+
+The frontend will run on http://localhost:3000
 
 ### Development Process
 
