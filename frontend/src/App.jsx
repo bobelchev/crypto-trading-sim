@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -15,7 +15,31 @@ import Row from "react-bootstrap/Row";
 function App() {
   const [user, setUser] = useState({ userId: "", balance: "" });
   const [marketPrices, setMarketPrices] = useState([]);
-  const fetchMarketData = () =>{
+  const connection = useRef(null);
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080/ws/marketdata");
+
+    socket.addEventListener("open", (event) => {
+      socket.send("Connection established");
+    });
+
+    socket.addEventListener("message", (event) => {
+      const data = JSON.parse(event.data);
+      const formattedData = Object.entries(data).map(([symbol, price]) => ({
+        symbol,
+        price,
+      }));
+      formattedData.sort((a, b) => (a.price > b.price ? -1 : 1));
+      setMarketPrices(formattedData);
+      console.log("Message from server ", data);
+    });
+
+    connection.current = socket;
+
+    return () => connection.current.close();
+  }, []);
+
+  /*const fetchMarketData = () =>{
       fetch("http://localhost:8080/marketData")
             .then((response) => response.json())
             .then((data) => {
@@ -31,11 +55,11 @@ function App() {
             });
       }
   useEffect(() => {
-      const myInterval = setInterval(fetchMarketData, 250);
+      const myInterval = setInterval(fetchMarketData, 500);
       return () => {
           clearInterval(myInterval);
         };
-  }, []);
+  }, []);*/
 
   useEffect(() => {
     fetch("http://localhost:8080/users/balance?userId=1")

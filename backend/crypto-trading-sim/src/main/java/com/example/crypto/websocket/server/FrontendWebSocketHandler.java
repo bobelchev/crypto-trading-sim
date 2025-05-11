@@ -13,7 +13,6 @@ public class FrontendWebSocketHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        System.out.println("Client connected");
         addSession(session);
     }
 
@@ -29,19 +28,13 @@ public class FrontendWebSocketHandler implements WebSocketHandler {
     }
 
     public void pushMarketData(String message){
-        System.out.println("Update");
         for (WebSocketSession session : sessions) {
-            System.out.println("Into the loop");
-            TextMessage msg = new TextMessage("Update market data");
             if (session.isOpen()) {
                 try {
-                    System.out.println("Message to be sent");
                     session.sendMessage(new TextMessage(message));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else {
-                System.out.println("Session closed: " + session.getId());
             }
         }
 
