@@ -21,13 +21,12 @@
    ```bash
    cd frontend
    npm install    # Only needed the first time
-   npm start
+   npm start      # Or: npm run dev
    ```
-
 
 The backend will run on http://localhost:8080
 
-The frontend will run on http://localhost:3000
+The frontend will run on http://localhost:5173 or fallback to http://localhost:5174
 ### Demo
 
 Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiWBQe2OWV7eZ--5DymZnJuiDkN/view?usp=drive_link)
