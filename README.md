@@ -75,7 +75,7 @@ Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiW
 | Kraken WebSocket Integration     | `feature/kraken-ws-client` | [#5](https://github.com/bobelchev/crypto-trading-sim/pull/5) |
 | Frontend UI                      | `frontend`         | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
 
-### Third-Party Code
+### References
 
 - **Java-WebSocket Library**  
   Used the WS client example to enable WebSocket communication with Kraken's WebSocket V2 API.
