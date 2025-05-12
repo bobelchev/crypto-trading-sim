@@ -28,7 +28,7 @@ function SellModal({ show, onCancel, onSell, holding, lockedPrice }) {
             <Form.Text className="text-muted">
               Maximum amount: {holding?.quantity}
             </Form.Text>
-            <p>Total: ${lockedPrice * parseFloat(quantity)}</p>
+            <p>Total: ${lockedPrice * parseFloat(quantity).toFixed(6)}</p>
           </Form.Group>
         </Form>
       </Modal.Body>

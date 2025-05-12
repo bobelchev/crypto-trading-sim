@@ -57,18 +57,19 @@ function Holdings({ prices }) {
           },
           body: JSON.stringify(postBody),
         });
+        const jsonResponse = await response.text();
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error(jsonResponse||"Network response was not ok");
         }
 
-        const jsonResponse = await response.text();
-        alert(`Transaction successful: ${jsonResponse}`);
+
+        alert(jsonResponse);
         console.log("POST request successful:", jsonResponse);
         console.log(quantityToSell);
         //for now like that
         window.location.reload();
       } catch (error) {
-        alert("Transaction failed: ", error);
+        alert(error);
         console.error("POST request failed:", error);
       }
     }
