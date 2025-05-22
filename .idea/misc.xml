@@ -5,6 +5,7 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/backend/crypto-trading-sim/pom.xml" />
+        <option value="$PROJECT_DIR$/kraken-ws-service/kraken-ws-service/pom.xml" />
       </list>
     </option>
   </component>

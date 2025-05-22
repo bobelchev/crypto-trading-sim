@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 --create transactions table
 CREATE TABLE IF NOT EXISTS transactions(
-    id SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id BIGINT NOT NULL,
         crypto_ticker VARCHAR(10) NOT NULL,
         quantity DECIMAL(18, 6) NOT NULL,
