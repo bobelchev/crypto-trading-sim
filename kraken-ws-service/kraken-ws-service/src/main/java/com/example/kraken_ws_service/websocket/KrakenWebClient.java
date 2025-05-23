@@ -1,6 +1,5 @@
 package com.example.kraken_ws_service.websocket;
 
-import com.example.crypto.websocket.server.FrontendWebSocketHandler;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
