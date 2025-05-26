@@ -4,6 +4,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -24,12 +25,16 @@ public class KrakenWebClient extends WebSocketClient {
             "TRX/USD", "SHIB/USD", "MATIC/USD", "LINK/USD", "LTC/USD",
             "ATOM/USD", "UNI/USD", "NEAR/USD", "XLM/USD", "XMR/USD"
     };
+    private static final String TOPIC = "my_topic";
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
 
 
     private final Map<String, Double> marketData = new ConcurrentHashMap<>();
 
-    public KrakenWebClient(URI serverURI) {
+    public KrakenWebClient(URI serverURI,KafkaTemplate<String, Object> kafkaTemplate) {
         super(serverURI);
+        this.kafkaTemplate = kafkaTemplate;
 
     }
 
@@ -83,6 +88,8 @@ public class KrakenWebClient extends WebSocketClient {
             String symbol = firstEntry.getString("symbol");
             double last = firstEntry.getDouble("last");
             updateMarketData(symbol,last);
+            kafkaTemplate.send(TOPIC, marketData);
+            System.out.println("Message sent: ");
 
         }
 
