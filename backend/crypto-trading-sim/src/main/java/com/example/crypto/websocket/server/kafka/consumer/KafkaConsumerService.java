@@ -1,4 +1,4 @@
-package com.example.kraken_ws_service.kafka.consumer;
+package com.example.crypto.websocket.server.kafka.consumer;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

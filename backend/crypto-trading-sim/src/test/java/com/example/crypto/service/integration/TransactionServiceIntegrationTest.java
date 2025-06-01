@@ -2,7 +2,6 @@ package com.example.crypto.service.integration;
 
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.service.TransactionService;
-import com.example.crypto.websocket.client.WebSocketConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.math.RoundingMode;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ImportAutoConfiguration(exclude = WebSocketConfig.class)
 @Transactional
 public class TransactionServiceIntegrationTest {
     @Autowired

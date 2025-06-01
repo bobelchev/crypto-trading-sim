@@ -67,6 +67,8 @@ public class KrakenWebClient extends WebSocketClient {
                 """, pairs);
 
         send(subMessage);
+        System.out.println("Subscribe sent");
+
     }
 
     @Override
@@ -78,6 +80,7 @@ public class KrakenWebClient extends WebSocketClient {
     public void onMessage(String message) {
         //{"channel":"ticker","type":"snapshot","data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]}
         JSONObject json = new JSONObject(message);
+        System.out.println("Message sent: ");
 
         if (json.has("channel") && "ticker".equals(json.getString("channel")) && json.has("data")) {
             //"data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]

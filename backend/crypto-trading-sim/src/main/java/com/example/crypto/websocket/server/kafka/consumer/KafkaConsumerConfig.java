@@ -1,4 +1,4 @@
-package com.example.kraken_ws_service.kafka.consumer;
+package com.example.crypto.websocket.server.kafka.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
