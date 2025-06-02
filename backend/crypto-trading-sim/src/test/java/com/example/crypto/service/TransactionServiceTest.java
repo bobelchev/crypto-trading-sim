@@ -1,6 +1,9 @@
 package com.example.crypto.service;
 
 import com.example.crypto.controller.dto.TransactionDTO;
+import com.example.crypto.exception.InsufficientBalanceException;
+import com.example.crypto.exception.InsufficientHoldingsException;
+import com.example.crypto.exception.InvalidTransactionException;
 import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.TransactionRepository;
@@ -96,7 +99,7 @@ public class TransactionServiceTest {
         dto.setQuantity(NEGATIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(SELL);
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(InvalidTransactionException.class, () -> {
             transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
@@ -114,7 +117,7 @@ public class TransactionServiceTest {
         dto.setQuantity(NEGATIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(BUY);
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(InvalidTransactionException.class, () -> {
             transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
@@ -132,7 +135,7 @@ public class TransactionServiceTest {
         dto.setQuantity(EXCESSIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(BUY);
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+       Exception exception = assertThrows(InsufficientBalanceException.class, () -> {
             transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Insufficient balance to complete the purchase."));
@@ -152,7 +155,7 @@ public class TransactionServiceTest {
         dto.setQuantity(EXCESSIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(SELL);
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(InsufficientHoldingsException.class, () -> {
             transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Insufficient holdings to complete the sale."));

@@ -1,5 +1,8 @@
 package com.example.crypto.controller;
 
+import com.example.crypto.exception.InsufficientBalanceException;
+import com.example.crypto.exception.InsufficientHoldingsException;
+import com.example.crypto.exception.InvalidTransactionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -7,7 +10,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class IllegalTransaction {
-    @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler({
+            InsufficientBalanceException.class,
+            InsufficientHoldingsException.class,
+            InvalidTransactionException.class
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String illegalTransactionHandler(IllegalStateException ex) {
         return ex.getMessage();

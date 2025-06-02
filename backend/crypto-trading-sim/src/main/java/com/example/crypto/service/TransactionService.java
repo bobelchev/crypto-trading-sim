@@ -1,6 +1,9 @@
 package com.example.crypto.service;
 
 import com.example.crypto.controller.dto.TransactionDTO;
+import com.example.crypto.exception.InsufficientBalanceException;
+import com.example.crypto.exception.InsufficientHoldingsException;
+import com.example.crypto.exception.InvalidTransactionException;
 import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.TransactionRepository;
@@ -55,7 +58,7 @@ public class TransactionService {
      */
     public void makeTx(TransactionDTO transaction){
         if (transaction.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalStateException("Quantity must be a positive number.");
+            throw new InvalidTransactionException("Quantity must be a positive number.");
         }
         BigDecimal cost = transaction.getPrice().multiply(transaction.getQuantity());
         BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
@@ -66,9 +69,9 @@ public class TransactionService {
         bigger than the balance it will still throw which is incorrect
          */
         if(transaction.getType() == TransactionType.BUY  && cost.compareTo(availableBalance)>0){
-            throw new IllegalStateException("Insufficient balance to complete the purchase.");
+            throw new InsufficientBalanceException("Insufficient balance to complete the purchase.");
         } else if (transaction.getType() == TransactionType.SELL && transaction.getQuantity().compareTo(currentTickerQuantity) > 0) {
-            throw new IllegalStateException("Insufficient holdings to complete the sale.");
+            throw new InsufficientHoldingsException("Insufficient holdings to complete the sale.");
         }
         BigDecimal newBalance = (transaction.getType().equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
         userRepository.updateBalance(transaction.getUserId(),newBalance);

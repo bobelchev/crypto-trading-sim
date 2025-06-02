@@ -1,6 +1,8 @@
 package com.example.crypto.service.integration;
 
 import com.example.crypto.controller.dto.TransactionDTO;
+import com.example.crypto.exception.InsufficientBalanceException;
+import com.example.crypto.exception.InsufficientHoldingsException;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,7 +104,7 @@ public class TransactionServiceIntegrationTest {
         dto.setPrice(price);
         dto.setType(TransactionType.BUY);
 
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(InsufficientBalanceException.class, () -> {
             transactionService.makeTx(dto);
         });
         String expectedMessage = "Insufficient balance to complete the purchase.";
@@ -182,7 +184,7 @@ public class TransactionServiceIntegrationTest {
         dto.setQuantity(quantity);
         dto.setPrice(price);
         dto.setType(TransactionType.SELL);
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(InsufficientHoldingsException.class, () -> {
             transactionService.makeTx(dto);
         });
         String expectedMessage = "Insufficient holdings to complete the sale.";
