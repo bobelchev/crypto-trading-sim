@@ -8,6 +8,7 @@ import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.TransactionRepository;
 import com.example.crypto.repository.UserRepository;
+import com.example.crypto.service.validation.TransactionValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ public class TransactionServiceTest {
     private static TransactionRepository mockTxRepository;
     private static CryptoHoldingService mockHoldingService;
     private static TransactionService transactionService;
+    private static TransactionValidator mockValidator;
+
 
     public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
     public static final long USERID = 1L;
@@ -37,6 +40,7 @@ public class TransactionServiceTest {
 
     @BeforeAll
     static void setUp(){
+        mockValidator = mock(TransactionValidator.class);
         mockUserRepository = mock(UserRepository.class);
         mockTxRepository = mock(TransactionRepository.class);
         mockHoldingService = mock(CryptoHoldingService.class);
@@ -44,6 +48,7 @@ public class TransactionServiceTest {
         transactionService.userRepository = mockUserRepository;
         transactionService.transactionRepository = mockTxRepository;
         transactionService.cryptoHoldingService = mockHoldingService;
+        transactionService.transactionValidator = mockValidator;
     }
     @BeforeEach
     void resetMocks() {
@@ -52,7 +57,7 @@ public class TransactionServiceTest {
     @Test
     public void testBuy(){
         BigDecimal cost = DEFAULT_QUANTITY.multiply(DEFAULT_PRICE);
-        //added this one because did not anticipate to be needed before
+        doNothing().when(mockValidator).validate(any(), any(), any());
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         TransactionDTO dto = new TransactionDTO();
         dto.setUserId(USERID);
@@ -69,6 +74,7 @@ public class TransactionServiceTest {
     @Test
     public void testSell(){
         BigDecimal cost = DEFAULT_QUANTITY.multiply(DEFAULT_PRICE);
+        doNothing().when(mockValidator).validate(any(), any(), any());
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         when(mockHoldingService.getAveragePrice(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("80.000000"));
@@ -99,6 +105,8 @@ public class TransactionServiceTest {
         dto.setQuantity(NEGATIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(SELL);
+        doThrow(new InvalidTransactionException("Quantity must be a positive number."))
+                .when(mockValidator).validate(dto, DEFAULT_BALANCE, new BigDecimal("1.000000"));
         Exception exception = assertThrows(InvalidTransactionException.class, () -> {
             transactionService.makeTx(dto);
         });
@@ -111,12 +119,15 @@ public class TransactionServiceTest {
     public void testIllegalBuyNegativeQuantity(){
         BigDecimal cost = NEGATIVE_QUANTITY.multiply(DEFAULT_PRICE);
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         TransactionDTO dto = new TransactionDTO();
         dto.setUserId(USERID);
         dto.setCryptoTicker(DEFAULT_TICKER);
         dto.setQuantity(NEGATIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(BUY);
+        doThrow(new InvalidTransactionException("Quantity must be a positive number."))
+                .when(mockValidator).validate(dto, DEFAULT_BALANCE, new BigDecimal("1.000000"));
         Exception exception = assertThrows(InvalidTransactionException.class, () -> {
             transactionService.makeTx(dto);
         });
@@ -129,12 +140,15 @@ public class TransactionServiceTest {
     public void testIllegalBuyExcessiveQuantity(){
         BigDecimal cost = EXCESSIVE_QUANTITY.multiply(DEFAULT_PRICE);
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         TransactionDTO dto = new TransactionDTO();
         dto.setUserId(USERID);
         dto.setCryptoTicker(DEFAULT_TICKER);
         dto.setQuantity(EXCESSIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(BUY);
+        doThrow(new InsufficientBalanceException("Insufficient balance to complete the purchase."))
+                .when(mockValidator).validate(dto, DEFAULT_BALANCE, new BigDecimal("1.000000"));
        Exception exception = assertThrows(InsufficientBalanceException.class, () -> {
             transactionService.makeTx(dto);
         });
@@ -155,6 +169,8 @@ public class TransactionServiceTest {
         dto.setQuantity(EXCESSIVE_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(SELL);
+        doThrow(new InsufficientHoldingsException("Insufficient holdings to complete the sale."))
+                .when(mockValidator).validate(dto, DEFAULT_BALANCE, currentHoldings);
         Exception exception = assertThrows(InsufficientHoldingsException.class, () -> {
             transactionService.makeTx(dto);
         });

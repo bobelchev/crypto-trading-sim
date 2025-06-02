@@ -8,6 +8,7 @@ import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.TransactionRepository;
 import com.example.crypto.repository.UserRepository;
+import com.example.crypto.service.validation.TransactionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +28,8 @@ public class TransactionService {
     UserRepository userRepository;
     @Autowired
     CryptoHoldingService cryptoHoldingService;
-
-    public List<Transaction> getAllTransactions(long userId){
-        return transactionRepository.getAllTxForUser(userId);
-    }
+    @Autowired
+    TransactionValidator transactionValidator;
 
     /**
      * Handles the business logic for both buy and sell transactions.
@@ -57,22 +56,11 @@ public class TransactionService {
      * @throws IllegalStateException if the transaction is invalid (e.g., insufficient funds or holdings, or non-positive quantity)
      */
     public void makeTx(TransactionDTO transaction){
-        if (transaction.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidTransactionException("Quantity must be a positive number.");
-        }
+
         BigDecimal cost = transaction.getPrice().multiply(transaction.getQuantity());
         BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(transaction.getUserId(),transaction.getCryptoTicker());
-        // TODO define custom exception
-        /*
-        specify buy or sell because in case of selling for cost
-        bigger than the balance it will still throw which is incorrect
-         */
-        if(transaction.getType() == TransactionType.BUY  && cost.compareTo(availableBalance)>0){
-            throw new InsufficientBalanceException("Insufficient balance to complete the purchase.");
-        } else if (transaction.getType() == TransactionType.SELL && transaction.getQuantity().compareTo(currentTickerQuantity) > 0) {
-            throw new InsufficientHoldingsException("Insufficient holdings to complete the sale.");
-        }
+        transactionValidator.validate(transaction,availableBalance,currentTickerQuantity);
         BigDecimal newBalance = (transaction.getType().equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
         userRepository.updateBalance(transaction.getUserId(),newBalance);
         //before holding got deleted before we can read the average price
@@ -85,6 +73,9 @@ public class TransactionService {
             insertTx(transaction,BigDecimal.ZERO);
         }
 
+    }
+    public List<Transaction> getAllTransactions(long userId){
+        return transactionRepository.getAllTxForUser(userId);
     }
 
    private void insertTx(TransactionDTO transaction, BigDecimal pNl){
