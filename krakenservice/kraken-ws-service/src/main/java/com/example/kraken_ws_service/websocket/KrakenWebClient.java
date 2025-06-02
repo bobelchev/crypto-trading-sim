@@ -1,11 +1,10 @@
-package com.example.crypto.websocket.client;
+package com.example.kraken_ws_service.websocket;
 
-import com.example.crypto.websocket.server.FrontendWebSocketHandler;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -26,14 +25,16 @@ public class KrakenWebClient extends WebSocketClient {
             "TRX/USD", "SHIB/USD", "MATIC/USD", "LINK/USD", "LTC/USD",
             "ATOM/USD", "UNI/USD", "NEAR/USD", "XLM/USD", "XMR/USD"
     };
-    private final FrontendWebSocketHandler frontendHandler;
+    private static final String TOPIC = "my_topic";
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
 
 
     private final Map<String, Double> marketData = new ConcurrentHashMap<>();
 
-    public KrakenWebClient(URI serverURI,FrontendWebSocketHandler frontendHandler) {
+    public KrakenWebClient(URI serverURI,KafkaTemplate<String, Object> kafkaTemplate) {
         super(serverURI);
-        this.frontendHandler = frontendHandler;
+        this.kafkaTemplate = kafkaTemplate;
 
     }
 
@@ -66,6 +67,8 @@ public class KrakenWebClient extends WebSocketClient {
                 """, pairs);
 
         send(subMessage);
+        System.out.println("Subscribe sent");
+
     }
 
     @Override
@@ -77,6 +80,7 @@ public class KrakenWebClient extends WebSocketClient {
     public void onMessage(String message) {
         //{"channel":"ticker","type":"snapshot","data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]}
         JSONObject json = new JSONObject(message);
+        System.out.println("Message sent: ");
 
         if (json.has("channel") && "ticker".equals(json.getString("channel")) && json.has("data")) {
             //"data":[{"symbol":"BNB/USD","bid":598.43,"bid_qty":0.83551,"ask":600.08,"ask_qty":8.20024,"last":600.21,"volume":485.14555,"vwap":602.41,"low":597.39,"high":608.89,"change":-1.37,"change_pct":-0.23}]
@@ -87,9 +91,9 @@ public class KrakenWebClient extends WebSocketClient {
             String symbol = firstEntry.getString("symbol");
             double last = firstEntry.getDouble("last");
             updateMarketData(symbol,last);
-            if(!frontendHandler.getSessions().isEmpty()) {
-                frontendHandler.pushMarketData(new JSONObject(marketData).toString());
-            }
+            kafkaTemplate.send(TOPIC, marketData);
+            System.out.println("Message sent: ");
+
         }
 
     }

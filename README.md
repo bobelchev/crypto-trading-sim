@@ -94,3 +94,7 @@ Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiW
    - **Author**: [Alex Booker](https://github.com/bookercodes)
    - **Published by**: [Ably](https://ably.com)
 
+- **Kafka Docker Setup Guide**  
+  Used as a reference for setting up Apache Kafka and Zookeeper using Docker and Docker Compose.
+    - **Article**: [Kafka With Docker](https://www.baeldung.com/ops/kafka-docker-setup)
+    - **Published by**: [Baeldung](https://www.baeldung.com)

@@ -1,4 +1,4 @@
-package com.example.crypto.websocket.client;
+package com.example.kraken_ws_service.websocket;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
