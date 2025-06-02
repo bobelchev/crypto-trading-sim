@@ -1,9 +1,6 @@
 package com.example.crypto.service;
 
 import com.example.crypto.controller.dto.TransactionDTO;
-import com.example.crypto.exception.InsufficientBalanceException;
-import com.example.crypto.exception.InsufficientHoldingsException;
-import com.example.crypto.exception.InvalidTransactionException;
 import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.TransactionRepository;
@@ -11,9 +8,7 @@ import com.example.crypto.repository.UserRepository;
 import com.example.crypto.service.validation.TransactionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,6 +25,10 @@ public class TransactionService {
     CryptoHoldingService cryptoHoldingService;
     @Autowired
     TransactionValidator transactionValidator;
+
+    public List<Transaction> getAllTransactions(long userId){
+        return transactionRepository.getAllTxForUser(userId);
+    }
 
     /**
      * Handles the business logic for both buy and sell transactions.
@@ -60,7 +59,7 @@ public class TransactionService {
         BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(transaction.getUserId(),transaction.getCryptoTicker());
         transactionValidator.validate(transaction,availableBalance,currentTickerQuantity);
-        BigDecimal newBalance = (transaction.getType().equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
+        BigDecimal newBalance = calculateNewBalance(transaction.getType(),availableBalance,cost);
         userRepository.updateBalance(transaction.getUserId(),newBalance);
         //read the price before the holding gets deleted
         BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
@@ -71,9 +70,9 @@ public class TransactionService {
         insertTx(transaction, profitOrLoss);
 
     }
-    public List<Transaction> getAllTransactions(long userId){
-        return transactionRepository.getAllTxForUser(userId);
-    }
+   private BigDecimal calculateNewBalance(TransactionType type, BigDecimal availableBalance, BigDecimal cost){
+        return (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
+   }
    private BigDecimal calculatePnL(BigDecimal price, BigDecimal averagePrice, BigDecimal quantity){
         return price.subtract(averagePrice).multiply(quantity);
    }
