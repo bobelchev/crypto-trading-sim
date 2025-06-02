@@ -1,5 +1,6 @@
 package com.example.crypto.service;
 
+import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.TransactionRepository;
@@ -50,7 +51,13 @@ public class TransactionServiceTest {
         BigDecimal cost = DEFAULT_QUANTITY.multiply(DEFAULT_PRICE);
         //added this one because did not anticipate to be needed before
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
-        transactionService.makeTx(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,DEFAULT_PRICE,BUY);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(DEFAULT_TICKER);
+        dto.setQuantity(DEFAULT_QUANTITY);
+        dto.setPrice(DEFAULT_PRICE);
+        dto.setType(BUY);
+        transactionService.makeTx(dto);
         verify(mockUserRepository).updateBalance(USERID,DEFAULT_BALANCE.subtract(cost));
         verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY, BUY, DEFAULT_PRICE);
         //not testing timestamp or profit loss (we have to mock quite a lot from holding service)
@@ -62,8 +69,14 @@ public class TransactionServiceTest {
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         when(mockHoldingService.getAveragePrice(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("80.000000"));
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(DEFAULT_TICKER);
+        dto.setQuantity(DEFAULT_QUANTITY);
+        dto.setPrice(DEFAULT_PRICE);
+        dto.setType(SELL);
 
-        transactionService.makeTx(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,DEFAULT_PRICE,SELL);
+        transactionService.makeTx(dto);
 
         verify(mockUserRepository).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
         verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,SELL,DEFAULT_PRICE);
@@ -77,8 +90,14 @@ public class TransactionServiceTest {
         BigDecimal cost = NEGATIVE_QUANTITY.multiply(DEFAULT_PRICE);
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(DEFAULT_TICKER);
+        dto.setQuantity(NEGATIVE_QUANTITY);
+        dto.setPrice(DEFAULT_PRICE);
+        dto.setType(SELL);
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            transactionService.makeTx(USERID, DEFAULT_TICKER, NEGATIVE_QUANTITY, DEFAULT_PRICE, SELL);
+            transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
         verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));
@@ -89,8 +108,14 @@ public class TransactionServiceTest {
     public void testIllegalBuyNegativeQuantity(){
         BigDecimal cost = NEGATIVE_QUANTITY.multiply(DEFAULT_PRICE);
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(DEFAULT_TICKER);
+        dto.setQuantity(NEGATIVE_QUANTITY);
+        dto.setPrice(DEFAULT_PRICE);
+        dto.setType(BUY);
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            transactionService.makeTx(USERID, DEFAULT_TICKER, NEGATIVE_QUANTITY, DEFAULT_PRICE, BUY);
+            transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
         verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));
@@ -101,8 +126,14 @@ public class TransactionServiceTest {
     public void testIllegalBuyExcessiveQuantity(){
         BigDecimal cost = EXCESSIVE_QUANTITY.multiply(DEFAULT_PRICE);
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(DEFAULT_TICKER);
+        dto.setQuantity(EXCESSIVE_QUANTITY);
+        dto.setPrice(DEFAULT_PRICE);
+        dto.setType(BUY);
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            transactionService.makeTx(USERID, DEFAULT_TICKER, EXCESSIVE_QUANTITY, DEFAULT_PRICE, BUY);
+            transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Insufficient balance to complete the purchase."));
         verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));
@@ -115,8 +146,14 @@ public class TransactionServiceTest {
         BigDecimal cost = EXCESSIVE_QUANTITY.multiply(DEFAULT_PRICE);
         when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(currentHoldings);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(DEFAULT_TICKER);
+        dto.setQuantity(EXCESSIVE_QUANTITY);
+        dto.setPrice(DEFAULT_PRICE);
+        dto.setType(SELL);
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            transactionService.makeTx(USERID, DEFAULT_TICKER, EXCESSIVE_QUANTITY, DEFAULT_PRICE, SELL);
+            transactionService.makeTx(dto);
         });
         assert(exception.getMessage().contains("Insufficient holdings to complete the sale."));
         verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));

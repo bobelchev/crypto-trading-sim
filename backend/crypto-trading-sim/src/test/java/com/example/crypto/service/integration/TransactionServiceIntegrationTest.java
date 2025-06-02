@@ -1,5 +1,6 @@
 package com.example.crypto.service.integration;
 
+import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,8 +60,15 @@ public class TransactionServiceIntegrationTest {
                 sql, BigDecimal.class, USERID);
         //test if setup is ok
         assertEquals(DEFAULT_BALANCE, initialBalance);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(ticker);
+        dto.setQuantity(quantity);
+        dto.setPrice(price);
+        dto.setType(TransactionType.BUY);
 
-        transactionService.makeTx(USERID, ticker, quantity, price, TransactionType.BUY);
+
+        transactionService.makeTx(dto);
         BigDecimal leftoverBalance = jdbcTemplate.queryForObject(
                 sql, BigDecimal.class, USERID);
         assertEquals(DEFAULT_BALANCE.subtract(cost).setScale(6),leftoverBalance);
@@ -87,9 +95,15 @@ public class TransactionServiceIntegrationTest {
         //test if setup is ok
         //for this test default should be 10k to throw an exception
         assertEquals(DEFAULT_BALANCE, initialBalance);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(ticker);
+        dto.setQuantity(quantity);
+        dto.setPrice(price);
+        dto.setType(TransactionType.BUY);
 
         Exception exception = assertThrows(IllegalStateException.class, () -> {
-            transactionService.makeTx(USERID, ticker, quantity, price, TransactionType.BUY);
+            transactionService.makeTx(dto);
         });
         String expectedMessage = "Insufficient balance to complete the purchase.";
         String actualMessage = exception.getMessage();
@@ -122,8 +136,14 @@ public class TransactionServiceIntegrationTest {
         BigDecimal initialBalance = jdbcTemplate.queryForObject(
                 sql, BigDecimal.class, USERID);
         assertEquals(DEFAULT_BALANCE, initialBalance);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(ticker);
+        dto.setQuantity(quantity);
+        dto.setPrice(price);
+        dto.setType(TransactionType.SELL);
 
-        transactionService.makeTx(USERID, ticker, quantity, price, TransactionType.SELL);
+        transactionService.makeTx(dto);
         BigDecimal newBalance = jdbcTemplate.queryForObject(
                 sql, BigDecimal.class, USERID);
         assertEquals(DEFAULT_BALANCE.add(cost).setScale(6),newBalance);
@@ -156,8 +176,14 @@ public class TransactionServiceIntegrationTest {
         BigDecimal initialBalance = jdbcTemplate.queryForObject(
                 sql, BigDecimal.class, USERID);
         assertEquals(DEFAULT_BALANCE, initialBalance);
+        TransactionDTO dto = new TransactionDTO();
+        dto.setUserId(USERID);
+        dto.setCryptoTicker(ticker);
+        dto.setQuantity(quantity);
+        dto.setPrice(price);
+        dto.setType(TransactionType.SELL);
         Exception exception = assertThrows(IllegalStateException.class, () -> {
-            transactionService.makeTx(USERID, ticker, quantity, price, TransactionType.SELL);
+            transactionService.makeTx(dto);
         });
         String expectedMessage = "Insufficient holdings to complete the sale.";
         String actualMessage = exception.getMessage();

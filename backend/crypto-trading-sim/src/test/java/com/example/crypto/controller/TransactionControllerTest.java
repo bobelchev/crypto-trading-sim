@@ -1,5 +1,6 @@
 package com.example.crypto.controller;
 
+import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.service.TransactionService;
 import com.example.crypto.service.UserService;
@@ -44,11 +45,13 @@ public class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Transaction successful."));
         verify(transactionService).makeTx(
-                1L,
-                "ETH",
-                new BigDecimal("1.500000"),
-                new BigDecimal("2000.000000"),
-                TransactionType.BUY
+                new TransactionDTO() {{
+                    setUserId(1L);
+                    setCryptoTicker("ETH");
+                    setQuantity(new BigDecimal("1.500000"));
+                    setPrice(new BigDecimal("2000.000000"));
+                    setType(TransactionType.BUY);
+                }}
         );
 
     }

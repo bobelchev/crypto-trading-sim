@@ -38,13 +38,7 @@ public class TransactionController {
     @PostMapping
     @CrossOrigin(origins = {"http://localhost:5173","http://localhost:5174","http://localhost:3000"})
     public ResponseEntity<String> makeTransaction(@RequestBody TransactionDTO transactionRequest){
-        transactionService.makeTx(
-                transactionRequest.getUserId(),
-                transactionRequest.getCryptoTicker(),
-                transactionRequest.getQuantity(),
-                transactionRequest.getPrice(),
-                transactionRequest.getType()
-        );
+        transactionService.makeTx(transactionRequest);
         return ResponseEntity.ok("Transaction successful.");
     }
 

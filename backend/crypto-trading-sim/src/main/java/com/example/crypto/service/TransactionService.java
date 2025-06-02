@@ -1,5 +1,6 @@
 package com.example.crypto.service;
 
+import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
 import com.example.crypto.repository.TransactionRepository;
@@ -29,44 +30,56 @@ public class TransactionService {
     }
 
     /**
-     * Handles the business logic of a buy transaction.
-     * Deducts from the account balance the total amount
-     * calculated as {@code quantity x price}.
-     * Adds a new holding to the crypto holding or updates
-     * existing one by increasing its quantity.
-     * Creates a transaction of sell type and saves it in the DB.
-     * @param userId the ID of the user making the transaction
-     * @param cryptoTicker the ticker bought e.g. BTC, ETH, etc.
-     * @param quantity the quantity bought
-     * @param price the price of 1 coin from the ticker
+     * Handles the business logic for both buy and sell transactions.
+     * <p>
+     * For a <b>BUY</b> transaction:
+     * <ul>
+     *   <li>Calculates total cost as {@code quantity × price}</li>
+     *   <li>Validates if the user has sufficient balance</li>
+     *   <li>Deducts the cost from the user's balance</li>
+     *   <li>Updates or creates a crypto holding</li>
+     *   <li>Records the transaction in the database</li>
+     * </ul>
+     *
+     * For a <b>SELL</b> transaction:
+     * <ul>
+     *   <li>Validates if the user has enough holdings of the crypto</li>
+     *   <li>Increases the user's balance by {@code quantity × price}</li>
+     *   <li>Updates the user's holdings</li>
+     *   <li>Calculates profit/loss based on average purchase price</li>
+     *   <li>Records the transaction in the database</li>
+     * </ul>
+     *
+     * @param transaction a {@link TransactionDTO} containing user ID, crypto ticker, quantity, price, and transaction type
+     * @throws IllegalStateException if the transaction is invalid (e.g., insufficient funds or holdings, or non-positive quantity)
      */
-    public void makeTx(long userId, String cryptoTicker, BigDecimal quantity, BigDecimal price, TransactionType type){
-        if (quantity.compareTo(BigDecimal.ZERO) <= 0) {
+    public void makeTx(TransactionDTO transaction){
+        if (transaction.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("Quantity must be a positive number.");
         }
-        BigDecimal cost = price.multiply(quantity);
-        BigDecimal availableBalance = userRepository.getBalanceOfUser(userId);
-        BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(userId,cryptoTicker);
+        BigDecimal cost = transaction.getPrice().multiply(transaction.getQuantity());
+        BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
+        BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(transaction.getUserId(),transaction.getCryptoTicker());
         // TODO define custom exception
         /*
         specify buy or sell because in case of selling for cost
         bigger than the balance it will still throw which is incorrect
          */
-        if(type == TransactionType.BUY  && cost.compareTo(availableBalance)>0){
+        if(transaction.getType() == TransactionType.BUY  && cost.compareTo(availableBalance)>0){
             throw new IllegalStateException("Insufficient balance to complete the purchase.");
-        } else if (type == TransactionType.SELL && quantity.compareTo(currentTickerQuantity) > 0) {
+        } else if (transaction.getType() == TransactionType.SELL && transaction.getQuantity().compareTo(currentTickerQuantity) > 0) {
             throw new IllegalStateException("Insufficient holdings to complete the sale.");
         }
-        BigDecimal newBalance = (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
-        userRepository.updateBalance(userId,newBalance);
+        BigDecimal newBalance = (transaction.getType().equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
+        userRepository.updateBalance(transaction.getUserId(),newBalance);
         //before holding got deleted before we can read the average price
-        BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(userId, cryptoTicker);
-        cryptoHoldingService.handleHolding(userId,cryptoTicker,quantity,type,price);
-        if (type == TransactionType.SELL){
-            BigDecimal profitOrLoss = price.subtract(averagePrice).multiply(quantity);
-            insertTx(userId, cryptoTicker, quantity, price, type, profitOrLoss);
+        BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
+        cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());
+        if (transaction.getType() == TransactionType.SELL){
+            BigDecimal profitOrLoss = transaction.getPrice().subtract(averagePrice).multiply(transaction.getQuantity());
+            insertTx(transaction.getUserId(), transaction.getCryptoTicker(), transaction.getQuantity(), transaction.getPrice(), transaction.getType(), profitOrLoss);
         } else {
-            insertTx(userId,cryptoTicker,quantity,price,type,BigDecimal.ZERO);
+            insertTx(transaction.getUserId(), transaction.getCryptoTicker(), transaction.getQuantity(), transaction.getPrice(), transaction.getType(),BigDecimal.ZERO);
         }
 
     }
