@@ -3,9 +3,31 @@
 - Java 17.0.6 or newer (Java 17+ required)
 - Node.js 18.18.2 or newer
 - npm 9.8.1 or newer
+- **Docker**:
+    - Docker Engine `20.10.22` or newer
+    - Docker Compose `v2.15.1` or newer
+    - At least **4 GB of free system RAM** recommended for Kafka/Zookeeper containers
+
+> ✅ Ensure Docker is running before starting Kafka.
+> - On **Windows/macOS**: Start Docker Desktop
+> - On **Linux**: Run `sudo systemctl start docker`
 
 ### Running the project
-1. Navigate to the backend folder and start the Spring Boot server using PS on Windows:
+
+1. Navigate to the `krakenservice` folder that contains the `docker-compose.yml` file:
+
+```bash
+cd krakenservice
+docker-compose up -d
+```
+2. Navigate to the krakenservice folder and start the Spring Boot Kraken service using PS on Windows:
+   ```bash
+      cd krakenservice/kraken-ws-service
+      .\mvnw spring-boot:run        # PowerShell
+      # or
+      mvnw spring-boot:run          # CMD
+   ```
+3. Open new terminal, navigate to the backend folder and start the Spring Boot server using PS on Windows:
 
    ```bash
    cd backend/crypto-trading-sim
@@ -16,7 +38,7 @@
     mvnw spring-boot:run
    ```
 
-2. Open a new terminal, navigate to the frontend folder, and start the React app:
+4. Open a new terminal, navigate to the frontend folder, and start the React app:
 
    ```bash
    cd frontend
@@ -25,6 +47,8 @@
    ```
 
 The backend will run on http://localhost:8080
+
+The kraken service will run on http://localhost:8082
 
 The frontend will run on http://localhost:5173 or fallback to http://localhost:5174
 ### Demo
@@ -70,10 +94,47 @@ Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiW
 
 3. **Pull Requests**
 
-| Feature                          | Branch             | PR Link                                                      |
-|----------------------------------|--------------------|--------------------------------------------------------------|
-| Kraken WebSocket Integration     | `feature/kraken-ws-client` | [#5](https://github.com/bobelchev/crypto-trading-sim/pull/5) |
-| Frontend UI                      | `frontend`         | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
+| Feature                | Branch                     | PR Link                                                      |
+|------------------------|----------------------------|--------------------------------------------------------------|
+| Kraken WebSocket Integration | `feature/kraken-ws-client` | [#5](https://github.com/bobelchev/crypto-trading-sim/pull/5) |
+| Frontend UI            | `frontend`                 | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
+| Extract Kraken WebSocket to Kafka Producer Service                       | `service/kraken-ws`         | [#7](https://github.com/bobelchev/crypto-trading-sim/pull/7) |
+
+
+## 🏗️ Architecture Evolution
+
+### 🔹 First Iteration: Monolithic Architecture
+
+In the initial version of the project, all responsibilities were handled by a **single Spring Boot application**:
+
+- It connected directly to Kraken’s WebSocket API.
+- It parsed and processed live market data.
+- It also maintained WebSocket sessions with all frontend users.
+
+📸 **Diagram: Monolithic Architecture**
+
+![Monolithic Architecture](img/monolith.png)
+
+> As more backend instances were added (e.g., to handle more users), **each instance would open a new subscription to Kraken**, leading to:
+> - Redundant traffic to the Kraken API
+> - Inefficient use of system and network resources
+> - Increased risk of hitting API limits or rate caps
+
+---
+
+### 🔸 Second Iteration: Decoupled Kafka-Based Architecture
+
+To solve this scalability issue and improve overall system design, the project was refactored into an **event-driven architecture** using **Apache Kafka**.
+
+#### 🔁 Key Changes:
+
+- ✅ Introduced a dedicated `kraken-ws-service` that connects to Kraken **once** and acts as a **Kafka producer**
+- ✅ Backend (`crypto-trading-sim`) becomes a **Kafka consumer**, only responsible for frontend communication
+- ✅ Kafka serves as the **single source of truth**, decoupling live data ingestion from distribution
+
+📸 **Diagram: Kafka-Based Microservices Architecture**
+
+![Kafka Microservices Architecture](img/microservice1.png)
 
 ### References
 
