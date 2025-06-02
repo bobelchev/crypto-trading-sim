@@ -66,12 +66,10 @@ public class TransactionService {
         //before holding got deleted before we can read the average price
         BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
         cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());
-        if (transaction.getType() == TransactionType.SELL){
-            BigDecimal profitOrLoss = transaction.getPrice().subtract(averagePrice).multiply(transaction.getQuantity());
-            insertTx(transaction, profitOrLoss);
-        } else {
-            insertTx(transaction,BigDecimal.ZERO);
-        }
+        BigDecimal profitOrLoss = transaction.getType() == TransactionType.SELL
+                ?transaction.getPrice().subtract(averagePrice).multiply(transaction.getQuantity())
+                :BigDecimal.ZERO;
+        insertTx(transaction, profitOrLoss);
 
     }
     public List<Transaction> getAllTransactions(long userId){
