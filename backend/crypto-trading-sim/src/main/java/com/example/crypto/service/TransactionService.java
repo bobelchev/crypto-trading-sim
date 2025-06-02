@@ -77,20 +77,20 @@ public class TransactionService {
         cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());
         if (transaction.getType() == TransactionType.SELL){
             BigDecimal profitOrLoss = transaction.getPrice().subtract(averagePrice).multiply(transaction.getQuantity());
-            insertTx(transaction.getUserId(), transaction.getCryptoTicker(), transaction.getQuantity(), transaction.getPrice(), transaction.getType(), profitOrLoss);
+            insertTx(transaction, profitOrLoss);
         } else {
-            insertTx(transaction.getUserId(), transaction.getCryptoTicker(), transaction.getQuantity(), transaction.getPrice(), transaction.getType(),BigDecimal.ZERO);
+            insertTx(transaction,BigDecimal.ZERO);
         }
 
     }
 
-   private void insertTx(long userId, String cryptoTicker, BigDecimal quantity, BigDecimal price, TransactionType type, BigDecimal pNl){
+   private void insertTx(TransactionDTO transaction, BigDecimal pNl){
         transactionRepository.insertTx(
                 new Transaction(
-                        userId,cryptoTicker,
-                        quantity,price,
+                        transaction.getUserId(),transaction.getCryptoTicker(),
+                        transaction.getQuantity(),transaction.getPrice(),
                         LocalDateTime.now(),
-                        type,
+                        transaction.getType(),
                         pNl
                 )
         );
