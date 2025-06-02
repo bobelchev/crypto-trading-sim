@@ -56,18 +56,17 @@ public class TransactionService {
      * @throws IllegalStateException if the transaction is invalid (e.g., insufficient funds or holdings, or non-positive quantity)
      */
     public void makeTx(TransactionDTO transaction){
-
         BigDecimal cost = transaction.getPrice().multiply(transaction.getQuantity());
         BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(transaction.getUserId(),transaction.getCryptoTicker());
         transactionValidator.validate(transaction,availableBalance,currentTickerQuantity);
         BigDecimal newBalance = (transaction.getType().equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
         userRepository.updateBalance(transaction.getUserId(),newBalance);
-        //before holding got deleted before we can read the average price
+        //read the price before the holding gets deleted
         BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
         cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());
         BigDecimal profitOrLoss = transaction.getType() == TransactionType.SELL
-                ?transaction.getPrice().subtract(averagePrice).multiply(transaction.getQuantity())
+                ?calculatePnL(transaction.getPrice(), averagePrice, transaction.getQuantity())
                 :BigDecimal.ZERO;
         insertTx(transaction, profitOrLoss);
 
@@ -75,7 +74,9 @@ public class TransactionService {
     public List<Transaction> getAllTransactions(long userId){
         return transactionRepository.getAllTxForUser(userId);
     }
-
+   private BigDecimal calculatePnL(BigDecimal price, BigDecimal averagePrice, BigDecimal quantity){
+        return price.subtract(averagePrice).multiply(quantity);
+   }
    private void insertTx(TransactionDTO transaction, BigDecimal pNl){
         transactionRepository.insertTx(
                 new Transaction(
