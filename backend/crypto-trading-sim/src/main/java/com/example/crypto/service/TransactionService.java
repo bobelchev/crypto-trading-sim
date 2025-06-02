@@ -8,6 +8,9 @@ import com.example.crypto.repository.UserRepository;
 import com.example.crypto.service.validation.TransactionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.beans.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,6 +57,7 @@ public class TransactionService {
      * @param transaction a {@link TransactionDTO} containing user ID, crypto ticker, quantity, price, and transaction type
      * @throws IllegalStateException if the transaction is invalid (e.g., insufficient funds or holdings, or non-positive quantity)
      */
+    @Transactional
     public void makeTx(TransactionDTO transaction){
         BigDecimal cost = transaction.getPrice().multiply(transaction.getQuantity());
         BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
