@@ -20,14 +20,21 @@ import java.util.List;
  */
 @Service
 public class TransactionService {
-    @Autowired
-    TransactionRepository transactionRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    CryptoHoldingService cryptoHoldingService;
-    @Autowired
-    TransactionValidator transactionValidator;
+    private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
+    private final CryptoHoldingService cryptoHoldingService;
+    private final TransactionValidator transactionValidator;
+
+
+    public TransactionService(TransactionRepository transactionRepository,
+                              UserRepository userRepository,
+                              CryptoHoldingService cryptoHoldingService,
+                              TransactionValidator transactionValidator) {
+        this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
+        this.cryptoHoldingService = cryptoHoldingService;
+        this.transactionValidator = transactionValidator;
+    }
 
     public List<Transaction> getAllTransactions(long userId){
         return transactionRepository.getAllTxForUser(userId);
@@ -68,7 +75,7 @@ public class TransactionService {
         //read the price before the holding gets deleted
         BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
         cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());
-        BigDecimal profitOrLoss = calculatePnL(transaction.getType(),transaction.getPrice(),averagePrice,currentTickerQuantity);
+        BigDecimal profitOrLoss = calculatePnL(transaction.getType(),transaction.getPrice(),averagePrice,transaction.getQuantity());
         insertTx(transaction, profitOrLoss);
 
     }

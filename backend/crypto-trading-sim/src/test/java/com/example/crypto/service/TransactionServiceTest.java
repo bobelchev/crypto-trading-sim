@@ -44,11 +44,12 @@ public class TransactionServiceTest {
         mockUserRepository = mock(UserRepository.class);
         mockTxRepository = mock(TransactionRepository.class);
         mockHoldingService = mock(CryptoHoldingService.class);
-        transactionService = new TransactionService();
-        transactionService.userRepository = mockUserRepository;
-        transactionService.transactionRepository = mockTxRepository;
-        transactionService.cryptoHoldingService = mockHoldingService;
-        transactionService.transactionValidator = mockValidator;
+        transactionService = new TransactionService(
+                mockTxRepository,
+                mockUserRepository,
+                mockHoldingService,
+                mockValidator
+        );
     }
     @BeforeEach
     void resetMocks() {
