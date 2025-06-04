@@ -27,26 +27,26 @@ public class CryptoHoldingService {
      */
     public void handleHolding(long userId, String cryptoTicker, BigDecimal quantity, TransactionType type, BigDecimal price){
         CryptoHolding cryptoHolding = cryptoHoldingRepository.getSingleHoldingByTickerAndUserId(userId,cryptoTicker);
-        //if it does not exist we will update existing row
-        if (cryptoHolding!=null){
-            BigDecimal oldQuantity = cryptoHolding.getQuantity();
-            //depending on if the tx was BUY or sell we will add or substract
-            BigDecimal newQuantity = (type==TransactionType.BUY)?oldQuantity.add(quantity):oldQuantity.subtract(quantity);
-            //if we sell all from an asset it should be removed
-            if (type == TransactionType.SELL && newQuantity.compareTo(BigDecimal.ZERO) == 0) {
-                cryptoHoldingRepository.deleteSingleHolding(userId, cryptoTicker);
-                return;
-            }
-            BigDecimal newAvgPrice = cryptoHolding.getAveragePrice();
-            //change average only in the case of a BUY
-            if (type == TransactionType.BUY) {
-                newAvgPrice = calculateNewAveragePrice(oldQuantity, cryptoHolding.getAveragePrice(), quantity, price);
-            }
-            cryptoHoldingRepository.updateHolding(new CryptoHolding(userId,cryptoTicker,newQuantity,newAvgPrice));
-        } else {
+        //in case it does not exist insert new
+        if (cryptoHolding==null){
             //in case it does not exist the average price is the market price
             cryptoHoldingRepository.insertHolding(new CryptoHolding(userId,cryptoTicker,quantity,price));
+            return;
         }
+        BigDecimal oldQuantity = cryptoHolding.getQuantity();
+        //depending on if the tx was BUY or sell we will add or substract
+        BigDecimal newQuantity = (type==TransactionType.BUY)?oldQuantity.add(quantity):oldQuantity.subtract(quantity);
+        //if we sell all from an asset it should be removed
+        if (type == TransactionType.SELL && newQuantity.compareTo(BigDecimal.ZERO) == 0) {
+            cryptoHoldingRepository.deleteSingleHolding(userId, cryptoTicker);
+            return;
+        }
+        BigDecimal newAvgPrice = cryptoHolding.getAveragePrice();
+        //change average only in the case of a BUY
+        if (type == TransactionType.BUY) {
+            newAvgPrice = calculateNewAveragePrice(oldQuantity, cryptoHolding.getAveragePrice(), quantity, price);
+        }
+        cryptoHoldingRepository.updateHolding(new CryptoHolding(userId,cryptoTicker,newQuantity,newAvgPrice));
 
     }
     private BigDecimal calculateNewAveragePrice(BigDecimal oldQuantity, BigDecimal oldAvgPrice, BigDecimal addedQuantity, BigDecimal newPrice) {
