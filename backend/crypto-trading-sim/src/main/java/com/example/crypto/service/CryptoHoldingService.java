@@ -12,8 +12,10 @@ import java.util.List;
 
 @Service
 public class CryptoHoldingService {
-    @Autowired
-    CryptoHoldingRepository cryptoHoldingRepository;
+    private final CryptoHoldingRepository cryptoHoldingRepository;
+    public CryptoHoldingService(CryptoHoldingRepository cryptoHoldingRepository){
+        this.cryptoHoldingRepository = cryptoHoldingRepository;
+    }
 
     /**
      * Handles the business logic of creating or updating existing holding.

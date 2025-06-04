@@ -21,8 +21,7 @@ public class CryptoHoldingServiceTest {
     @BeforeAll
     static void setUp() {
         mockRepository = mock(CryptoHoldingRepository.class);
-        holdingService = new CryptoHoldingService();
-        holdingService.cryptoHoldingRepository = mockRepository;
+        holdingService = new CryptoHoldingService(mockRepository);
     }
     @BeforeEach
     void resetMocks() {
