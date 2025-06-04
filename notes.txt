@@ -1,0 +1,11 @@
+Why use a message queue?
+context: There is a KrakenWebClient (websocket) that connects to Kraken API wrapped as a separate standalone service,
+This client acts as a producer to the message queue. And sends real-time data to the queue.
+There is another service crypto-trading-sim that handles logic such as updating the frontend with recent market data and handling transactions and etc.
+This service acts as consumer for the queue above.
+Queue was used because REST will tightly couple the two services.
+Opposite idea: Implementing REST endpoint in the crypto-trading-service to which the kraken service will send the data when there is an update.
+Problems with that idea: tight coupling because the kraken service must know the location and if the consumer is available
+if we scale the crypto-trading-sim horizontally then we need to modify the kraken service or if we try to manage it we have to implement some kind of register which
+provides the locations of all crypto-trading-sim services and then broadcast to each one of them
+also if the consumer for some reason cannot accept the request due to overload then it missed new data while the queue retents the message until it is consumed.

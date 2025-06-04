@@ -68,17 +68,15 @@ public class TransactionService {
         //read the price before the holding gets deleted
         BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
         cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());
-        BigDecimal profitOrLoss = transaction.getType() == TransactionType.SELL
-                ?calculatePnL(transaction.getPrice(), averagePrice, transaction.getQuantity())
-                :BigDecimal.ZERO;
+        BigDecimal profitOrLoss = calculatePnL(transaction.getType(),transaction.getPrice(),averagePrice,currentTickerQuantity);
         insertTx(transaction, profitOrLoss);
 
     }
    private BigDecimal calculateNewBalance(TransactionType type, BigDecimal availableBalance, BigDecimal cost){
         return (type.equals(TransactionType.BUY))?availableBalance.subtract(cost):availableBalance.add(cost);
    }
-   private BigDecimal calculatePnL(BigDecimal price, BigDecimal averagePrice, BigDecimal quantity){
-        return price.subtract(averagePrice).multiply(quantity);
+   private BigDecimal calculatePnL(TransactionType type,BigDecimal price, BigDecimal averagePrice, BigDecimal quantity){
+        return type == TransactionType.SELL?price.subtract(averagePrice).multiply(quantity):BigDecimal.ZERO;
    }
    private void insertTx(TransactionDTO transaction, BigDecimal pNl){
         transactionRepository.insertTx(
