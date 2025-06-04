@@ -34,8 +34,7 @@ public class CryptoHoldingService {
             return;
         }
         BigDecimal oldQuantity = cryptoHolding.getQuantity();
-        //depending on if the tx was BUY or sell we will add or substract
-        BigDecimal newQuantity = (type==TransactionType.BUY)?oldQuantity.add(quantity):oldQuantity.subtract(quantity);
+        BigDecimal newQuantity = calculateNewQuantity(type,oldQuantity,quantity);
         //if we sell all from an asset it should be removed
         if (type == TransactionType.SELL && newQuantity.compareTo(BigDecimal.ZERO) == 0) {
             cryptoHoldingRepository.deleteSingleHolding(userId, cryptoTicker);
@@ -48,6 +47,10 @@ public class CryptoHoldingService {
         }
         cryptoHoldingRepository.updateHolding(new CryptoHolding(userId,cryptoTicker,newQuantity,newAvgPrice));
 
+    }
+    private BigDecimal calculateNewQuantity(TransactionType type, BigDecimal oldQuantity, BigDecimal txQuantity){
+        //depending on if the tx was BUY or sell we will add or substract
+        return (type==TransactionType.BUY)?oldQuantity.add(txQuantity):oldQuantity.subtract(txQuantity);
     }
     private BigDecimal calculateNewAveragePrice(BigDecimal oldQuantity, BigDecimal oldAvgPrice, BigDecimal addedQuantity, BigDecimal newPrice) {
         BigDecimal totalCost = oldAvgPrice.multiply(oldQuantity).add(newPrice.multiply(addedQuantity));
