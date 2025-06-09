@@ -100,6 +100,19 @@ Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiW
 | Frontend UI            | `frontend`                 | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
 | Extract Kraken WebSocket to Kafka Producer Service                       | `service/kraken-ws`         | [#7](https://github.com/bobelchev/crypto-trading-sim/pull/7) |
 
+### 4. **Refactoring Code Smells**
+
+Several core design and maintainability issues were addressed:
+
+| Code Smell Resolved     | Solution Implemented                                           | Example Commit |
+|-------------------------|----------------------------------------------------------------|----------------|
+| 🔍 Hidden Dependencies  | Replaced field injection with **constructor injection**        | [Commit #e3a2675](https://github.com/bobelchev/crypto-trading-sim/commit/e3a26750546df5a8dad161da4cc48967cfa47068) |
+| 🔢 Long Parameter Lists | Grouped method arguments into DTOs or value objects            | [Commit #de231ea](https://github.com/bobelchev/crypto-trading-sim/commit/de231eadfe55c0aca34b59b4bb0c28c75ec205d7) |
+| 📏 Long Methods         | Extracted smaller helper methods to follow SRP                | [Commit #58b097d](https://github.com/bobelchev/crypto-trading-sim/commit/58b097df18f132dfc875aedf93157eb3b43b46fc) |
+| 🚨 Divergent Change     | Introduced a centralized `TransactionValidator` class          | [Commit #24b26d8](https://github.com/bobelchev/crypto-trading-sim/commit/24b26d83e23b689edab956e2c5f136dcc34c68d2) |
+| ❗ Poor Error Handling   | Defined domain-specific **custom exceptions** (e.g., `InvalidTransactionException`) | [Commit #6936db8](https://github.com/bobelchev/crypto-trading-sim/commit/6936db8e57ecfbc40294b9a5388f24ecc2b3ae9a) |
+
+>   **Note:** For more information about common code smells and best practices for refactoring, visit [Refactoring Guru](https://refactoring.guru/refactoring/smells).
 
 ## 🏗️ Architecture Evolution
 
