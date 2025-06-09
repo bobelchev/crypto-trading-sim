@@ -37,8 +37,17 @@ docker-compose up -d
    ```bash
     mvnw spring-boot:run
    ```
+4. Open new terminal, navigate to the gateway-crypto folder and start the Spring Boot server using PS on Windows:
 
-4. Open a new terminal, navigate to the frontend folder, and start the React app:
+   ```bash
+   cd gateway-crypto/gateway-crypto
+   .\mvnw spring-boot:run
+   ```
+   Or if using CMD:
+   ```bash
+    mvnw spring-boot:run
+   ```
+5. Open a new terminal, navigate to the frontend folder, and start the React app:
 
    ```bash
    cd frontend
@@ -46,7 +55,9 @@ docker-compose up -d
    npm start      # Or: npm run dev
    ```
 
-The backend will run on http://localhost:8080
+The gateway will run on http://localhost:8080
+
+The backend will run on http://localhost:8081
 
 The kraken service will run on http://localhost:8082
 
@@ -149,6 +160,18 @@ To solve this scalability issue and improve overall system design, the project w
 
 ![Kafka Microservices Architecture](img/microservice1.png)
 
+### 🔹 Third Iteration: API Gateway
+
+Introduced a simple API Gateway using Spring WebFlux. At this point to provide simple routing and CORS policy management to the monolith service.
+ 
+Now that the gateway is in place:
+
+- 🧩 The backend can be gradually decomposed into services like `user-service`, `transaction-service`, `marketdata-service`, etc.
+- 🔄 Gateway will be updated to route requests using service names instead of static ports
+- 🛡 Authentication and rate limiting can be handled globally
+- 📊 Observability (e.g., using Sleuth or OpenTelemetry) can be added to trace requests across the system
+![API Gateway](img/gateway.png)
+
 ### References
 
 - **Java-WebSocket Library**  
@@ -172,3 +195,8 @@ To solve this scalability issue and improve overall system design, the project w
   Used as a reference for setting up Apache Kafka and Zookeeper using Docker and Docker Compose.
     - **Article**: [Kafka With Docker](https://www.baeldung.com/ops/kafka-docker-setup)
     - **Published by**: [Baeldung](https://www.baeldung.com)
+
+- **Spring Cloud Gateway with Spring WebFlux**  
+  Used to understand routing and WebFlux configuration in Spring Cloud Gateway.
+    - **Article**: [Spring Cloud Gateway with Spring WebFlux](https://www.geeksforgeeks.org/spring-cloud-gateway-with-spring-webflux/)
+    - **Published by**: [GeeksforGeeks](https://www.geeksforgeeks.org)
