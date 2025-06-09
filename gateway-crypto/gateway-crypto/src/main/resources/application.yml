@@ -23,17 +23,6 @@ spring:
               uri: ws://localhost:8081
               predicates:
                 - Path=/ws/**
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "*"
-            allowedMethods:
-              - "*"
-            allowedHeaders:
-              - "*"
-            allowCredentials: false
-
 logging:
   level:
     root: INFO
