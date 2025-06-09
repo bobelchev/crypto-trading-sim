@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: users-route
+              uri: http://localhost:8081
+              predicates:
+                - Path=/users/**
+
+            - id: transactions-route
+              uri: http://localhost:8081
+              predicates:
+                - Path=/transactions/**
+
+            - id: holdings-route
+              uri: http://localhost:8081
+              predicates:
+                - Path=/holdings/**
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
