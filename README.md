@@ -103,13 +103,14 @@ Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiW
    > - [`frontend`](https://github.com/bobelchev/crypto-trading-sim/tree/frontend) – Implements the React frontend interface
    > - [`feature/kraken-ws-client`](https://github.com/bobelchev/crypto-trading-sim/tree/feature/kraken-ws-client) – Connects to Kraken WebSocket API and exposes real-time data
 
-3. **Pull Requests**
+### 3. **Pull Requests**
 
-| Feature                | Branch                     | PR Link                                                      |
-|------------------------|----------------------------|--------------------------------------------------------------|
-| Kraken WebSocket Integration | `feature/kraken-ws-client` | [#5](https://github.com/bobelchev/crypto-trading-sim/pull/5) |
-| Frontend UI            | `frontend`                 | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
-| Extract Kraken WebSocket to Kafka Producer Service                       | `service/kraken-ws`         | [#7](https://github.com/bobelchev/crypto-trading-sim/pull/7) |
+| Feature                                               | Branch                     | PR Link                                                      |
+|--------------------------------------------------------|----------------------------|--------------------------------------------------------------|
+| Kraken WebSocket Integration                          | `feature/kraken-ws-client` | [#5](https://github.com/bobelchev/crypto-trading-sim/pull/5) |
+| Frontend UI                                           | `frontend`                 | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
+| Extract Kraken WebSocket to Kafka Producer Service    | `service/kraken-ws`        | [#7](https://github.com/bobelchev/crypto-trading-sim/pull/7) |
+| Introduce API Gateway using Spring Cloud Gateway      | `gateway/api-gateway`      | [#8](https://github.com/bobelchev/crypto-trading-sim/pull/8) |
 
 ### 4. **Refactoring Code Smells**
 
