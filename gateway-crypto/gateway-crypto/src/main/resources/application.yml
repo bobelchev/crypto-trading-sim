@@ -11,16 +11,24 @@ spring:
               uri: http://localhost:8081
               predicates:
                 - Path=/users/**
-
             - id: transactions-route
               uri: http://localhost:8081
               predicates:
                 - Path=/transactions/**
-
             - id: holdings-route
               uri: http://localhost:8081
               predicates:
                 - Path=/holdings/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: false
 
 logging:
   level:
