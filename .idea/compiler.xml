@@ -13,11 +13,18 @@
         <module name="kraken-ws-service" />
         <module name="crypto-trading-sim" />
       </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="gateway-crypto" />
+      </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="crypto-trading-sim" options="-parameters" />
+      <module name="gateway-crypto" options="-parameters" />
       <module name="kraken-ws-service" options="-parameters" />
     </option>
   </component>

@@ -18,6 +18,5 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "my_topic", groupId = "group_id")
     public void consume(String message) {
         frontendWebSocketHandler.pushMarketData(message);
-        System.out.println("Message received: " + message);
     }
 }
