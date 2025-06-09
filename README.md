@@ -68,23 +68,26 @@ Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiW
 
 ### Screenshots
 
-#### Initial Application Screen (Top 20 Crypto Prices)
-![Top 20 Crypto Prices](img/initialScreen.png)
-----
-#### Buy Interface
-![Buy Interface](img/buyInterface.png)
-----
-#### Sell Interface
-![Sell Interface](img/sellInterface.png)
-----
-#### Updated Balance After Transaction
 
-![Interface before the transaction](img/initialScreen.png)
-----
-![Make a sell](img/buyInterface.png)
-----
-![Interface after the transaction](img/interfaceAfterBuy.png)
-----
+<h4>Initial Application Screen (Top 20 Crypto Prices)</h4>
+<img src="img/initialScreen.png" alt="Top 20 Crypto Prices" width="400"/>
+
+<hr/>
+
+<h4>Buy Interface</h4>
+<img src="img/buyInterface.png" alt="Buy Interface" width="400"/>
+
+<hr/>
+
+<h4>Sell Interface</h4>
+<img src="img/sellInterface.png" alt="Sell Interface" width="400"/>
+
+<hr/>
+
+<h4>Updated Balance After Transaction</h4>
+<img src="img/initialScreen.png" alt="Before Transaction" width="300"/>
+<img src="img/buyInterface.png" alt="Transaction In Progress" width="300"/>
+<img src="img/interfaceAfterBuy.png" alt="After Transaction" width="300"/>
 ### Development Process
 
 1. **Test-Driven Development (TDD) for the Backend**
