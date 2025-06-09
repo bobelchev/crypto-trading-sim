@@ -19,6 +19,10 @@ spring:
               uri: http://localhost:8081
               predicates:
                 - Path=/holdings/**
+            - id: websocket-route
+              uri: ws://localhost:8081
+              predicates:
+                - Path=/ws/**
       globalcors:
         corsConfigurations:
           '[/**]':
