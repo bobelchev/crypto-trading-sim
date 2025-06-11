@@ -4,5 +4,6 @@
     <file url="file://$PROJECT_DIR$/backend/crypto-trading-sim/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gateway-crypto/gateway-crypto/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/krakenservice/kraken-ws-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/market-data-streamer/market-data-streamer/src/main/java" charset="UTF-8" />
   </component>
 </project>
