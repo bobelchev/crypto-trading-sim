@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/krakenservice/kraken-ws-service/pom.xml" />
         <option value="$PROJECT_DIR$/gateway-crypto/gateway-crypto/pom.xml" />
         <option value="$PROJECT_DIR$/market-data-streamer/market-data-streamer/pom.xml" />
+        <option value="$PROJECT_DIR$/eureka-server/eureka-server/pom.xml" />
       </list>
     </option>
   </component>

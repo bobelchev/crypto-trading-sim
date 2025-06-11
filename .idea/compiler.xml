@@ -10,23 +10,15 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="crypto-trading-sim" />
-      </profile>
-      <profile name="Annotation profile for kraken-ws-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-        </processorPath>
         <module name="kraken-ws-service" />
+        <module name="crypto-trading-sim" />
       </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gateway-crypto" />
+        <module name="eureka-server" />
         <module name="market-data-streamer" />
       </profile>
     </annotationProcessing>
@@ -34,6 +26,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="crypto-trading-sim" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
       <module name="gateway-crypto" options="-parameters" />
       <module name="kraken-ws-service" options="-parameters" />
       <module name="market-data-streamer" options="-parameters" />
