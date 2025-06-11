@@ -1,7 +1,6 @@
 package com.example.crypto.websocket.server.kafka.consumer;
 
 import com.example.crypto.websocket.server.FrontendWebSocketHandler;
-import com.example.crypto.websocket.server.FrontendWebSocketServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

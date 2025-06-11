@@ -27,6 +27,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gateway-crypto" />
+        <module name="market-data-streamer" />
       </profile>
     </annotationProcessing>
   </component>
@@ -35,6 +36,7 @@
       <module name="crypto-trading-sim" options="-parameters" />
       <module name="gateway-crypto" options="-parameters" />
       <module name="kraken-ws-service" options="-parameters" />
+      <module name="market-data-streamer" options="-parameters" />
     </option>
   </component>
 </project>
