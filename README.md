@@ -27,7 +27,14 @@ docker-compose up -d
       # or
       mvnw spring-boot:run          # CMD
    ```
-3. Open new terminal, navigate to the backend folder and start the Spring Boot server using PS on Windows:
+3. Navigate to the marked-data-streamer folder and start the Spring Boot Market Data service using PS on Windows:
+   ```bash
+      cd market-data-streamer/market-data-streamer
+      .\mvnw spring-boot:run        # PowerShell
+      # or
+      mvnw spring-boot:run          # CMD
+   ```
+4. Open new terminal, navigate to the backend folder and start the Spring Boot server using PS on Windows:
 
    ```bash
    cd backend/crypto-trading-sim
@@ -37,7 +44,7 @@ docker-compose up -d
    ```bash
     mvnw spring-boot:run
    ```
-4. Open new terminal, navigate to the gateway-crypto folder and start the Spring Boot server using PS on Windows:
+5. Open new terminal, navigate to the gateway-crypto folder and start the Spring Boot server using PS on Windows:
 
    ```bash
    cd gateway-crypto/gateway-crypto
@@ -47,7 +54,7 @@ docker-compose up -d
    ```bash
     mvnw spring-boot:run
    ```
-5. Open a new terminal, navigate to the frontend folder, and start the React app:
+6. Open a new terminal, navigate to the frontend folder, and start the React app:
 
    ```bash
    cd frontend
@@ -59,7 +66,9 @@ The gateway will run on http://localhost:8080
 
 The backend will run on http://localhost:8081
 
-The kraken service will run on http://localhost:8082
+The market data streamer service  will run on http://localhost:8082
+
+The kraken service will run on http://localhost:8083
 
 The frontend will run on http://localhost:5173 or fallback to http://localhost:5174
 ### Demo
@@ -114,6 +123,8 @@ Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiW
 | Frontend UI                                           | `frontend`                 | [#6](https://github.com/bobelchev/crypto-trading-sim/pull/6) |
 | Extract Kraken WebSocket to Kafka Producer Service    | `service/kraken-ws`        | [#7](https://github.com/bobelchev/crypto-trading-sim/pull/7) |
 | Introduce API Gateway using Spring Cloud Gateway      | `gateway/api-gateway`      | [#8](https://github.com/bobelchev/crypto-trading-sim/pull/8) |
+| Decouple WebSocket Market Data Streaming to New Service | `service/market-data-streamer` | [#9](https://github.com/bobelchev/crypto-trading-sim/pull/9) |
+
 
 ### 4. **Refactoring Code Smells**
 
