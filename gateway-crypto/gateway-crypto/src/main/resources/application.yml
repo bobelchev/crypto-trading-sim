@@ -20,7 +20,7 @@ spring:
               predicates:
                 - Path=/holdings/**
             - id: websocket-route
-              uri: ws://localhost:8081
+              uri: ws://localhost:8082
               predicates:
                 - Path=/ws/**
 logging:
