@@ -176,6 +176,28 @@ Now that the gateway is in place:
 - 📊 Observability (e.g., using Sleuth or OpenTelemetry) can be added to trace requests across the system
 ![API Gateway](img/gateway.png)
 
+
+### 🔹 Fourth Iteration: Decoupling the Frontend WebSocket Push Server from the Monolith
+
+To further isolate concerns and improve scalability, a new service called `market-data-streamer` was introduced. This service is responsible solely for **streaming real-time market data to frontend clients over WebSocket**.
+
+#### 🔁 Key Changes:
+
+- ✅ The monolith no longer manages WebSocket sessions for market data.
+- ✅ `market-data-streamer` acts as a **Kafka consumer**, receiving market data from the `kraken-ws-service`.
+- ✅ It maintains WebSocket sessions with connected frontend clients and pushes updates in real time.
+- ✅ This decoupling allows both the market data ingestion and WebSocket streaming layers to scale independently.
+
+#### 🌟 Benefits:
+
+- 📦 **Better separation of concerns** – data ingestion and client communication are now handled by dedicated services.
+- 📈 **Scalability** – the streamer service can be horizontally scaled based on user demand without impacting Kraken API usage.
+- 🧪 **Easier testing and deployment** – changes to WebSocket logic don’t affect the main trading simulator backend.
+- 🧩 **Modularity** – sets the foundation for additional streaming channels or protocol support in the future (e.g., SSE, gRPC streams).
+
+📸 **Diagram: Market Data Streamer Architecture**
+
+![Market Data Streamer](img/marketDataStreamer.png)
 ### References
 
 - **Java-WebSocket Library**  
