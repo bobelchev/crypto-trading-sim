@@ -35,4 +35,13 @@ public class UserController {
     public void resetUserAccount(@RequestParam long userId) {
         userService.resetAccount(userId);
     }
+    /**
+     * Endpoint for updating the balance of a user account to a specified value.
+     * @param userId      the ID of the user whose balance is to be updated
+     * @param newBalance  the new balance value to set for the user
+     */
+    @PostMapping("/updateBalance")
+    public void updateBalance(@RequestParam long userId, @RequestParam BigDecimal newBalance) {
+        userService.updateBalance(userId,newBalance);
+    }
 }

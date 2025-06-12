@@ -38,4 +38,7 @@ public class UserService {
     public BigDecimal getBalance(long userId){
             return userRepository.getBalanceOfUser(userId);
     }
+    public void updateBalance(long userId, BigDecimal newBalance){
+        userRepository.updateBalance(userId,newBalance);
+    }
 }

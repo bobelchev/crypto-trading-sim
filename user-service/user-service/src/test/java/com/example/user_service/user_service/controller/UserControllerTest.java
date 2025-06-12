@@ -43,4 +43,13 @@ public class UserControllerTest {
 
         verify(userService).resetAccount(USERID);
     }
+    @Test
+    public void testUpdateBalance() throws Exception {
+        mockMvc.perform(post("/users/updateBalance")
+                        .param("userId", String.valueOf(USERID))
+                        .param("newBalance", "5000.000000"))
+                .andExpect(status().isOk());
+
+        verify(userService).updateBalance(USERID, new BigDecimal("5000.000000"));
+    }
 }

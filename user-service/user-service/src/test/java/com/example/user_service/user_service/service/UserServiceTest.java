@@ -20,7 +20,6 @@ public class UserServiceTest {
     @BeforeEach
     void setUp(){
         mockUserRepository = mock(UserRepository.class);
-
         userService = new UserService();
         userService.userRepository = mockUserRepository;
     }
@@ -40,5 +39,13 @@ public class UserServiceTest {
         //verify(mockTxRepository,times(1)).deleteAllTxs(USERID);
         //verify(mockHoldingService,times(1)).deleteAllHoldingsOfUser(USERID);
     }
+    @Test
+    public void testUpdateBalance() {
+        BigDecimal newBalance = new BigDecimal("5000.000000");
+        userService.updateBalance(USERID, newBalance);
+
+        verify(mockUserRepository, times(1)).updateBalance(USERID, newBalance);
+    }
+
 
 }
