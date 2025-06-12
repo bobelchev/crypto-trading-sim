@@ -2,21 +2,26 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: api-gateway
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       server:
         webflux:
           routes:
             - id: users-route
-              uri: http://localhost:8081
+              uri: lb://crypto-trading-sim
               predicates:
                 - Path=/users/**
             - id: transactions-route
-              uri: http://localhost:8081
+              uri: lb://crypto-trading-sim
               predicates:
                 - Path=/transactions/**
             - id: holdings-route
-              uri: http://localhost:8081
+              uri: lb://crypto-trading-sim
               predicates:
                 - Path=/holdings/**
             - id: websocket-route

@@ -27,14 +27,21 @@ docker-compose up -d
       # or
       mvnw spring-boot:run          # CMD
    ```
-3. Navigate to the marked-data-streamer folder and start the Spring Boot Market Data service using PS on Windows:
+3. Navigate to the eureka-server folder and start the Spring Boot Eureka discovery service using PS on Windows:
+   ```bash
+      cd eureka-server/eureka-server
+      .\mvnw spring-boot:run        # PowerShell
+      # or
+      mvnw spring-boot:run          # CMD
+   ```
+4. Navigate to the marked-data-streamer folder and start the Spring Boot Market Data service using PS on Windows:
    ```bash
       cd market-data-streamer/market-data-streamer
       .\mvnw spring-boot:run        # PowerShell
       # or
       mvnw spring-boot:run          # CMD
    ```
-4. Open new terminal, navigate to the backend folder and start the Spring Boot server using PS on Windows:
+5. Open new terminal, navigate to the backend folder and start the Spring Boot server using PS on Windows:
 
    ```bash
    cd backend/crypto-trading-sim
@@ -44,7 +51,7 @@ docker-compose up -d
    ```bash
     mvnw spring-boot:run
    ```
-5. Open new terminal, navigate to the gateway-crypto folder and start the Spring Boot server using PS on Windows:
+6. Open new terminal, navigate to the gateway-crypto folder and start the Spring Boot server using PS on Windows:
 
    ```bash
    cd gateway-crypto/gateway-crypto
@@ -54,13 +61,14 @@ docker-compose up -d
    ```bash
     mvnw spring-boot:run
    ```
-6. Open a new terminal, navigate to the frontend folder, and start the React app:
+7. Open a new terminal, navigate to the frontend folder, and start the React app:
 
    ```bash
    cd frontend
    npm install    # Only needed the first time
    npm start      # Or: npm run dev
    ```
+The eureka server will run on http://localhost:8761
 
 The gateway will run on http://localhost:8080
 
@@ -209,6 +217,21 @@ To further isolate concerns and improve scalability, a new service called `marke
 📸 **Diagram: Market Data Streamer Architecture**
 
 ![Market Data Streamer](img/marketDataStreamer.png)
+
+### 🔹 Fifth Iteration: Service Discovery with Eureka Server
+
+To reduce configuration complexity and enable dynamic service lookup, the system introduced **service discovery** using **Spring Cloud Netflix Eureka**.
+
+#### 🔁 Key Changes:
+
+- ✅ Added a **dedicated Eureka Server** to act as a **central registry** for all services
+- ✅ `API Gateway`, `market-data-streamer`, and `crypto-trading-sim` now **register themselves** with Eureka upon startup
+- ✅ The API Gateway **routes requests** using logical service names (`lb://service-name`) instead of hardcoded IPs or ports
+- ✅ Services can now **scale horizontally** and remain discoverable without modifying configuration files
+
+📸 **Diagram: Service Discovery Integration with Eureka**
+
+![Service Discovery with Eureka](img/eureka.png)
 ### References
 
 - **Java-WebSocket Library**  
@@ -237,3 +260,8 @@ To further isolate concerns and improve scalability, a new service called `marke
   Used to understand routing and WebFlux configuration in Spring Cloud Gateway.
     - **Article**: [Spring Cloud Gateway with Spring WebFlux](https://www.geeksforgeeks.org/spring-cloud-gateway-with-spring-webflux/)
     - **Published by**: [GeeksforGeeks](https://www.geeksforgeeks.org)
+
+- **Spring Cloud Service Registration and Discovery Guide**  
+  Used to understand how services register and discover each other using Spring Cloud Eureka.
+    - **Guide**: [Service Registration and Discovery](https://spring.io/guides/gs/service-registration-and-discovery)
+    - **Published by**: [Spring.io](https://spring.io)
