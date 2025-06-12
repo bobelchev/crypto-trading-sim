@@ -1,0 +1,41 @@
+package com.example.user_service.user_service.service;
+
+
+import com.example.user_service.user_service.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
+/**
+ * Service class that handles the business logic for
+ * operations related to the user e.g. resetting to default state
+ */
+@Service
+public class UserService {
+    @Autowired
+    UserRepository userRepository;
+
+
+    /**
+     * Resets the balance to default and deletes associated
+     * transactions and holdings
+     * @param userId the ID of the user that is going to be reset
+     */
+    public void resetAccount(long userId){
+        userRepository.resetBalance(userId);
+        System.out.println("Received reset");
+        //this should become calls to the corresponding services
+        //transactionRepository.deleteAllTxs(userId);
+        //cryptoHoldingService.deleteAllHoldingsOfUser(userId);
+    }
+
+    /**
+     * Returns the balance for the user
+     * @param userId the ID of the user whose balance is being requested
+     * @return the current balance as a {@link BigDecimal}
+     */
+    public BigDecimal getBalance(long userId){
+            return userRepository.getBalanceOfUser(userId);
+    }
+}

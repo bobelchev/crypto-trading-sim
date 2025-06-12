@@ -262,3 +262,9 @@ To reduce configuration complexity and enable dynamic service lookup, the system
   Used to understand how services register and discover each other using Spring Cloud Eureka.
     - **Guide**: [Service Registration and Discovery](https://spring.io/guides/gs/service-registration-and-discovery)
     - **Published by**: [Spring.io](https://spring.io)
+
+- **Microservice Testing Architecture**  
+  Used as the primary reference for understanding how testing strategies evolve when migrating to a microservices architecture, especially regarding unit, integration, contract, and end-to-end testing tiers.
+    - **Article**: [Microservice Testing](https://martinfowler.com/articles/microservice-testing/#architecture)
+    - **Author**: [Martin Fowler](https://martinfowler.com/aboutMe.html)
+    - **Published on**: [martinfowler.com](https://martinfowler.com)

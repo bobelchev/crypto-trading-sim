@@ -3,7 +3,15 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for crypto-trading-sim" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="gateway-crypto" />
+        <module name="eureka-server" />
+        <module name="market-data-streamer" />
+      </profile>
+      <profile name="Annotation profile for user-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -12,14 +20,7 @@
         </processorPath>
         <module name="kraken-ws-service" />
         <module name="crypto-trading-sim" />
-      </profile>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="gateway-crypto" />
-        <module name="eureka-server" />
-        <module name="market-data-streamer" />
+        <module name="user-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -30,6 +31,7 @@
       <module name="gateway-crypto" options="-parameters" />
       <module name="kraken-ws-service" options="-parameters" />
       <module name="market-data-streamer" options="-parameters" />
+      <module name="user-service" options="-parameters" />
     </option>
   </component>
 </project>
