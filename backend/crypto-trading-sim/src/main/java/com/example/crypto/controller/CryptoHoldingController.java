@@ -19,4 +19,15 @@ public class CryptoHoldingController {
     public List<CryptoHolding> getUserHoldings(@RequestParam long userId) {
         return holdingService.getHoldingsOfUser(userId);
     }
+    /**
+     * Endpoint to delete all holdings of a specific user
+     * @param userId ID of the user
+     * @return confirmation message
+     */
+    @DeleteMapping("/{userId}")
+    public String deleteUserHoldings(@PathVariable long userId) {
+        holdingService.deleteAllHoldingsOfUser(userId);
+        System.out.println("Delete holdings");
+        return "All holdings for user " + userId + " deleted.";
+    }
 }

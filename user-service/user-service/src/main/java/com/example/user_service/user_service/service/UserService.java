@@ -1,6 +1,8 @@
 package com.example.user_service.user_service.service;
 
 
+import com.example.user_service.user_service.client.HoldingClient;
+import com.example.user_service.user_service.client.TransactionClient;
 import com.example.user_service.user_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,10 @@ import java.math.BigDecimal;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired()
+    HoldingClient holdingClient;
+    @Autowired
+    TransactionClient transactionClient;
 
 
     /**
@@ -24,6 +30,8 @@ public class UserService {
      */
     public void resetAccount(long userId){
         userRepository.resetBalance(userId);
+        transactionClient.deleteAllUserTransactions(userId);
+        holdingClient.deleteAllUserHoldings(userId);
         System.out.println("Received reset");
         //this should become calls to the corresponding services
         //transactionRepository.deleteAllTxs(userId);
