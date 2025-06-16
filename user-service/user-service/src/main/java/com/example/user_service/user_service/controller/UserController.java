@@ -23,6 +23,7 @@ public class UserController {
      */
     @GetMapping("/balance")
     public BigDecimal getUserBalance(@RequestParam long userId) {
+        System.out.println("Getting the balance");
         return userService.getBalance(userId);
     }
 
@@ -42,6 +43,7 @@ public class UserController {
      */
     @PostMapping("/updateBalance")
     public void updateBalance(@RequestParam long userId, @RequestParam BigDecimal newBalance) {
+        System.out.println("Received the request");
         userService.updateBalance(userId,newBalance);
     }
 }

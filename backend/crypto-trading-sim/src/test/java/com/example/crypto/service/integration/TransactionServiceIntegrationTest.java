@@ -1,5 +1,6 @@
 package com.example.crypto.service.integration;
 
+import com.example.crypto.client.UserClient;
 import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.exception.InsufficientBalanceException;
 import com.example.crypto.exception.InsufficientHoldingsException;
@@ -8,9 +9,11 @@ import com.example.crypto.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import static org.mockito.Mockito.*;
+
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -25,12 +28,16 @@ public class TransactionServiceIntegrationTest {
     TransactionService transactionService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @MockitoBean
+    private UserClient userClient;
 
     public static final long USERID = 1L;
     public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
 
     @BeforeEach
     void setUp(){
+        when(userClient.getUserBalance(USERID)).thenReturn(DEFAULT_BALANCE);
+        doNothing().when(userClient).updateBalance(anyLong(), any(BigDecimal.class));
         jdbcTemplate.execute("DELETE FROM transactions");
         jdbcTemplate.execute("DELETE FROM holdings");
         jdbcTemplate.execute("ALTER TABLE transactions ALTER COLUMN id RESTART WITH 1");
@@ -71,6 +78,8 @@ public class TransactionServiceIntegrationTest {
 
 
         transactionService.makeTx(dto);
+        verify(userClient).getUserBalance(USERID);
+        verify(userClient).updateBalance(USERID, DEFAULT_BALANCE.subtract(cost));
         BigDecimal leftoverBalance = jdbcTemplate.queryForObject(
                 sql, BigDecimal.class, USERID);
         assertEquals(DEFAULT_BALANCE.subtract(cost).setScale(6),leftoverBalance);
@@ -107,6 +116,8 @@ public class TransactionServiceIntegrationTest {
         Exception exception = assertThrows(InsufficientBalanceException.class, () -> {
             transactionService.makeTx(dto);
         });
+        verify(userClient).getUserBalance(USERID);
+        verify(userClient,never()).updateBalance(anyLong(), any(BigDecimal.class));
         String expectedMessage = "Insufficient balance to complete the purchase.";
         String actualMessage = exception.getMessage();
 
@@ -146,6 +157,9 @@ public class TransactionServiceIntegrationTest {
         dto.setType(TransactionType.SELL);
 
         transactionService.makeTx(dto);
+        verify(userClient).getUserBalance(USERID);
+        verify(userClient).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
+
         BigDecimal newBalance = jdbcTemplate.queryForObject(
                 sql, BigDecimal.class, USERID);
         assertEquals(DEFAULT_BALANCE.add(cost).setScale(6),newBalance);
@@ -187,6 +201,8 @@ public class TransactionServiceIntegrationTest {
         Exception exception = assertThrows(InsufficientHoldingsException.class, () -> {
             transactionService.makeTx(dto);
         });
+        verify(userClient).getUserBalance(USERID);
+        verify(userClient,never()).updateBalance(anyLong(), any(BigDecimal.class));
         String expectedMessage = "Insufficient holdings to complete the sale.";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));

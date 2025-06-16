@@ -13,7 +13,7 @@ spring:
         webflux:
           routes:
             - id: users-route
-              uri: lb://crypto-trading-sim
+              uri: lb://user-service
               predicates:
                 - Path=/users/**
             - id: transactions-route
