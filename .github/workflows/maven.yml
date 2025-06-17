@@ -24,3 +24,6 @@ jobs:
       - name: Build and test with Maven
         run: mvn clean verify
         working-directory: backend/crypto-trading-sim
+      - name: Build and test user-service
+        run: mvn clean verify
+        working-directory: user-service/user-service
