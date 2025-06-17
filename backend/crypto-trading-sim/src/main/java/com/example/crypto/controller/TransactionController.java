@@ -47,7 +47,7 @@ public class TransactionController {
      * @param userId ID of the user
      * @return HTTP 200 with confirmation message
      */
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUserTransactions(@PathVariable long userId) {
         transactionRepository.deleteAllTxs(userId);
         System.out.println("Delete transactions");

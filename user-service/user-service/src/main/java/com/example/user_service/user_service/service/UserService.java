@@ -3,6 +3,7 @@ package com.example.user_service.user_service.service;
 
 import com.example.user_service.user_service.client.HoldingClient;
 import com.example.user_service.user_service.client.TransactionClient;
+import com.example.user_service.user_service.client.UserClient;
 import com.example.user_service.user_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class UserService {
     HoldingClient holdingClient;
     @Autowired
     TransactionClient transactionClient;
+    @Autowired
+    UserClient userClient;
 
 
     /**
@@ -30,6 +33,7 @@ public class UserService {
      */
     public void resetAccount(long userId){
         userRepository.resetBalance(userId);
+        userClient.resetUser(userId);
         transactionClient.deleteAllUserTransactions(userId);
         holdingClient.deleteAllUserHoldings(userId);
         System.out.println("Received reset");
