@@ -2,6 +2,7 @@ package com.example.crypto.controller;
 
 import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.TransactionType;
+import com.example.crypto.repository.TransactionRepository;
 import com.example.crypto.service.TransactionService;
 import com.example.crypto.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ public class TransactionControllerTest {
 
     @MockitoBean
     private TransactionService transactionService;
+    @MockitoBean
+    private TransactionRepository transactionRepository;
     public static final long USERID = 1L;
     public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
 

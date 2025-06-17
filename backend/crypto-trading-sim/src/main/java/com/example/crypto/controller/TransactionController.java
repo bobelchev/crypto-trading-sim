@@ -2,6 +2,7 @@ package com.example.crypto.controller;
 
 import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.Transaction;
+import com.example.crypto.repository.TransactionRepository;
 import com.example.crypto.service.TransactionService;
 import com.example.crypto.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.util.List;
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
+    @Autowired
+    private TransactionRepository transactionRepository;
     /**
      * Endpoint for getting all the txs of a user
      * @param userId
@@ -38,6 +41,17 @@ public class TransactionController {
     public ResponseEntity<String> makeTransaction(@RequestBody TransactionDTO transactionRequest){
         transactionService.makeTx(transactionRequest);
         return ResponseEntity.ok("Transaction successful.");
+    }
+    /**
+     * Endpoint to delete all transactions of a specific user
+     * @param userId ID of the user
+     * @return HTTP 200 with confirmation message
+     */
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUserTransactions(@PathVariable long userId) {
+        transactionRepository.deleteAllTxs(userId);
+        System.out.println("Delete transactions");
+        return ResponseEntity.ok("All transactions for user " + userId + " deleted.");
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.crypto.service;
 
+import com.example.crypto.client.UserClient;
 import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.Transaction;
 import com.example.crypto.model.TransactionType;
@@ -24,16 +25,18 @@ public class TransactionService {
     private final UserRepository userRepository;
     private final CryptoHoldingService cryptoHoldingService;
     private final TransactionValidator transactionValidator;
+    private final UserClient userClient;
 
 
     public TransactionService(TransactionRepository transactionRepository,
                               UserRepository userRepository,
                               CryptoHoldingService cryptoHoldingService,
-                              TransactionValidator transactionValidator) {
+                              TransactionValidator transactionValidator, UserClient userClient) {
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
         this.cryptoHoldingService = cryptoHoldingService;
         this.transactionValidator = transactionValidator;
+        this.userClient = userClient;
     }
 
     public List<Transaction> getAllTransactions(long userId){
@@ -67,11 +70,16 @@ public class TransactionService {
     @Transactional
     public void makeTx(TransactionDTO transaction){
         BigDecimal cost = transaction.getPrice().multiply(transaction.getQuantity());
+        //will leave both until user service is stable
         BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
+        BigDecimal testingBalance = userClient.getUserBalance(transaction.getUserId());
+        System.out.println("Test Balance: " + testingBalance);
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(transaction.getUserId(),transaction.getCryptoTicker());
         transactionValidator.validate(transaction,availableBalance,currentTickerQuantity);
         BigDecimal newBalance = calculateNewBalance(transaction.getType(),availableBalance,cost);
         userRepository.updateBalance(transaction.getUserId(),newBalance);
+        userClient.updateBalance(transaction.getUserId(), newBalance);
+        System.out.println("Send new balance " + newBalance);
         //read the price before the holding gets deleted
         BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
         cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());

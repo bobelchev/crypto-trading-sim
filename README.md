@@ -229,6 +229,30 @@ To reduce configuration complexity and enable dynamic service lookup, the system
 📸 **Diagram: Service Discovery Integration with Eureka**
 
 ![Service Discovery with Eureka](img/eureka.png)
+
+### 🔹 Sixth Iteration: Strangler Pattern — Gradual Decomposition of the Monolith
+
+As part of the system's evolution, we adopted **Martin Fowler’s Strangler Tree Pattern** to incrementally break down the monolith (`crypto-trading-sim`) into dedicated microservices. This approach ensures **stability, availability**, and **progressive migration** without a risky full rewrite.
+
+#### 🔁 Key Changes:
+
+- ✅ The `crypto-trading-sim` monolith **retains core logic** and its internal database schema (`User`, `Holdings`, `Transactions`) to preserve existing behavior.
+- ✅ A new `user-service` was introduced to **own user data and balance logic** going forward.
+- 🔁 For now, **both systems update user state** (the monolith locally and `user-service` remotely). This **dual-write mechanism** ensures consistency during the transitional phase.
+- 📤 Once `user-service` is fully validated in production, the user-related logic and data schema inside `crypto-trading-sim` will be deprecated and removed.
+
+#### 🧠 Why:
+
+- 🧩 **Incremental decomposition** – each microservice (user,holding, transaction, market data) is carved out and hardened before cutting off the corresponding monolith path.
+- 🛠 **Stable evolution** – legacy functionality stays intact while new components are independently developed, tested, and deployed.
+- 📉 **Reduced risk** – no need for big-bang migrations or downtime-prone rewrites.
+- 🔬 **Side-by-side validation** – both the monolith and new services operate in tandem until confidence is gained.
+
+#### 📸 Architecture View:
+![User Service](img/userservice.png)
+> 📝 **Note:** Eureka service discovery and registration flows were omitted from this diagram for simplicity.
+
+
 ### References
 
 - **Java-WebSocket Library**  
@@ -262,3 +286,14 @@ To reduce configuration complexity and enable dynamic service lookup, the system
   Used to understand how services register and discover each other using Spring Cloud Eureka.
     - **Guide**: [Service Registration and Discovery](https://spring.io/guides/gs/service-registration-and-discovery)
     - **Published by**: [Spring.io](https://spring.io)
+
+- **Microservice Testing Architecture**  
+  Used as the primary reference for understanding how testing strategies evolve when migrating to a microservices architecture, especially regarding unit, integration, contract, and end-to-end testing tiers.
+    - **Article**: [Microservice Testing](https://martinfowler.com/articles/microservice-testing/#architecture)
+    - **Author**: [Martin Fowler](https://martinfowler.com/aboutMe.html)
+    - **Published on**: [martinfowler.com](https://martinfowler.com)
+
+- **Strangler Fig Pattern by Martin Fowler**  
+  Used as the guiding principle for incrementally refactoring the monolith into microservices without a full rewrite.
+    - **Article**: [Strangler Fig Application](https://martinfowler.com/bliki/StranglerFigApplication.html)
+    - **Author**: [Martin Fowler](https://martinfowler.com)
