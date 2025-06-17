@@ -1,6 +1,9 @@
 package com.example.user_service.user_service.service;
 
 
+import com.example.user_service.user_service.client.HoldingClient;
+import com.example.user_service.user_service.client.TransactionClient;
+import com.example.user_service.user_service.client.UserClient;
 import com.example.user_service.user_service.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,9 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest {
 
     UserRepository mockUserRepository;
+    HoldingClient mockHoldingClient;
+    TransactionClient mockTransactionClient;
+    UserClient mockUserClient;
     UserService userService;
 
     public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
@@ -20,8 +26,16 @@ public class UserServiceTest {
     @BeforeEach
     void setUp(){
         mockUserRepository = mock(UserRepository.class);
-        userService = new UserService();
-        userService.userRepository = mockUserRepository;
+        mockHoldingClient = mock(HoldingClient.class);
+        mockTransactionClient = mock(TransactionClient.class);
+        mockUserClient = mock(UserClient.class);
+
+        userService = new UserService(
+                mockUserRepository,
+                mockHoldingClient,
+                mockTransactionClient,
+                mockUserClient
+        );
     }
 
     @Test
@@ -35,6 +49,9 @@ public class UserServiceTest {
     public void testReset(){
         userService.resetAccount(USERID);
         verify(mockUserRepository, times(1)).resetBalance(USERID);
+        verify(mockUserClient).resetUser(USERID);
+        verify(mockTransactionClient).deleteAllUserTransactions(USERID);
+        verify(mockHoldingClient).deleteAllUserHoldings(USERID);
         //verify here if calls are made
         //verify(mockTxRepository,times(1)).deleteAllTxs(USERID);
         //verify(mockHoldingService,times(1)).deleteAllHoldingsOfUser(USERID);

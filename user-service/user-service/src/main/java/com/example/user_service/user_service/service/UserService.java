@@ -16,14 +16,20 @@ import java.math.BigDecimal;
  */
 @Service
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired()
-    HoldingClient holdingClient;
-    @Autowired
-    TransactionClient transactionClient;
-    @Autowired
-    UserClient userClient;
+    private final UserRepository userRepository;
+    private final HoldingClient holdingClient;
+    private final TransactionClient transactionClient;
+    private final UserClient userClient;
+
+    public UserService(UserRepository userRepository,
+                       HoldingClient holdingClient,
+                       TransactionClient transactionClient,
+                       UserClient userClient) {
+        this.userRepository = userRepository;
+        this.holdingClient = holdingClient;
+        this.transactionClient = transactionClient;
+        this.userClient = userClient;
+    }
 
 
     /**
