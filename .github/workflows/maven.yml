@@ -27,3 +27,6 @@ jobs:
       - name: Build and test user-service
         run: mvn clean verify
         working-directory: user-service/user-service
+      - name: Build and test holding-service
+        run: mvn clean verify
+        working-directory: holding-service/holding-service
