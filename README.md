@@ -253,6 +253,30 @@ As part of the system's evolution, we adopted **Martin Fowler’s Strangler Tree
 > 📝 **Note:** Eureka service discovery and registration flows were omitted from this diagram for simplicity.
 
 
+### 🔹 Seventh Iteration: Strangler Pattern — Gradual Decomposition of the Monolith (Holding Service)
+
+As part of the ongoing decomposition, we extracted the logic related to **crypto holdings** into a dedicated `holding-service`.
+
+#### 🔁 Key Changes:
+
+- ✅ `holding-service` now handles the creation, update, and deletion of user holdings.
+- ✅ The service is called after a transaction to:
+    - Check current quantity for `SELL` transactions
+    - Update or insert holding for `BUY` transactions
+- 🔁 The monolith (`crypto-trading-sim`) still:
+    - Maintains its own copy of holding state
+    - Calls `holding-service` for the same update (dual-write)
+- 📖 Currently, the frontend reads holdings **only** from `holding-service`.
+
+#### 📝 Considerations for Next Steps:
+
+- ❗️**User ID validation**:
+    - Previously enforced via a foreign key constraint (`FOREIGN KEY (user_id) REFERENCES users(id)`)
+    - Now, with decoupled services and separate databases, this check is no longer enforced by the DB
+    - ⚠️ Risk of updating or querying holdings for a **non-existent user**
+    - ✅ We need to enforce **user existence validation** at the application level (e.g., via a call to `user-service`)
+#### 📸 Architecture View:
+![Holding Service](img/holdingservice.png)
 ### References
 
 - **Java-WebSocket Library**  

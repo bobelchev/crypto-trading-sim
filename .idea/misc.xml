@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/market-data-streamer/market-data-streamer/pom.xml" />
         <option value="$PROJECT_DIR$/eureka-server/eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/holding-service/holding-service/pom.xml" />
       </list>
     </option>
   </component>
