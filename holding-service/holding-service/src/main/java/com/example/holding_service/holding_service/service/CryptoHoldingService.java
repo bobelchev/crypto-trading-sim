@@ -45,6 +45,7 @@ public class CryptoHoldingService {
             newAvgPrice = calculateNewAveragePrice(oldQuantity, cryptoHolding.getAveragePrice(), quantity, price);
         }
         cryptoHoldingRepository.updateHolding(new CryptoHolding(userId,cryptoTicker,newQuantity,newAvgPrice));
+        System.out.println("Updated holding");
 
     }
     private BigDecimal calculateNewQuantity(TransactionType type, BigDecimal oldQuantity, BigDecimal txQuantity){

@@ -59,6 +59,7 @@ public class CryptoHoldingController {
             @RequestParam TransactionType type,
             @RequestParam BigDecimal price
     ) {
+        System.out.println("Updating holding..");
         holdingService.handleHolding(userId, ticker, quantity, type, price);
         return "Holding updated for user " + userId + ", ticker " + ticker;
     }
