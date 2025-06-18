@@ -21,7 +21,7 @@ spring:
               predicates:
                 - Path=/transactions/**
             - id: holdings-route
-              uri: lb://crypto-trading-sim
+              uri: lb://holding-service
               predicates:
                 - Path=/holdings/**
             - id: websocket-route

@@ -1,5 +1,6 @@
 package com.example.crypto.service;
 
+import com.example.crypto.client.HoldingClient;
 import com.example.crypto.client.UserClient;
 import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.exception.InsufficientBalanceException;
@@ -27,6 +28,7 @@ public class TransactionServiceTest {
     private static TransactionService transactionService;
     private static TransactionValidator mockValidator;
     private static UserClient mockUserClient;
+    private static HoldingClient mockHoldingClient;
 
 
 
@@ -48,17 +50,19 @@ public class TransactionServiceTest {
         mockTxRepository = mock(TransactionRepository.class);
         mockHoldingService = mock(CryptoHoldingService.class);
         mockUserClient = mock(UserClient.class);
+        mockHoldingClient = mock(HoldingClient.class);
         transactionService = new TransactionService(
                 mockTxRepository,
                 mockUserRepository,
                 mockHoldingService,
                 mockValidator,
-                mockUserClient
+                mockUserClient,
+                mockHoldingClient
         );
     }
     @BeforeEach
     void resetMocks() {
-        reset(mockUserRepository, mockTxRepository, mockHoldingService, mockUserClient);
+        reset(mockUserRepository, mockTxRepository, mockHoldingService, mockUserClient,mockHoldingClient);
     }
     @Test
     public void testBuy(){

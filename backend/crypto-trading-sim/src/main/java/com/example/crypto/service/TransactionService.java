@@ -1,5 +1,6 @@
 package com.example.crypto.service;
 
+import com.example.crypto.client.HoldingClient;
 import com.example.crypto.client.UserClient;
 import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.model.Transaction;
@@ -26,17 +27,20 @@ public class TransactionService {
     private final CryptoHoldingService cryptoHoldingService;
     private final TransactionValidator transactionValidator;
     private final UserClient userClient;
+    private final HoldingClient holdingClient;
 
 
     public TransactionService(TransactionRepository transactionRepository,
                               UserRepository userRepository,
                               CryptoHoldingService cryptoHoldingService,
-                              TransactionValidator transactionValidator, UserClient userClient) {
+                              TransactionValidator transactionValidator, UserClient userClient,
+                               HoldingClient holdingClient) {
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
         this.cryptoHoldingService = cryptoHoldingService;
         this.transactionValidator = transactionValidator;
         this.userClient = userClient;
+        this.holdingClient = holdingClient;
     }
 
     public List<Transaction> getAllTransactions(long userId){
@@ -75,14 +79,35 @@ public class TransactionService {
         BigDecimal testingBalance = userClient.getUserBalance(transaction.getUserId());
         System.out.println("Test Balance: " + testingBalance);
         BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(transaction.getUserId(),transaction.getCryptoTicker());
+        BigDecimal currentTickerQuantity2 = holdingClient.getTickerQuantity(
+                transaction.getUserId(), transaction.getCryptoTicker()
+        );
+        System.out.println("Current ticker quantity from monolith: " + currentTickerQuantity);
+
+        System.out.println("Current ticker quantity from service: " + currentTickerQuantity2);
+
         transactionValidator.validate(transaction,availableBalance,currentTickerQuantity);
         BigDecimal newBalance = calculateNewBalance(transaction.getType(),availableBalance,cost);
+
         userRepository.updateBalance(transaction.getUserId(),newBalance);
         userClient.updateBalance(transaction.getUserId(), newBalance);
         System.out.println("Send new balance " + newBalance);
         //read the price before the holding gets deleted
         BigDecimal averagePrice = cryptoHoldingService.getAveragePrice(transaction.getUserId(), transaction.getCryptoTicker());
+        BigDecimal averagePrice2 = holdingClient.getAveragePrice(
+                transaction.getUserId(), transaction.getCryptoTicker()
+        );System.out.println("Average price from monolith: " + averagePrice);
+
+        System.out.println("Average price from service: " + averagePrice2);
         cryptoHoldingService.handleHolding(transaction.getUserId(),transaction.getCryptoTicker(),transaction.getQuantity(),transaction.getType(),transaction.getPrice());
+        System.out.println("Updating the holding service...");
+        holdingClient.updateHolding(
+                transaction.getUserId(),
+                transaction.getCryptoTicker(),
+                transaction.getQuantity(),
+                transaction.getType(),
+                transaction.getPrice()
+        );
         BigDecimal profitOrLoss = calculatePnL(transaction.getType(),transaction.getPrice(),averagePrice,transaction.getQuantity());
         insertTx(transaction, profitOrLoss);
 

@@ -1,5 +1,6 @@
 package com.example.crypto.service.integration;
 
+import com.example.crypto.client.HoldingClient;
 import com.example.crypto.client.UserClient;
 import com.example.crypto.controller.dto.TransactionDTO;
 import com.example.crypto.exception.InsufficientBalanceException;
@@ -30,6 +31,8 @@ public class TransactionServiceIntegrationTest {
     private JdbcTemplate jdbcTemplate;
     @MockitoBean
     private UserClient userClient;
+    @MockitoBean
+    private HoldingClient holdingClient;
 
     public static final long USERID = 1L;
     public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
