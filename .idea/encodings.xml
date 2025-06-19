@@ -7,6 +7,7 @@
     <file url="file://$PROJECT_DIR$/holding-service/holding-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/krakenservice/kraken-ws-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/market-data-streamer/market-data-streamer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/transaction-service/transaction-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/user-service/src/main/java" charset="UTF-8" />
   </component>
 </project>

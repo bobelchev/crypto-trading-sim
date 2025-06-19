@@ -11,7 +11,7 @@
         <module name="eureka-server" />
         <module name="market-data-streamer" />
       </profile>
-      <profile name="Annotation profile for holding-service" enabled="true">
+      <profile name="Annotation profile for transaction-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -19,6 +19,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="kraken-ws-service" />
+        <module name="transaction-service" />
         <module name="crypto-trading-sim" />
         <module name="user-service" />
         <module name="holding-service" />
@@ -33,6 +34,7 @@
       <module name="holding-service" options="-parameters" />
       <module name="kraken-ws-service" options="-parameters" />
       <module name="market-data-streamer" options="-parameters" />
+      <module name="transaction-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>
