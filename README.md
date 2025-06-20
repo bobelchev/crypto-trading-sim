@@ -277,6 +277,42 @@ As part of the ongoing decomposition, we extracted the logic related to **crypto
     - ✅ We need to enforce **user existence validation** at the application level (e.g., via a call to `user-service`)
 #### 📸 Architecture View:
 ![Holding Service](img/holdingservice.png)
+
+### 🔹 Eighth Iteration: Final Strangler — Complete Microservice Decomposition
+
+The monolithic `crypto-trading-sim` application has now been fully decomposed into dedicated microservices, completing the transition to a modular, scalable architecture. Each service is now responsible for a **single bounded domain**, and the monolith has been retired.
+
+#### 🧩 Final Migration Plan
+
+Following the **Strangler Fig Pattern**, the order of service extraction was determined by **coupling level**, **scalability needs**, and **risk isolation**:
+
+1. **Kraken Service**  
+   Was chipped away first due to its **low coupling** and the need for **scaling**. Decoupling Kraken access allowed a single service to handle API subscriptions for all users, eliminating redundant Kraken connections.
+
+2. **Market Data Streamer**  
+   Was extracted next because it had **no dependency on business logic**. Its sole responsibility — streaming market data to the frontend — made it ideal for early isolation.
+
+3. **User Service**  
+   Came next as it had minimal cross-service logic. It was responsible for **providing and updating user balances**, both for the client and for backend services like `transaction-service`.
+
+4. **Holding Service**  
+   Followed due to its relatively **simple coupling** with transaction logic. It manages users' asset holdings and was already a well-scoped part of the domain.
+
+5. **Transaction Service**  
+   Was the final and most complex service to extract, as it was **deeply coupled** with both user balances and holdings logic. Its extraction completed the decoupling of all core state transitions.
+
+---
+
+#### ✅ Current State
+
+- 🧩 Each business function now lives in its **own microservice**, with independent databases, deployment pipelines, and scaling profiles.
+- 🛠 All communication between services happens via **REST** or **Kafka**, coordinated by the **API Gateway** and **service discovery**.
+- 🧹 The monolith has been fully **removed** — both logic and schema — from the system.
+
+📸 **Diagram: Final Microservices Architecture**
+
+![Final Microservices Architecture](img/final.png)
+
 ### References
 
 - **Java-WebSocket Library**  
