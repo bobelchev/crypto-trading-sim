@@ -39,7 +39,7 @@ public class UserService {
      */
     public void resetAccount(long userId){
         userRepository.resetBalance(userId);
-        userClient.resetUser(userId);
+        //userClient.resetUser(userId);
         transactionClient.deleteAllUserTransactions(userId);
         holdingClient.deleteAllUserHoldings(userId);
         System.out.println("Received reset");

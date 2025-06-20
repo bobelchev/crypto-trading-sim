@@ -17,7 +17,7 @@ spring:
               predicates:
                 - Path=/users/**
             - id: transactions-route
-              uri: lb://crypto-trading-sim
+              uri: lb://transaction-service
               predicates:
                 - Path=/transactions/**
             - id: holdings-route
@@ -33,3 +33,6 @@ logging:
     root: INFO
     org.springframework.cloud.gateway: DEBUG
     reactor.netty.http.client: DEBUG
+eureka:
+  instance:
+    prefer-ip-address: true
