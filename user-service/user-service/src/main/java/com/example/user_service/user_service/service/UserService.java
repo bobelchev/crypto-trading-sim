@@ -4,7 +4,9 @@ package com.example.user_service.user_service.service;
 import com.example.user_service.user_service.client.HoldingClient;
 import com.example.user_service.user_service.client.TransactionClient;
 import com.example.user_service.user_service.client.UserClient;
+import com.example.user_service.user_service.model.User;
 import com.example.user_service.user_service.repository.UserRepository;
+import com.example.user_service.user_service.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,4 +61,14 @@ public class UserService {
     public void updateBalance(long userId, BigDecimal newBalance){
         userRepository.updateBalance(userId,newBalance);
     }
+    public String login(String username, String password) {
+        User user = userRepository.findByUsername(username);
+
+        if (!password.equals(user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        return JwtUtil.generateToken(user.getUsername());
+    }
+
 }

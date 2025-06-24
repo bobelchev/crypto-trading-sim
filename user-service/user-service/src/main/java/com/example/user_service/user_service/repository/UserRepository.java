@@ -1,5 +1,6 @@
 package com.example.user_service.user_service.repository;
 
+import com.example.user_service.user_service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -43,4 +44,18 @@ public class UserRepository {
         String sql = "UPDATE users SET balance = ? WHERE id = ?";
         jdbcTemplate.update(sql,DEFAULT_BALANCE,userId);
     }
+
+    public User findByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            User user = new User();
+            user.setId(rs.getLong("id"));
+            user.setUsername(rs.getString("username"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            user.setBalance(rs.getBigDecimal("balance"));
+            return user;
+        }, username);
+    }
+
 }
