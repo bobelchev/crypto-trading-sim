@@ -8,6 +8,7 @@ import com.example.user_service.user_service.model.User;
 import com.example.user_service.user_service.repository.UserRepository;
 import com.example.user_service.user_service.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,15 +23,19 @@ public class UserService {
     private final HoldingClient holdingClient;
     private final TransactionClient transactionClient;
     private final UserClient userClient;
+    private final PasswordEncoder passwordEncoder;
+
 
     public UserService(UserRepository userRepository,
                        HoldingClient holdingClient,
                        TransactionClient transactionClient,
-                       UserClient userClient) {
+                       UserClient userClient,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.holdingClient = holdingClient;
         this.transactionClient = transactionClient;
         this.userClient = userClient;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -64,9 +69,10 @@ public class UserService {
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username);
 
-        if (!password.equals(user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("Invalid password");
         }
+
 
         return JwtUtil.generateToken(user.getUsername());
     }
