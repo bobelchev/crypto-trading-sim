@@ -20,15 +20,28 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String validateToken(String token) {
+    public static String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY).build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+    public static boolean validateToken(String token) {
         try {
-            return Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getSubject();
-        } catch (Exception e) {
-            return null;
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            return true;
+        } catch (SecurityException e) {
+            System.out.println("Invalid JWT signature: " + e.getMessage());
+        } catch (MalformedJwtException e) {
+            System.out.println("Invalid JWT token: " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT token is expired: " + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            System.out.println("JWT token is unsupported: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("JWT claims string is empty: " + e.getMessage());
         }
+        return false;
     }
 }
