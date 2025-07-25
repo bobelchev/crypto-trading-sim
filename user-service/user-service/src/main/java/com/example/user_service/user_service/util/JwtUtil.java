@@ -12,9 +12,9 @@ public class JwtUtil {
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
     private static final long EXPIRATION_TIME = 3600000; // 1 hour
 
-    public static String generateToken(String username) {
+    public static String generateToken(long userId) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(String.valueOf(userId))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();

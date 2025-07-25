@@ -41,10 +41,12 @@ function MarketData({ rows, user }) {
             type: "BUY",
           };
           try {
+              const token = sessionStorage.getItem("jwt");
             const response = await fetch("http://localhost:8080/transactions", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify(postBody),
             });

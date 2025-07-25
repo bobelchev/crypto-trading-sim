@@ -7,6 +7,7 @@ import com.example.user_service.user_service.client.UserClient;
 import com.example.user_service.user_service.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 
@@ -20,6 +21,7 @@ public class UserServiceTest {
     TransactionClient mockTransactionClient;
     UserClient mockUserClient;
     UserService userService;
+    PasswordEncoder passwordEncoder;
 
     public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("10000.000000");
     public static final long USERID = 1L;
@@ -29,12 +31,14 @@ public class UserServiceTest {
         mockHoldingClient = mock(HoldingClient.class);
         mockTransactionClient = mock(TransactionClient.class);
         mockUserClient = mock(UserClient.class);
+        passwordEncoder = mock(PasswordEncoder.class);
 
         userService = new UserService(
                 mockUserRepository,
                 mockHoldingClient,
                 mockTransactionClient,
-                mockUserClient
+                mockUserClient,
+                passwordEncoder
         );
     }
 
