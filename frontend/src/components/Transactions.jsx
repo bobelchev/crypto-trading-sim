@@ -5,7 +5,13 @@ function Transactions() {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/transactions?userId=1")
+    const token = sessionStorage.getItem("jwt");
+    if (!token) return;
+    fetch("http://localhost:8080/transactions?userId=1", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -39,7 +45,7 @@ function Transactions() {
                   <strong>Price:</strong> {transaction.price}
                 </div>
                 <div>
-                    <strong>PnL:</strong> {transaction.pnl}
+                  <strong>PnL:</strong> {transaction.pnl}
                 </div>
                 <div>
                   <strong>Date:</strong>{" "}

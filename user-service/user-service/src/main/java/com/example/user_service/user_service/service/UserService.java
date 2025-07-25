@@ -72,9 +72,7 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("Invalid password");
         }
-
-
-        return JwtUtil.generateToken(user.getUsername());
+        return JwtUtil.generateToken(user.getId());
     }
 
 }

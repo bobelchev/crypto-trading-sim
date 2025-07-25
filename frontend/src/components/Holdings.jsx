@@ -12,7 +12,13 @@ function Holdings({ prices }) {
   //the locked price
   const [lockedPrice, setPrice] = useState(0.0);
   useEffect(() => {
-    fetch("http://localhost:8080/holdings?userId=1")
+    const token = sessionStorage.getItem("jwt");
+    if (!token) return;
+    fetch("http://localhost:8080/holdings?userId=1", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -50,18 +56,20 @@ function Holdings({ prices }) {
       };
       console.log("Sending POST request with body:", postBody);
       try {
+          const token = sessionStorage.getItem("jwt");
+              if (!token) return;
         const response = await fetch("http://localhost:8080/transactions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+             Authorization: `Bearer ${token}`
           },
           body: JSON.stringify(postBody),
         });
         const jsonResponse = await response.text();
         if (!response.ok) {
-          throw new Error(jsonResponse||"Network response was not ok");
+          throw new Error(jsonResponse || "Network response was not ok");
         }
-
 
         alert(jsonResponse);
         console.log("POST request successful:", jsonResponse);
