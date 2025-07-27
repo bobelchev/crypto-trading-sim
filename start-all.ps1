@@ -8,11 +8,17 @@ $services = @(
   "gateway-crypto\gateway-crypto"
 )
 
+$pidFile = "service-pids.txt"
+Remove-Item $pidFile -ErrorAction SilentlyContinue
+
 foreach ($service in $services) {
     Write-Host "Starting $service..."
 
     $fullPath = Join-Path $PWD.Path $service
 
-    # Launch in a new PowerShell window
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd `"$fullPath`"; .\mvnw spring-boot:run"
+    $proc = Start-Process powershell `
+        -ArgumentList "-NoExit", "-Command", "cd `"$fullPath`"; .\mvnw spring-boot:run" `
+        -PassThru
+
+    $proc.Id | Out-File -Append $pidFile
 }

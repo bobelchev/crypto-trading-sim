@@ -20,54 +20,29 @@
 cd krakenservice
 docker-compose up -d
 ```
-2. Navigate to the krakenservice folder and start the Spring Boot Kraken service using PS on Windows:
-   ```bash
-      cd krakenservice/kraken-ws-service
-      .\mvnw spring-boot:run        # PowerShell
-      # or
-      mvnw spring-boot:run          # CMD
-   ```
-3. Navigate to the eureka-server folder and start the Spring Boot Eureka discovery service using PS on Windows:
-   ```bash
-      cd eureka-server/eureka-server
-      .\mvnw spring-boot:run        # PowerShell
-      # or
-      mvnw spring-boot:run          # CMD
-   ```
-4. Navigate to the marked-data-streamer folder and start the Spring Boot Market Data service using PS on Windows:
-   ```bash
-      cd market-data-streamer/market-data-streamer
-      .\mvnw spring-boot:run        # PowerShell
-      # or
-      mvnw spring-boot:run          # CMD
-   ```
-5. Open new terminal, navigate to the backend folder and start the Spring Boot server using PS on Windows:
+### 2. Start All Spring Boot Microservices
 
-   ```bash
-   cd backend/crypto-trading-sim
-   .\mvnw spring-boot:run
-   ```
-   Or if using CMD:
-   ```bash
-    mvnw spring-boot:run
-   ```
-6. Open new terminal, navigate to the gateway-crypto folder and start the Spring Boot server using PS on Windows:
+From the project root (`crypto-trading-sim`), run the PowerShell startup script:
 
-   ```bash
-   cd gateway-crypto/gateway-crypto
-   .\mvnw spring-boot:run
-   ```
-   Or if using CMD:
-   ```bash
-    mvnw spring-boot:run
-   ```
-7. Open a new terminal, navigate to the frontend folder, and start the React app:
+```powershell
+.\start-all.ps1
+```
 
-   ```bash
-   cd frontend
-   npm install    # Only needed the first time
-   npm start      # Or: npm run dev
-   ```
+This will open a new PowerShell window for each microservice and start it using Maven. You will see real-time logs in each window.
+
+---
+To stop all Spring Boot microservices and close their PowerShell windows, run the following script from the project root (`crypto-trading-sim`):
+
+```powershell
+.\stop-all.ps1
+```
+
+This script will:
+
+- Terminate all running Spring Boot services by stopping their `java` processes.
+- Close the PowerShell windows that were opened by the `start-all.ps1` script.
+
+> ⚠️ This will stop **all** Java processes related to the services. Make sure you're not running other important Java applications at the same time.
 The eureka server will run on http://localhost:8761
 
 The gateway will run on http://localhost:8080
