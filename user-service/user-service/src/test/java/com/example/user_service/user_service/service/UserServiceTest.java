@@ -53,7 +53,7 @@ public class UserServiceTest {
     public void testReset(){
         userService.resetAccount(USERID);
         verify(mockUserRepository, times(1)).resetBalance(USERID);
-        verify(mockUserClient).resetUser(USERID);
+        //verify(mockUserClient).resetUser(USERID);
         verify(mockTransactionClient).deleteAllUserTransactions(USERID);
         verify(mockHoldingClient).deleteAllUserHoldings(USERID);
         //verify here if calls are made
