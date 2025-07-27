@@ -44,17 +44,25 @@ This script will:
 
 > ⚠️ This will stop **all** Java processes related to the services. Make sure you're not running other important Java applications at the same time.
 
-The eureka server will run on http://localhost:8761
+### 🌐 Service Endpoints
 
-The gateway will run on http://localhost:8080
+| Service                    | Description                    | URL                          |
+|---------------------------|--------------------------------|------------------------------|
+| 🧭 **Eureka Server**       | Service discovery dashboard    | [http://localhost:8761](http://localhost:8761) |
+| 🚪 **API Gateway**         | Entry point for all APIs       | [http://localhost:8080](http://localhost:8080) |
+| 👤 **User Service**        | Handles user data & balances   | [http://localhost:8081](http://localhost:8081) |
+| 📊 **Market Data Streamer**| Streams crypto price updates   | [http://localhost:8082](http://localhost:8082) |
+| 🐙 **Kraken Service**      | WebSocket client for Kraken API| [http://localhost:8083](http://localhost:8083) |
+| 🖥️ **Frontend (React)**    | Web UI for users               | [http://localhost:5173](http://localhost:5173) or [http://localhost:5174](http://localhost:5174) |
 
-The backend will run on http://localhost:8081
 
-The market data streamer service  will run on http://localhost:8082
+### 🧑‍💼 Admin Credentials (for local development)
 
-The kraken service will run on http://localhost:8083
+The following default credentials can be used to log in to the Eureka dashboard or other protected endpoints:
 
-The frontend will run on http://localhost:5173 or fallback to http://localhost:5174
+| Username | Password         |
+|----------|------------------|
+| `admin`  | `plaintextpassword` |
 ### Demo
 
 Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiWBQe2OWV7eZ--5DymZnJuiDkN/view?usp=drive_link)
