@@ -65,7 +65,9 @@ The following default credentials can be used to log in to the Eureka dashboard 
 | `admin`  | `plaintextpassword` |
 ### Demo
 
-Watch the demo video on [Google Drive](https://drive.google.com/file/d/1k9GvioiWBQe2OWV7eZ--5DymZnJuiDkN/view?usp=drive_link)
+Watch the demo video on 
+LAST MVP DEMO: [Google Drive](https://drive.google.com/file/d/1Df_ysL3VG8Q4QJJO5fFXwgJ12sW8g4Pp/view?usp=sharing)
+FIRST MVP DEMO: [Google Drive](https://drive.google.com/file/d/1k9GvioiWBQe2OWV7eZ--5DymZnJuiDkN/view?usp=drive_link)
 
 ### Screenshots
 
