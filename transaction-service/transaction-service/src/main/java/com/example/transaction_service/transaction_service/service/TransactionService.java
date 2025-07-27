@@ -67,11 +67,12 @@ public class TransactionService {
      * @throws IllegalStateException if the transaction is invalid (e.g., insufficient funds or holdings, or non-positive quantity)
      */
     @Transactional
-    public void makeTx(TransactionDTO transaction){
+    public void makeTx(TransactionDTO transaction,String authHeader){
         BigDecimal cost = transaction.getPrice().multiply(transaction.getQuantity());
         //will leave both until user service is stable
         //BigDecimal availableBalance = userRepository.getBalanceOfUser(transaction.getUserId());
-        BigDecimal availableBalance = userClient.getUserBalance(transaction.getUserId());
+         // must include Bearer prefix
+        BigDecimal availableBalance = userClient.getUserBalance(authHeader);
         System.out.println("Test Balance: " + availableBalance);
         //BigDecimal currentTickerQuantity = cryptoHoldingService.getTickerQuantity(transaction.getUserId(),transaction.getCryptoTicker());
         BigDecimal currentTickerQuantity = holdingClient.getTickerQuantity(

@@ -10,7 +10,7 @@ import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-function App() {
+function Dashboard() {
   const [user, setUser] = useState({ userId: "", balance: "" });
   const [marketPrices, setMarketPrices] = useState([]);
   const connection = useRef(null);
@@ -100,4 +100,4 @@ function App() {
   );
 }
 
-export default App;
+export default Dashboard;

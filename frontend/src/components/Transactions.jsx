@@ -7,7 +7,7 @@ function Transactions() {
   useEffect(() => {
     const token = sessionStorage.getItem("jwt");
     if (!token) return;
-    fetch("http://localhost:8080/transactions?userId=1", {
+    fetch("http://localhost:8080/transactions", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

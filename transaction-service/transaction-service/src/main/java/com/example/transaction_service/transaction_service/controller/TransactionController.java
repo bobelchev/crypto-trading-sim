@@ -5,9 +5,12 @@ import com.example.transaction_service.transaction_service.controller.dto.Transa
 import com.example.transaction_service.transaction_service.model.Transaction;
 import com.example.transaction_service.transaction_service.repository.TransactionRepository;
 import com.example.transaction_service.transaction_service.service.TransactionService;
+import com.example.transaction_service.transaction_service.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -27,7 +30,8 @@ public class TransactionController {
      * @return
      */
     @GetMapping
-    public List<Transaction> getTransactions(@RequestParam long userId){
+    public List<Transaction> getTransactions(@RequestHeader("Authorization") String authHeader) {
+        Long userId = extractUserIdFromToken(authHeader);
         return transactionService.getAllTransactions(userId);
     }
 
@@ -37,8 +41,11 @@ public class TransactionController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<String> makeTransaction(@RequestBody TransactionDTO transactionRequest){
-        transactionService.makeTx(transactionRequest);
+    public ResponseEntity<String> makeTransaction(@RequestHeader("Authorization") String authHeader,
+                                                  @RequestBody TransactionDTO transactionRequest) {
+        Long userId = extractUserIdFromToken(authHeader);
+        transactionRequest.setUserId(userId);
+        transactionService.makeTx(transactionRequest, authHeader);
         return ResponseEntity.ok("Transaction successful.");
     }
     /**
@@ -47,11 +54,24 @@ public class TransactionController {
      * @return HTTP 200 with confirmation message
      */
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUserTransactions(@PathVariable long userId) {
+    public ResponseEntity<String> deleteUserTransactions(@RequestHeader("Authorization") String authHeader) {
+        Long userId = extractUserIdFromToken(authHeader);
         transactionRepository.deleteAllTxs(userId);
-        System.out.println("Delete transactions");
         return ResponseEntity.ok("All transactions for user " + userId + " deleted.");
     }
+    /**
+     * Extracts user ID from the JWT Authorization header.
+     */
+    private Long extractUserIdFromToken(String authHeader) {
+        try {
+            String token = authHeader.substring(7); // Remove "Bearer "
+            String userIdStr = JwtUtil.getIdFromToken(token);
+            return Long.parseLong(userIdStr);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);
+        }
+    }
+
 
 
 }

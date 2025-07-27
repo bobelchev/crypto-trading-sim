@@ -63,17 +63,17 @@ public class TransactionServiceTest {
     public void testBuy(){
         BigDecimal cost = DEFAULT_QUANTITY.multiply(DEFAULT_PRICE);
         doNothing().when(mockValidator).validate(any(), any(), any());
-        //when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        when(mockUserClient.getUserBalance(anyString())).thenReturn(DEFAULT_BALANCE);
         TransactionDTO dto = new TransactionDTO();
         dto.setUserId(USERID);
         dto.setCryptoTicker(DEFAULT_TICKER);
         dto.setQuantity(DEFAULT_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(BUY);
-        transactionService.makeTx(dto);
+        transactionService.makeTx(dto, "Bearer fake-token");
         //verify(mockUserRepository).updateBalance(USERID,DEFAULT_BALANCE.subtract(cost));
         //verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY, BUY, DEFAULT_PRICE);
-        verify(mockUserClient).getUserBalance(USERID);
+        verify(mockUserClient).getUserBalance(anyString());
         verify(mockUserClient).updateBalance(USERID, DEFAULT_BALANCE.subtract(cost));
 
         //not testing timestamp or profit loss (we have to mock quite a lot from holding service)
@@ -83,7 +83,11 @@ public class TransactionServiceTest {
     public void testSell(){
         BigDecimal cost = DEFAULT_QUANTITY.multiply(DEFAULT_PRICE);
         doNothing().when(mockValidator).validate(any(), any(), any());
-        //when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
+        when(mockUserClient.getUserBalance(anyString())).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingClient.getAveragePrice(USERID, DEFAULT_TICKER))
+                .thenReturn(new BigDecimal("80.000000"));
+        when(mockHoldingClient.getTickerQuantity(USERID, DEFAULT_TICKER))
+                .thenReturn(new BigDecimal("1.000000"));
         //when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         //when(mockHoldingService.getAveragePrice(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("80.000000"));
         TransactionDTO dto = new TransactionDTO();
@@ -92,12 +96,13 @@ public class TransactionServiceTest {
         dto.setQuantity(DEFAULT_QUANTITY);
         dto.setPrice(DEFAULT_PRICE);
         dto.setType(SELL);
+        transactionService.makeTx(dto, "Bearer fake-token");
 
-        transactionService.makeTx(dto);
+
 
         //verify(mockUserRepository).updateBalance(USERID,DEFAULT_BALANCE.add(cost));
         //verify(mockHoldingService).handleHolding(USERID,DEFAULT_TICKER,DEFAULT_QUANTITY,SELL,DEFAULT_PRICE);
-        verify(mockUserClient).getUserBalance(USERID);
+        verify(mockUserClient).getUserBalance(anyString());
         verify(mockUserClient).updateBalance(USERID, DEFAULT_BALANCE.add(cost));
         // This line is commented out because LocalDateTime.now() produces a different timestamp each time it's called,
         //TODO: solve the timestamp problem
@@ -107,6 +112,9 @@ public class TransactionServiceTest {
     @Test
     public void testIllegalSellNegativeQuantity(){
         BigDecimal cost = NEGATIVE_QUANTITY.multiply(DEFAULT_PRICE);
+        when(mockUserClient.getUserBalance(anyString())).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingClient.getTickerQuantity(USERID, DEFAULT_TICKER))
+                .thenReturn(new BigDecimal("1.000000"));
         //when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         //when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         TransactionDTO dto = new TransactionDTO();
@@ -118,11 +126,12 @@ public class TransactionServiceTest {
         doThrow(new InvalidTransactionException("Quantity must be a positive number."))
                 .when(mockValidator).validate(dto, DEFAULT_BALANCE, new BigDecimal("1.000000"));
         Exception exception = assertThrows(InvalidTransactionException.class, () -> {
-            transactionService.makeTx(dto);
+            transactionService.makeTx(dto, "Bearer fake-token");
+
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
         //THIS SHOULD GET CALLED IN ORDER FOR THE VALIDATION TO WORK
-        verify(mockUserClient).getUserBalance(USERID);
+        verify(mockUserClient).getUserBalance(anyString());
         //verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));
         //verify(mockHoldingService,never()).handleHolding(anyLong(), anyString(), any(BigDecimal.class), any(TransactionType.class), any(BigDecimal.class));
         verify(mockTxRepository, never()).insertTx(any(Transaction.class));
@@ -131,6 +140,9 @@ public class TransactionServiceTest {
     @Test
     public void testIllegalBuyNegativeQuantity(){
         BigDecimal cost = NEGATIVE_QUANTITY.multiply(DEFAULT_PRICE);
+        when(mockUserClient.getUserBalance(anyString())).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingClient.getTickerQuantity(USERID, DEFAULT_TICKER))
+                .thenReturn(new BigDecimal("1.000000"));
         //when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         //when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         TransactionDTO dto = new TransactionDTO();
@@ -142,11 +154,13 @@ public class TransactionServiceTest {
         doThrow(new InvalidTransactionException("Quantity must be a positive number."))
                 .when(mockValidator).validate(dto, DEFAULT_BALANCE, new BigDecimal("1.000000"));
         Exception exception = assertThrows(InvalidTransactionException.class, () -> {
-            transactionService.makeTx(dto);
+            transactionService.makeTx(dto, "Bearer fake-token");
+
         });
         assert(exception.getMessage().contains("Quantity must be a positive number."));
         //THIS SHOULD GET CALLED IN ORDER FOR THE VALIDATION TO WORK
-        verify(mockUserClient).getUserBalance(USERID);
+        verify(mockUserClient).getUserBalance(anyString());
+
         //verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));
         //verify(mockHoldingService,never()).handleHolding(anyLong(), anyString(), any(BigDecimal.class), any(TransactionType.class), any(BigDecimal.class));
         verify(mockTxRepository, never()).insertTx(any(Transaction.class));
@@ -154,6 +168,9 @@ public class TransactionServiceTest {
     }
     @Test
     public void testIllegalBuyExcessiveQuantity(){
+        when(mockUserClient.getUserBalance(anyString())).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingClient.getTickerQuantity(USERID, DEFAULT_TICKER))
+                .thenReturn(new BigDecimal("1.000000"));
         //when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         //when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(new BigDecimal("1.000000"));
         TransactionDTO dto = new TransactionDTO();
@@ -165,11 +182,12 @@ public class TransactionServiceTest {
         doThrow(new InsufficientBalanceException("Insufficient balance to complete the purchase."))
                 .when(mockValidator).validate(dto, DEFAULT_BALANCE, new BigDecimal("1.000000"));
        Exception exception = assertThrows(InsufficientBalanceException.class, () -> {
-            transactionService.makeTx(dto);
-        });
+           transactionService.makeTx(dto, "Bearer fake-token");
+       });
         assert(exception.getMessage().contains("Insufficient balance to complete the purchase."));
         //THIS SHOULD GET CALLED IN ORDER FOR THE VALIDATION TO WORK
-        verify(mockUserClient).getUserBalance(USERID);
+        verify(mockUserClient).getUserBalance(anyString());
+
         //verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));
         //verify(mockHoldingService,never()).handleHolding(anyLong(), anyString(), any(BigDecimal.class), any(TransactionType.class), any(BigDecimal.class));
         verify(mockTxRepository, never()).insertTx(any(Transaction.class));
@@ -179,6 +197,9 @@ public class TransactionServiceTest {
     public void testIllegalSellExcessiveQuantity(){
         BigDecimal currentHoldings = new BigDecimal("0.1");
         BigDecimal cost = EXCESSIVE_QUANTITY.multiply(DEFAULT_PRICE);
+        when(mockUserClient.getUserBalance(anyString())).thenReturn(DEFAULT_BALANCE);
+        when(mockHoldingClient.getTickerQuantity(USERID, DEFAULT_TICKER))
+                .thenReturn(currentHoldings);
         //when(mockUserRepository.getBalanceOfUser(USERID)).thenReturn(DEFAULT_BALANCE);
         //when(mockHoldingService.getTickerQuantity(USERID, DEFAULT_TICKER)).thenReturn(currentHoldings);
         TransactionDTO dto = new TransactionDTO();
@@ -190,11 +211,13 @@ public class TransactionServiceTest {
         doThrow(new InsufficientHoldingsException("Insufficient holdings to complete the sale."))
                 .when(mockValidator).validate(dto, DEFAULT_BALANCE, currentHoldings);
         Exception exception = assertThrows(InsufficientHoldingsException.class, () -> {
-            transactionService.makeTx(dto);
+            transactionService.makeTx(dto, "Bearer fake-token");
+
         });
         assert(exception.getMessage().contains("Insufficient holdings to complete the sale."));
         //THIS SHOULD GET CALLED IN ORDER FOR THE VALIDATION TO WORK
-        verify(mockUserClient).getUserBalance(USERID);
+        verify(mockUserClient).getUserBalance(anyString());
+
         //verify(mockUserRepository,never()).updateBalance(anyLong(),any(BigDecimal.class));
         //verify(mockHoldingService,never()).handleHolding(anyLong(), anyString(), any(BigDecimal.class), any(TransactionType.class), any(BigDecimal.class));
         verify(mockTxRepository, never()).insertTx(any());
