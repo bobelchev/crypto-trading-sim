@@ -27,7 +27,7 @@ export default function Login() {
         return;
       }
 
-      const token = await res.text(); // assuming backend returns plain JWT
+      const token = await res.text();
       sessionStorage.setItem("jwt", token);
       setMessage("Login successful");
       navigate("/dashboard");

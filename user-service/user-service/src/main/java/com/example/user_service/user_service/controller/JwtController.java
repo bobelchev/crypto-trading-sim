@@ -27,7 +27,7 @@ public class JwtController {
         if (!JwtUtil.validateToken(token)) {
             return "Invalid or expired token";
         }
-        String username = JwtUtil.getUsernameFromToken(token);
+        String username = JwtUtil.getIdFromToken(token);
         return "Hello, " + username;
 
     }

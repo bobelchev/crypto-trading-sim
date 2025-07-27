@@ -20,7 +20,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String getUsernameFromToken(String token) {
+    public static String getIdFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY).build()
                 .parseClaimsJws(token)
