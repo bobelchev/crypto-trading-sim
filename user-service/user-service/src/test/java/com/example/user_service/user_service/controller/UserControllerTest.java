@@ -1,6 +1,7 @@
 package com.example.user_service.user_service.controller;
 
 import com.example.user_service.user_service.service.UserService;
+import com.example.user_service.user_service.util.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,16 @@ public class UserControllerTest {
 
     @Test
     public void testGetUserBalance() throws Exception {
+        String fakeToken = "mock-jwt-token";
+        String authHeader = "Bearer " + fakeToken;
+
+        Mockito.mockStatic(JwtUtil.class).when(() -> JwtUtil.getIdFromToken(fakeToken))
+                .thenReturn(String.valueOf(USERID));
+
         Mockito.when(userService.getBalance(USERID)).thenReturn(DEFAULT_BALANCE);
+
         mockMvc.perform(get("/users/balance")
-                        .param("userId", String.valueOf(USERID)))
+                        .header("Authorization", authHeader))
                 .andExpect(status().isOk())
                 .andExpect(content().string("10000.000000"));
     }
