@@ -17,7 +17,7 @@ public class IllegalTransaction {
             InvalidTransactionException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String illegalTransactionHandler(IllegalStateException ex) {
+    String illegalTransactionHandler(Exception ex) {
         return ex.getMessage();
     }
 
