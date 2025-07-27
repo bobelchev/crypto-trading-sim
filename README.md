@@ -43,6 +43,7 @@ This script will:
 - Close the PowerShell windows that were opened by the `start-all.ps1` script.
 
 > ⚠️ This will stop **all** Java processes related to the services. Make sure you're not running other important Java applications at the same time.
+
 The eureka server will run on http://localhost:8761
 
 The gateway will run on http://localhost:8080
