@@ -27,27 +27,20 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
         }
 
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-
+        //token not included or broken header
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
 
         String token = authHeader.substring(7);
-
+        //token included properly but not valid
         if (!JwtUtil.validateToken(token)) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
 
-        String userId = JwtUtil.getUserIdFromToken(token);
-        System.out.println("UserId: " + userId);
-
-        ServerHttpRequest requestWithUserId = exchange.getRequest().mutate()
-                .header("X-User-Id", userId)
-                .build();
-
-        return chain.filter(exchange.mutate().request(requestWithUserId).build());
+        return chain.filter(exchange);
     }
 
     @Override

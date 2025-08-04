@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Service class that handles the business logic for
@@ -49,7 +50,6 @@ public class UserService {
         //userClient.resetUser(userId);
         transactionClient.deleteAllUserTransactions(userId);
         holdingClient.deleteAllUserHoldings(userId);
-        System.out.println("Received reset");
         //this should become calls to the corresponding services
         //transactionRepository.deleteAllTxs(userId);
         //cryptoHoldingService.deleteAllHoldingsOfUser(userId);
@@ -67,12 +67,25 @@ public class UserService {
         userRepository.updateBalance(userId,newBalance);
     }
     public String login(String username, String password) {
-        User user = userRepository.findByUsername(username);
-
+        Optional<User> optUser = userRepository.findByUsername(username);
+        if (optUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        User user = optUser.get();
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("Invalid password");
         }
         return JwtUtil.generateToken(user.getId());
+    }
+    public void register(String username, String email, String password){
+        Optional<User> optUser = userRepository.findByUsername(username);
+        if (!optUser.isEmpty()) {
+            throw new IllegalArgumentException("Username exists! Choose another one");
+        }
+        String hashedPassword = passwordEncoder.encode(password);
+        userRepository.addUser(username,email,hashedPassword);
+
+
     }
 
 }

@@ -28,10 +28,10 @@ spring:
               uri: ws://localhost:8082
               predicates:
                 - Path=/ws/**
-            - id: login
+            - id: authentication
               uri: lb://user-service
               predicates:
-                - Path=/login
+                - Path=/login,/register
             - id: protected
               uri: lb://user-service
               predicates:

@@ -58,7 +58,7 @@ This script will:
 
 ### 🧑‍💼 Admin Credentials (for local development)
 
-The following default credentials can be used to log in to the Eureka dashboard or other protected endpoints:
+The following default credentials can be used to log in:
 
 | Username | Password         |
 |----------|------------------|

@@ -2,10 +2,12 @@ package com.example.user_service.user_service.repository;
 
 import com.example.user_service.user_service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -45,17 +47,31 @@ public class UserRepository {
         jdbcTemplate.update(sql,DEFAULT_BALANCE,userId);
     }
 
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            User user = new User();
-            user.setId(rs.getLong("id"));
-            user.setUsername(rs.getString("username"));
-            user.setEmail(rs.getString("email"));
-            user.setPassword(rs.getString("password"));
-            user.setBalance(rs.getBigDecimal("balance"));
-            return user;
-        }, username);
+        try{
+            User user = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+                User u = new User();
+                u.setId(rs.getLong("id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setPassword(rs.getString("password"));
+                u.setBalance(rs.getBigDecimal("balance"));
+                return u;
+            }, username);
+            return Optional.of(user);
+        } catch (EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
+    }
+    public void addUser(String username, String email, String password){
+        String sql = """
+        INSERT INTO users (username,email,password, balance)
+        VALUES (?, ?, ?,?)
+        """;
+        jdbcTemplate.update(sql, username, email, password, DEFAULT_BALANCE);
+
+
     }
 
 }
