@@ -2,6 +2,8 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { useState, useEffect } from "react";
 import SellModal from "./child_components/SellModal";
+import { getUserHoldings } from "../services/api";
+import { postTransaction } from "../services/api";
 
 function Holdings({ prices }) {
   const [holdings, setHoldings] = useState([]);
@@ -12,14 +14,7 @@ function Holdings({ prices }) {
   //the locked price
   const [lockedPrice, setPrice] = useState(0.0);
   useEffect(() => {
-    const token = sessionStorage.getItem("jwt");
-    if (!token) return;
-    fetch("http://localhost:8080/holdings?userId=1", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
+    getUserHoldings()
       .then((data) => {
         console.log(data);
         setHoldings(data);
@@ -56,30 +51,12 @@ function Holdings({ prices }) {
       };
       console.log("Sending POST request with body:", postBody);
       try {
-          const token = sessionStorage.getItem("jwt");
-              if (!token) return;
-        const response = await fetch("http://localhost:8080/transactions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-             Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(postBody),
-        });
-        const jsonResponse = await response.text();
-        if (!response.ok) {
-          throw new Error(jsonResponse || "Network response was not ok");
-        }
-
-        alert(jsonResponse);
-        console.log("POST request successful:", jsonResponse);
-        console.log(quantityToSell);
-        //for now like that
-        window.location.reload();
-      } catch (error) {
-        alert(error);
-        console.error("POST request failed:", error);
-      }
+                  const result = await postTransaction(postBody);
+                  alert(result);
+                  window.location.reload();
+                } catch (error) {
+                  alert(error.message);
+                }
     }
   };
   return (
