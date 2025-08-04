@@ -4,6 +4,7 @@ import UserInfo from "./UserInfo";
 import Holdings from "./Holdings";
 import MarketData from "./MarketData";
 import Transactions from "./Transactions";
+import { getUserBalance } from "../services/api";
 
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
@@ -63,25 +64,18 @@ function Dashboard() {
   }, []);*/
 
   useEffect(() => {
-    const token = sessionStorage.getItem("jwt");
-    if (!token) return;
-    fetch("http://localhost:8080/users/balance", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setUser({
-          userId: 1,
-          balance: data,
+      getUserBalance()
+        .then((data) => {
+          console.log(data);
+          setUser({
+            userId: 1,
+            balance: data,
+          });
+        })
+        .catch((err) => {
+          console.error(err.message);
         });
-      })
-      .catch((err) => {
-        console.error(err.message);
-      });
-  }, []);
+    }, []);
 
   return (
     <Container fluid className="mt-4">

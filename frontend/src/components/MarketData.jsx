@@ -2,6 +2,7 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import BuyModal from "./child_components/BuyModal";
 import { useState, useEffect } from "react";
+import { postTransaction } from "../services/api";
 
 function MarketData({ rows, user }) {
   //state to open close the model
@@ -41,25 +42,11 @@ function MarketData({ rows, user }) {
             type: "BUY",
           };
           try {
-              const token = sessionStorage.getItem("jwt");
-            const response = await fetch("http://localhost:8080/transactions", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify(postBody),
-            });
-            const result = await response.text();
-            if (!response.ok) {
-                throw new Error(result|| "Transaction failed");
-            }
+            const result = await postTransaction(postBody);
             alert(result);
-            //for now like that
             window.location.reload();
           } catch (error) {
             alert(error.message);
-            console.error("POST request failed:", error);
           }
         }
     setShow(false);

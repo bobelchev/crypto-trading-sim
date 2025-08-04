@@ -1,18 +1,12 @@
 import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
+import { getTransactions } from "../services/api";
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("jwt");
-    if (!token) return;
-    fetch("http://localhost:8080/transactions", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
+    getTransactions()
       .then((data) => {
         console.log(data);
         data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
