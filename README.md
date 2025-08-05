@@ -49,19 +49,6 @@ This script will:
 - Close the PowerShell windows that were opened by the `start-all.ps1` script.
 
 > ⚠️ This will stop **all** Java processes related to the services. Make sure you're not running other important Java applications at the same time.
-
-### 🌐 Service Endpoints
-
-| Service                    | Description                    | URL                          |
-|---------------------------|--------------------------------|------------------------------|
-| 🧭 **Eureka Server**       | Service discovery dashboard    | [http://localhost:8761](http://localhost:8761) |
-| 🚪 **API Gateway**         | Entry point for all APIs       | [http://localhost:8080](http://localhost:8080) |
-| 👤 **User Service**        | Handles user data & balances   | [http://localhost:8081](http://localhost:8081) |
-| 📊 **Market Data Streamer**| Streams crypto price updates   | [http://localhost:8082](http://localhost:8082) |
-| 🐙 **Kraken Service**      | WebSocket client for Kraken API| [http://localhost:8083](http://localhost:8083) |
-| 🖥️ **Frontend (React)**    | Web UI for users               | [http://localhost:5173](http://localhost:5173) or [http://localhost:5174](http://localhost:5174) |
-
-
 ### 🧑‍💼 Admin Credentials (for local development)
 
 The following default credentials can be used to log in:
@@ -69,6 +56,20 @@ The following default credentials can be used to log in:
 | Username | Password         |
 |----------|------------------|
 | `admin`  | `plaintextpassword` |
+
+### Service Endpoints
+
+| Service                  | Description                     | URL                          |
+|--------------------------|---------------------------------|------------------------------|
+| **Eureka Server**        | Service discovery               | [http://localhost:8761](http://localhost:8761) |
+| **API Gateway**          | Entry point for all APIs        | [http://localhost:8080](http://localhost:8080) |
+| **User Service**         | Handles user data & balances    | [http://localhost:8081](http://localhost:8081) |
+| **Market Data Streamer** | Streams crypto price updates    | [http://localhost:8082](http://localhost:8082) |
+| **Kraken Service**       | WebSocket client for Kraken API | [http://localhost:8083](http://localhost:8083) |
+| **Holdings Service**     | Manages the crypto holdings     |  [http://localhost:8086](http://localhost:8086)                                                                                                |
+| **Transaction Service**  | Handles transactions buy/sell   |     [http://localhost:8085](http://localhost:8085)                                                                                             |
+| **Frontend (React)**     | Web UI for users                | [http://localhost:5173](http://localhost:5173) or [http://localhost:5174](http://localhost:5174) |
+
 
 ### Screenshots
 
@@ -122,13 +123,13 @@ The following default credentials can be used to log in:
 
 Several core design and maintainability issues were addressed:
 
-| Code Smell Resolved     | Solution Implemented                                           | Example Commit |
-|-------------------------|----------------------------------------------------------------|----------------|
-| 🔍 Hidden Dependencies  | Replaced field injection with **constructor injection**        | [Commit #e3a2675](https://github.com/bobelchev/crypto-trading-sim/commit/e3a26750546df5a8dad161da4cc48967cfa47068) |
-| 🔢 Long Parameter Lists | Grouped method arguments into DTOs or value objects            | [Commit #de231ea](https://github.com/bobelchev/crypto-trading-sim/commit/de231eadfe55c0aca34b59b4bb0c28c75ec205d7) |
-| 📏 Long Methods         | Extracted smaller helper methods to follow SRP                | [Commit #58b097d](https://github.com/bobelchev/crypto-trading-sim/commit/58b097df18f132dfc875aedf93157eb3b43b46fc) |
-| 🚨 Divergent Change     | Introduced a centralized `TransactionValidator` class          | [Commit #24b26d8](https://github.com/bobelchev/crypto-trading-sim/commit/24b26d83e23b689edab956e2c5f136dcc34c68d2) |
-| ❗ Poor Error Handling   | Defined domain-specific **custom exceptions** (e.g., `InvalidTransactionException`) | [Commit #6936db8](https://github.com/bobelchev/crypto-trading-sim/commit/6936db8e57ecfbc40294b9a5388f24ecc2b3ae9a) |
+| Code Smell Resolved    | Solution Implemented                                           | Example Commit |
+|------------------------|----------------------------------------------------------------|----------------|
+|  Hidden Dependencies  | Replaced field injection with **constructor injection**        | [Commit #e3a2675](https://github.com/bobelchev/crypto-trading-sim/commit/e3a26750546df5a8dad161da4cc48967cfa47068) |
+|  Long Parameter Lists | Grouped method arguments into DTOs or value objects            | [Commit #de231ea](https://github.com/bobelchev/crypto-trading-sim/commit/de231eadfe55c0aca34b59b4bb0c28c75ec205d7) |
+|  Long Methods         | Extracted smaller helper methods to follow SRP                | [Commit #58b097d](https://github.com/bobelchev/crypto-trading-sim/commit/58b097df18f132dfc875aedf93157eb3b43b46fc) |
+|  Divergent Change     | Introduced a centralized `TransactionValidator` class          | [Commit #24b26d8](https://github.com/bobelchev/crypto-trading-sim/commit/24b26d83e23b689edab956e2c5f136dcc34c68d2) |
+|  Poor Error Handling   | Defined domain-specific **custom exceptions** (e.g., `InvalidTransactionException`) | [Commit #6936db8](https://github.com/bobelchev/crypto-trading-sim/commit/6936db8e57ecfbc40294b9a5388f24ecc2b3ae9a) |
 
 >   **Note:** For more information about common code smells and best practices for refactoring, visit [Refactoring Guru](https://refactoring.guru/refactoring/smells).
 
@@ -173,10 +174,10 @@ Introduced a simple API Gateway using Spring WebFlux. At this point to provide s
  
 Now that the gateway is in place:
 
-- 🧩 The backend can be gradually decomposed into services like `user-service`, `transaction-service`, `marketdata-service`, etc.
-- 🔄 Gateway will be updated to route requests using service names instead of static ports
-- 🛡 Authentication and rate limiting can be handled globally
-- 📊 Observability (e.g., using Sleuth or OpenTelemetry) can be added to trace requests across the system
+-  The backend can be gradually decomposed into services like `user-service`, `transaction-service`, `marketdata-service`, etc.
+-  Gateway will be updated to route requests using service names instead of static ports
+-  Authentication and rate limiting can be handled globally
+-  Observability (e.g., using Sleuth or OpenTelemetry) can be added to trace requests across the system
 ![API Gateway](img/gateway.png)
 
 
@@ -191,12 +192,12 @@ To further isolate concerns and improve scalability, a new service called `marke
 - ✅ It maintains WebSocket sessions with connected frontend clients and pushes updates in real time.
 - ✅ This decoupling allows both the market data ingestion and WebSocket streaming layers to scale independently.
 
-#### 🌟 Benefits:
+#### Benefits:
 
-- 📦 **Better separation of concerns** – data ingestion and client communication are now handled by dedicated services.
-- 📈 **Scalability** - the streamer service can be horizontally scaled based on user demand without impacting Kraken API usage.
-- 🧪 **Easier testing and deployment** – changes to WebSocket logic don’t affect the main trading simulator backend.
-- 🧩 **Modularity** - sets the foundation for additional streaming channels or protocol support in the future (e.g., SSE, gRPC streams).
+-  **Better separation of concerns** - data ingestion and client communication are now handled by dedicated services.
+-  **Scalability** - the streamer service can be horizontally scaled based on user demand without impacting Kraken API usage.
+- **Easier testing and deployment** - changes to WebSocket logic don’t affect the main trading simulator backend.
+- **Modularity** - sets the foundation for additional streaming channels or protocol support in the future (e.g., SSE, gRPC streams).
 
 📸 **Diagram: Market Data Streamer Architecture**
 
@@ -228,16 +229,16 @@ As part of the system's evolution, we adopted **Martin Fowler’s Strangler Tree
 - 🔁 For now, **both systems update user state** (the monolith locally and `user-service` remotely). This **dual-write mechanism** ensures consistency during the transitional phase.
 - 📤 Once `user-service` is fully validated in production, the user-related logic and data schema inside `crypto-trading-sim` will be deprecated and removed.
 
-#### 🧠 Why:
+####  Why:
 
-- 🧩 **Incremental decomposition** - each microservice (user,holding, transaction, market data) is carved out and hardened before cutting off the corresponding monolith path.
-- 🛠 **Stable evolution** - legacy functionality stays intact while new components are independently developed, tested, and deployed.
-- 📉 **Reduced risk** - no need for big-bang migrations or downtime-prone rewrites.
-- 🔬 **Side-by-side validation** - both the monolith and new services operate in tandem until confidence is gained.
+- **Incremental decomposition** - each microservice (user,holding, transaction, market data) is carved out and hardened before cutting off the corresponding monolith path.
+- **Stable evolution** - legacy functionality stays intact while new components are independently developed, tested, and deployed.
+- **Reduced risk** - no need for big-bang migrations or downtime-prone rewrites.
+- **Side-by-side validation** - both the monolith and new services operate in tandem until confidence is gained.
 
 #### 📸 Architecture View:
 ![User Service](img/userservice.png)
-> 📝 **Note:** Eureka service discovery and registration flows were omitted from this diagram for simplicity.
+> **Note:** Eureka service discovery and registration flows were omitted from this diagram for simplicity.
 
 
 ### 🔹 Seventh Iteration: Strangler Pattern — Gradual Decomposition of the Monolith (Holding Service)
@@ -255,7 +256,7 @@ As part of the ongoing decomposition, we extracted the logic related to **crypto
     - Calls `holding-service` for the same update (dual-write)
 - 📖 Currently, the frontend reads holdings **only** from `holding-service`.
 
-#### 📝 Considerations for Next Steps:
+#### Considerations for Next Steps:
 
 - ❗️**User ID validation**:
     - Previously enforced via a foreign key constraint (`FOREIGN KEY (user_id) REFERENCES users(id)`)
@@ -269,7 +270,7 @@ As part of the ongoing decomposition, we extracted the logic related to **crypto
 
 The monolithic `crypto-trading-sim` application has now been fully decomposed into dedicated microservices, completing the transition to a modular, scalable architecture. Each service is now responsible for a **single bounded domain**, and the monolith has been retired.
 
-#### 🧩 Final Migration Plan
+#### Final Migration Plan
 
 Following the **Strangler Fig Pattern**, the order of service extraction was determined by **coupling level**, **scalability needs**, and **risk isolation**:
 
@@ -292,9 +293,9 @@ Following the **Strangler Fig Pattern**, the order of service extraction was det
 
 #### ✅ Current State
 
-- 🧩 Each business function now lives in its **own microservice**, with independent databases, deployment pipelines, and scaling profiles.
-- 🛠 All communication between services happens via **REST** or **Kafka**, coordinated by the **API Gateway** and **service discovery**.
-- 🧹 The monolith has been fully **removed** - both logic and schema - from the system.
+-  Each business function now lives in its **own microservice**, with independent databases, deployment pipelines, and scaling profiles.
+-  All communication between services happens via **REST** or **Kafka**, coordinated by the **API Gateway** and **service discovery**.
+-  The monolith has been fully **removed** - both logic and schema - from the system.
 
 📸 **Diagram: Final Microservices Architecture**
 
