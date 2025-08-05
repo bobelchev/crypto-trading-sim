@@ -57,20 +57,6 @@ The following default credentials can be used to log in:
 |----------|------------------|
 | `admin`  | `plaintextpassword` |
 
-### Service Endpoints
-
-| Service                  | Description                     | URL                          |
-|--------------------------|---------------------------------|------------------------------|
-| **Eureka Server**        | Service discovery               | [http://localhost:8761](http://localhost:8761) |
-| **API Gateway**          | Entry point for all APIs        | [http://localhost:8080](http://localhost:8080) |
-| **User Service**         | Handles user data & balances    | [http://localhost:8081](http://localhost:8081) |
-| **Market Data Streamer** | Streams crypto price updates    | [http://localhost:8082](http://localhost:8082) |
-| **Kraken Service**       | WebSocket client for Kraken API | [http://localhost:8083](http://localhost:8083) |
-| **Holdings Service**     | Manages the crypto holdings     |  [http://localhost:8086](http://localhost:8086)                                                                                                |
-| **Transaction Service**  | Handles transactions buy/sell   |     [http://localhost:8085](http://localhost:8085)                                                                                             |
-| **Frontend (React)**     | Web UI for users                | [http://localhost:5173](http://localhost:5173) or [http://localhost:5174](http://localhost:5174) |
-
-
 ### Screenshots
 
 #### Initial Application Screen (Top 20 Crypto Prices)
@@ -90,6 +76,21 @@ The following default credentials can be used to log in:
 ----
 ![Interface after the transaction](img/interfaceAfterBuy.png)
 ----
+
+### Service Endpoints
+
+| Service                  | Description                     | URL                          |
+|--------------------------|---------------------------------|------------------------------|
+| **Eureka Server**        | Service discovery               | [http://localhost:8761](http://localhost:8761) |
+| **API Gateway**          | Entry point for all APIs        | [http://localhost:8080](http://localhost:8080) |
+| **User Service**         | Handles user data & balances    | [http://localhost:8081](http://localhost:8081) |
+| **Market Data Streamer** | Streams crypto price updates    | [http://localhost:8082](http://localhost:8082) |
+| **Kraken Service**       | WebSocket client for Kraken API | [http://localhost:8083](http://localhost:8083) |
+| **Holdings Service**     | Manages the crypto holdings     |  [http://localhost:8086](http://localhost:8086)                                                                                                |
+| **Transaction Service**  | Handles transactions buy/sell   |     [http://localhost:8085](http://localhost:8085)                                                                                             |
+| **Frontend (React)**     | Web UI for users                | [http://localhost:5173](http://localhost:5173) or [http://localhost:5174](http://localhost:5174) |
+
+
 ### Development Process
 
 1. **Test-Driven Development (TDD) for the Backend**
@@ -218,7 +219,7 @@ To reduce configuration complexity and enable dynamic service lookup, the system
 
 ![Service Discovery with Eureka](img/eureka.png)
 
-### 🔹 Sixth Iteration: Strangler Pattern — Gradual Decomposition of the Monolith
+### 🔹 Sixth Iteration: Strangler Pattern - Gradual Decomposition of the Monolith (User Service)
 
 As part of the system's evolution, we adopted **Martin Fowler’s Strangler Tree Pattern** to incrementally break down the monolith (`crypto-trading-sim`) into dedicated microservices. This approach ensures **stability, availability**, and **progressive migration** without a risky full rewrite.
 
@@ -241,7 +242,7 @@ As part of the system's evolution, we adopted **Martin Fowler’s Strangler Tree
 > **Note:** Eureka service discovery and registration flows were omitted from this diagram for simplicity.
 
 
-### 🔹 Seventh Iteration: Strangler Pattern — Gradual Decomposition of the Monolith (Holding Service)
+### 🔹 Seventh Iteration: Strangler Pattern - Gradual Decomposition of the Monolith (Holding Service)
 
 As part of the ongoing decomposition, we extracted the logic related to **crypto holdings** into a dedicated `holding-service`.
 
@@ -266,7 +267,7 @@ As part of the ongoing decomposition, we extracted the logic related to **crypto
 #### 📸 Architecture View:
 ![Holding Service](img/holdingservice.png)
 
-### 🔹 Eighth Iteration: Final Strangler — Complete Microservice Decomposition
+### 🔹 Eighth Iteration: Final Strangler - Complete Microservice Decomposition
 
 The monolithic `crypto-trading-sim` application has now been fully decomposed into dedicated microservices, completing the transition to a modular, scalable architecture. Each service is now responsible for a **single bounded domain**, and the monolith has been retired.
 
