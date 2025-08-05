@@ -1,3 +1,9 @@
+### Demo
+
+Watch the demo video on
+
+LAST MVP DEMO: [Google Drive](https://drive.google.com/file/d/1Df_ysL3VG8Q4QJJO5fFXwgJ12sW8g4Pp/view?usp=sharing)
+
 ### Requirements
 
 - Java 17.0.6 or newer (Java 17+ required)
@@ -63,12 +69,6 @@ The following default credentials can be used to log in:
 | Username | Password         |
 |----------|------------------|
 | `admin`  | `plaintextpassword` |
-### Demo
-
-Watch the demo video on 
-
-LAST MVP DEMO: [Google Drive](https://drive.google.com/file/d/1Df_ysL3VG8Q4QJJO5fFXwgJ12sW8g4Pp/view?usp=sharing)
-
 
 ### Screenshots
 
@@ -104,8 +104,8 @@ LAST MVP DEMO: [Google Drive](https://drive.google.com/file/d/1Df_ysL3VG8Q4QJJO5
 2. **Branches**
     Once a stable minimally functional backend was developed the project branched out to develop the fronted and the WS connections.
    > **Branches:**
-   > - [`frontend`](https://github.com/bobelchev/crypto-trading-sim/tree/frontend) – Implements the React frontend interface
-   > - [`feature/kraken-ws-client`](https://github.com/bobelchev/crypto-trading-sim/tree/feature/kraken-ws-client) – Connects to Kraken WebSocket API and exposes real-time data
+   > - [`frontend`](https://github.com/bobelchev/crypto-trading-sim/tree/frontend) - Implements the React frontend interface
+   > - [`feature/kraken-ws-client`](https://github.com/bobelchev/crypto-trading-sim/tree/feature/kraken-ws-client) - Connects to Kraken WebSocket API and exposes real-time data
 
 ### 3. **Pull Requests**
 
@@ -194,9 +194,9 @@ To further isolate concerns and improve scalability, a new service called `marke
 #### 🌟 Benefits:
 
 - 📦 **Better separation of concerns** – data ingestion and client communication are now handled by dedicated services.
-- 📈 **Scalability** – the streamer service can be horizontally scaled based on user demand without impacting Kraken API usage.
+- 📈 **Scalability** - the streamer service can be horizontally scaled based on user demand without impacting Kraken API usage.
 - 🧪 **Easier testing and deployment** – changes to WebSocket logic don’t affect the main trading simulator backend.
-- 🧩 **Modularity** – sets the foundation for additional streaming channels or protocol support in the future (e.g., SSE, gRPC streams).
+- 🧩 **Modularity** - sets the foundation for additional streaming channels or protocol support in the future (e.g., SSE, gRPC streams).
 
 📸 **Diagram: Market Data Streamer Architecture**
 
@@ -230,10 +230,10 @@ As part of the system's evolution, we adopted **Martin Fowler’s Strangler Tree
 
 #### 🧠 Why:
 
-- 🧩 **Incremental decomposition** – each microservice (user,holding, transaction, market data) is carved out and hardened before cutting off the corresponding monolith path.
-- 🛠 **Stable evolution** – legacy functionality stays intact while new components are independently developed, tested, and deployed.
-- 📉 **Reduced risk** – no need for big-bang migrations or downtime-prone rewrites.
-- 🔬 **Side-by-side validation** – both the monolith and new services operate in tandem until confidence is gained.
+- 🧩 **Incremental decomposition** - each microservice (user,holding, transaction, market data) is carved out and hardened before cutting off the corresponding monolith path.
+- 🛠 **Stable evolution** - legacy functionality stays intact while new components are independently developed, tested, and deployed.
+- 📉 **Reduced risk** - no need for big-bang migrations or downtime-prone rewrites.
+- 🔬 **Side-by-side validation** - both the monolith and new services operate in tandem until confidence is gained.
 
 #### 📸 Architecture View:
 ![User Service](img/userservice.png)
@@ -277,7 +277,7 @@ Following the **Strangler Fig Pattern**, the order of service extraction was det
    Was chipped away first due to its **low coupling** and the need for **scaling**. Decoupling Kraken access allowed a single service to handle API subscriptions for all users, eliminating redundant Kraken connections.
 
 2. **Market Data Streamer**  
-   Was extracted next because it had **no dependency on business logic**. Its sole responsibility — streaming market data to the frontend — made it ideal for early isolation.
+   Was extracted next because it had **no dependency on business logic**. Its sole responsibility - streaming market data to the frontend - made it ideal for early isolation.
 
 3. **User Service**  
    Came next as it had minimal cross-service logic. It was responsible for **providing and updating user balances**, both for the client and for backend services like `transaction-service`.
@@ -294,7 +294,7 @@ Following the **Strangler Fig Pattern**, the order of service extraction was det
 
 - 🧩 Each business function now lives in its **own microservice**, with independent databases, deployment pipelines, and scaling profiles.
 - 🛠 All communication between services happens via **REST** or **Kafka**, coordinated by the **API Gateway** and **service discovery**.
-- 🧹 The monolith has been fully **removed** — both logic and schema — from the system.
+- 🧹 The monolith has been fully **removed** - both logic and schema - from the system.
 
 📸 **Diagram: Final Microservices Architecture**
 
